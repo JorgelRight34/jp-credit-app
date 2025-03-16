@@ -1,4 +1,3 @@
-using System.Text.Json;
 using api.DTOs;
 using api.Interfaces;
 using api.Models;
@@ -6,8 +5,6 @@ using Company.ClassLibrary1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 
 namespace api.Controllers
 {
@@ -21,15 +18,11 @@ namespace api.Controllers
 
             try
             {
-                var createdUser = await usersRepository.CreateUser(registerDto);
+                var createdUser = await usersRepository.CreateUserAsync(registerDto);
 
                 if (createdUser == null) return StatusCode(500, "Failed to create user");
 
-                return Ok(new UserDto
-                {
-                    Username = createdUser.UserName,
-                    Email = createdUser.Email,
-                });
+                return Ok(createdUser);
             }
             catch (Exception e)
             {
@@ -48,7 +41,7 @@ namespace api.Controllers
             if (result)
             {
                 var token = await tokenService.CreateToken(user);
-                return Ok(new UserDto
+                return Ok(new
                 {
                     Username = user.UserName,
                     Email = user.Email,
@@ -59,11 +52,32 @@ namespace api.Controllers
             return Unauthorized();
         }
 
-        [HttpGet("authorize")]
+        [HttpGet]
         [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public ActionResult GetUsers()
+        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers([FromQuery] UserQuery query)
         {
-            return Ok("Protected");
+            var users = await usersRepository.GetUsersAsync(query);
+            return Ok(users);
+        }
+
+        [HttpPut("{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<ActionResult<AppUser?>> UpdateUser([FromBody] UpdateUserDto updateUserDto, [FromRoute] string id)
+        {
+            var user = await usersRepository.UpdateUserAsync(updateUserDto, id);
+            if (user == null) return NotFound();
+
+            return Ok(user);
+        }
+
+        [HttpDelete("{id}")]
+        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+        public async Task<ActionResult> DeleteUser([FromRoute] string id)
+        {
+            var user = await usersRepository.DeleteUserAsync(id);
+            if (user == null) return NotFound();
+
+            return NoContent();
         }
     }
 }

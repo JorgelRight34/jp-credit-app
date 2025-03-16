@@ -167,3 +167,4 @@ C:\Users\pablo\Desktop\jp-apps\api\obj\Debug\net9.0\api.genruntimeconfig.cache
 C:\Users\pablo\Desktop\jp-apps\api\obj\Debug\net9.0\ref\api.dll
 C:\Users\pablo\Desktop\jp-apps\api\bin\Debug\net9.0\AutoMapper.dll
 C:\Users\pablo\Desktop\jp-apps\api\bin\Debug\net9.0\Newtonsoft.Json.dll
+C:\Users\pablo\Desktop\jp-apps\api\obj\Debug\net9.0\api.sourcelink.json
