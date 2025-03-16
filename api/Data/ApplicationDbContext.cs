@@ -12,9 +12,17 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
     {
     }
 
+    public DbSet<Loan> Loans { get; set; }
+    public DbSet<LoanOfficer> LoanOfficers { get; set; }
+    public DbSet<Collateral> Collaterals { get; set; }
+
     protected override void OnModelCreating(ModelBuilder builder)
     {
         base.OnModelCreating(builder);
+
+        builder.Entity<AppUser>()
+            .HasIndex(x => x.DNI)
+            .IsUnique();
 
         var roles = new List<IdentityRole>
         {

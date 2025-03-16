@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using api.Dtos.Validators;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Models;
 

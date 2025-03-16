@@ -1,18 +1,22 @@
 using api.DTOs;
+using api.DTOs.User;
 using api.Interfaces;
 using api.Models;
-using Company.ClassLibrary1;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
-    public class UsersController(IUsersRepository usersRepository, UserManager<AppUser> userManager, ITokenService tokenService) : BaseApiController
+    [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
+    public class UsersController(
+        IUsersRepository usersRepository,
+        UserManager<AppUser> userManager,
+        ITokenService tokenService
+    ) : BaseApiController
     {
         [HttpPost("register")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<ActionResult<AppUser>> CreateUser(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> CreateUser(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return BadRequest();
 
@@ -32,7 +36,8 @@ namespace api.Controllers
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<AppUser>> Login(LoginDto loginDto)
+        [AllowAnonymous]
+        public async Task<ActionResult> Login(LoginDto loginDto)
         {
             var user = await userManager.FindByNameAsync(loginDto.Username);
             if (user == null) return Unauthorized();
@@ -53,15 +58,13 @@ namespace api.Controllers
         }
 
         [HttpGet]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-        public async Task<ActionResult<IEnumerable<AppUser>>> GetUsers([FromQuery] UserQuery query)
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery] UserQuery query)
         {
             var users = await usersRepository.GetUsersAsync(query);
             return Ok(users);
         }
 
         [HttpPut("{id}")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<ActionResult<AppUser?>> UpdateUser([FromBody] UpdateUserDto updateUserDto, [FromRoute] string id)
         {
             var user = await usersRepository.UpdateUserAsync(updateUserDto, id);
@@ -71,7 +74,6 @@ namespace api.Controllers
         }
 
         [HttpDelete("{id}")]
-        [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
         public async Task<ActionResult> DeleteUser([FromRoute] string id)
         {
             var user = await usersRepository.DeleteUserAsync(id);

@@ -1,11 +1,10 @@
 using System;
 using api.Data;
-using api.DTOs;
+using api.DTOs.User;
 using api.Interfaces;
 using api.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Company.ClassLibrary1;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -24,13 +23,7 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
             }
         }
 
-        var user = new AppUser
-        {
-            UserName = registerDto.Username,
-            Email = registerDto.Email,
-            PhoneNumber = registerDto.PhoneNumber,
-            DNI = registerDto.DNI
-        };
+        var user = mapper.Map<AppUser>(registerDto);
 
         var result = await userManager.CreateAsync(user, registerDto.Password!);
 
@@ -92,12 +85,12 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
 
         if (!String.IsNullOrEmpty(query.Username))
         {
-            users = users.Where(x => x.Username != null && x.Username.Contains(query.Username));
+            users = users.Where(x => x.Username != null && x.Username.ToLower().Contains(query.Username.ToLower()));
         }
 
-        var page = query.Page - 1 <= 0 ? 1 : query.Page - 1;
+        var page = query.Page - 1 < 0 ? 0 : query.Page - 1;
 
-        var result = await users.Skip(query.Page * query.Limit).Take(query.Limit).ToListAsync();
+        var result = await users.Skip(page * query.Limit).Take(query.Limit).ToListAsync();
 
         return result;
     }

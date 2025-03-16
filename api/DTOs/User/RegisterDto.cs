@@ -2,7 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using api.Dtos.Validators;
 
-namespace api.DTOs;
+namespace api.DTOs.User;
 
 public class RegisterDto
 {
@@ -15,7 +15,13 @@ public class RegisterDto
     public string? Password { get; set; }
     [Required]
     public string? PhoneNumber { get; set; }
+    [Required]
+    public DateOnly DateOfBirth { get; set; }
     [DNI]
     public string? DNI { get; set; }
+    [Required]
+    public string? MaritalStatus { get; set; }
+    [Required]
+    public string? Neighborhood { get; set; }
     public List<string> Roles { get; set; } = [];
 }

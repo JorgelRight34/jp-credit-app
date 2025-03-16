@@ -1,7 +1,6 @@
 using System;
-using api.DTOs;
+using api.DTOs.User;
 using api.Models;
-using Company.ClassLibrary1;
 
 namespace api.Interfaces;
 
