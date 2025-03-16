@@ -1,0 +1,31 @@
+using System;
+using api.Data;
+using api.Interfaces;
+using api.Models;
+using api.Repositories;
+using api.Services;
+using Microsoft.EntityFrameworkCore;
+
+namespace api.Extensions;
+
+public static class ApplicationServiceExtensions
+{
+    public static IServiceCollection AddApplicationServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddControllers();
+        // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
+        services.AddOpenApi();
+
+        services.AddDbContext<ApplicationDbContext>(options =>
+        {
+            options.UseSqlite(configuration.GetConnectionString("DefaultConnection"));
+        });
+
+        services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUsersRepository, UsersRepository>();
+
+        services.AddCors();
+
+        return services;
+    }
+}
