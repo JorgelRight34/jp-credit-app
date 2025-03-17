@@ -1,5 +1,6 @@
 using System;
 using api.DTOs.Collateral;
+using api.DTOs.Loan;
 using api.DTOs.Transaction;
 using api.DTOs.User;
 using api.Extensions;
@@ -28,5 +29,8 @@ public class AutoMapperProfiles : Profile
 
         CreateMap<Transaction, TransactionDto>()
         .ForMember(d => d.Payer, o => o.MapFrom(s => s.Payer));
+
+        CreateMap<CreateLoanDto, Loan>();
+        CreateMap<Loan, LoanDto>();
     }
 }

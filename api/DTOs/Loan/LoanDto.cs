@@ -11,19 +11,20 @@ public class LoanDto
     public int Id { get; set; }
 
     // Loan details
-    public string? Description { get; set; }
     [Required]
-    public decimal Amount { get; set; } // Monto aprobado
+    public decimal ApprovedAmount { get; set; } // Monto aprobado
+    public string? Description { get; set; }
     [Required]
     public decimal DisbursedAmount { get; set; }    // Monto desembolsado
     [Required]
     public decimal AnnualInterestRate { get; set; }
     public int NumberOfPayments { get; set; }
-    public int PaymentFrecuency { get; set; }
+    [Required]
+    public string? PaymentFrecuency { get; set; }
 
     // Details
     [Required]
-    public int PaymentValue { get; set; }
+    public decimal PaymentValue { get; set; }
     public DateOnly StartDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
     public string Status { get; set; } = "Pending";

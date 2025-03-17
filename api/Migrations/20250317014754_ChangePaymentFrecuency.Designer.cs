@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -10,9 +11,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250317014754_ChangePaymentFrecuency")]
+    partial class ChangePaymentFrecuency
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -321,10 +324,10 @@ namespace api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("AnnualInterestRate")
+                    b.Property<decimal>("Amount")
                         .HasColumnType("TEXT");
 
-                    b.Property<decimal>("ApprovedAmount")
+                    b.Property<decimal>("AnnualInterestRate")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ClientId")
@@ -352,12 +355,11 @@ namespace api.Migrations
                     b.Property<int>("NumberOfPayments")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("PaymentFrecuency")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("PaymentFrecuency")
+                        .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("PaymentValue")
-                        .HasColumnType("TEXT");
+                    b.Property<int>("PaymentValue")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateOnly>("StartDate")
                         .HasColumnType("TEXT");

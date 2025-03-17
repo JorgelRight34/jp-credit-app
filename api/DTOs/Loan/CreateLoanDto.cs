@@ -7,13 +7,14 @@ public class CreateLoanDto
 {
     // Loan details
     [Required]
-    public decimal Amount { get; set; } // Monto aprobado
+    public decimal ApprovedAmount { get; set; } // Monto aprobado
     [Required]
     public decimal DisbursedAmount { get; set; }    // Monto desembolsado
     [Required]
     public decimal AnnualInterestRate { get; set; }
     public int NumberOfPayments { get; set; }
-    public int PaymentFrecuency { get; set; }
+    [Required]
+    public string? PaymentFrecuency { get; set; }
 
     // Details
     [Required]
@@ -22,8 +23,8 @@ public class CreateLoanDto
     public string Status { get; set; } = "Pending";
 
     // Relationships
-    public int? LoanOfficerId { get; set; }
+    public string? LoanOfficerId { get; set; }
     [Required]
-    public string? AppUserId { get; set; }
+    public string? ClientId { get; set; }
     public int? CollateralId { get; set; }
 }
