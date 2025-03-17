@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -10,9 +11,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250316211127_ImprovedLoanAndUser")]
+    partial class ImprovedLoanAndUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -379,42 +382,6 @@ namespace api.Migrations
                     b.ToTable("Loans");
                 });
 
-            modelBuilder.Entity("api.Models.Transaction", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("INTEGER");
-
-                    b.Property<decimal>("CapitalValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateOnly>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("InterestValue")
-                        .HasColumnType("TEXT");
-
-                    b.Property<int>("LoanId")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<string>("PayerId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
-                    b.Property<string>("Type")
-                        .IsRequired()
-                        .HasMaxLength(10)
-                        .HasColumnType("TEXT");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("LoanId");
-
-                    b.HasIndex("PayerId");
-
-                    b.ToTable("Transactions");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole", null)
@@ -498,25 +465,6 @@ namespace api.Migrations
                     b.Navigation("Collateral");
 
                     b.Navigation("LoanOfficer");
-                });
-
-            modelBuilder.Entity("api.Models.Transaction", b =>
-                {
-                    b.HasOne("api.Models.Loan", "Loan")
-                        .WithMany()
-                        .HasForeignKey("LoanId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("api.Models.AppUser", "Payer")
-                        .WithMany()
-                        .HasForeignKey("PayerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Loan");
-
-                    b.Navigation("Payer");
                 });
 #pragma warning restore 612, 618
         }

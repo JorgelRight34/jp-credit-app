@@ -1,12 +1,13 @@
 using System;
 using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+using api.DTOs.Collateral;
+using api.DTOs.User;
+using api.Models;
 
-namespace api.Models;
+namespace api.DTOs.Loan;
 
-public class Loan
+public class LoanDto
 {
-    [Key]
     public int Id { get; set; }
 
     // Loan details
@@ -27,18 +28,10 @@ public class Loan
     public DateOnly DeliveryDate { get; set; }  // Entrega
     public string Status { get; set; } = "Pending";
 
-    // Relationships
-    [Required]
-    public string? ClientId { get; set; }
-    public string? LoanOfficerId { get; set; }
-    public int? CollateralId { get; set; }
-
     // Navigation properties
-    [ForeignKey("ClientId")]
-    public AppUser? Client { get; set; }
-    [ForeignKey("LoanOfficerId")]
-    public AppUser? LoanOfficer { get; set; }
-    public Collateral? Collateral { get; set; }
+    public UserDto? Client { get; set; }
+    public UserDto? LoanOfficer { get; set; }
+    public CollateralDto? Collateral { get; set; }
 
     // Audit fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

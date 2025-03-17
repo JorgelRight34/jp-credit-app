@@ -1,0 +1,4 @@
+DS | Desembolso
+PC | Pago Cuota
+NC | Nota de Crédito
+ND | Nota de Débito

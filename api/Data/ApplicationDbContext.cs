@@ -13,8 +13,8 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
     }
 
     public DbSet<Loan> Loans { get; set; }
-    public DbSet<LoanOfficer> LoanOfficers { get; set; }
     public DbSet<Collateral> Collaterals { get; set; }
+    public DbSet<Transaction> Transactions { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
@@ -28,6 +28,8 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
         {
             new IdentityRole { Id = "Admin", Name = "Admin", NormalizedName = "ADMIN" },
             new IdentityRole { Id = "User", Name = "User", NormalizedName = "USER" },
+            new IdentityRole { Id = "LoanOfficer", Name = "LoanOfficer", NormalizedName = "LOANOFFICER" },
+            new IdentityRole { Id = "Guarantor", Name = "Guarantor", NormalizedName = "Guarantor" }
         };
 
         builder.Entity<IdentityRole>().HasData(roles);

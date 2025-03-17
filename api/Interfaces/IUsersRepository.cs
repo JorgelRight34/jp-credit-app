@@ -11,4 +11,5 @@ public interface IUsersRepository
     Task<UserDto?> UpdateUserAsync(UpdateUserDto updateUserDto, string id);
     Task<UserDto?> DeleteUserAsync(string id);
     Task<UserDto?> GetByUsernameAsync(string username);
+    Task<IEnumerable<UserDto>> GetUsersInRoleAsync(string role, string? query);
 }

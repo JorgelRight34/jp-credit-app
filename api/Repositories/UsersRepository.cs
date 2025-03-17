@@ -40,6 +40,13 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
 
             return mapper.Map<UserDto>(user);
         }
+        else
+        {
+            foreach (var error in result.Errors)
+            {
+                Console.WriteLine(error);
+            }
+        }
 
         return null;
     }
@@ -51,6 +58,12 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
 
         user.Email = updateUserDto.Email;
         user.PhoneNumber = updateUserDto.PhoneNumber;
+        user.OfficePhone = updateUserDto.OfficePhoneNumber;
+        user.Address = updateUserDto.Address;
+        user.Landline = updateUserDto.Landline;
+        user.FirstName = updateUserDto.FirstName;
+        user.LastName = updateUserDto.LastName;
+        user.MaritalStatus = updateUserDto.MaritalStatus;
 
         foreach (var role in updateUserDto.Roles)
         {
@@ -85,7 +98,10 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
 
         if (!String.IsNullOrEmpty(query.Username))
         {
-            users = users.Where(x => x.Username != null && x.Username.ToLower().Contains(query.Username.ToLower()));
+            users = users
+            .Where(
+                x => x.Username != null && x.Username.ToLower().Contains(query.Username.ToLower())
+            );
         }
 
         var page = query.Page - 1 < 0 ? 0 : query.Page - 1;
@@ -93,5 +109,11 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
         var result = await users.Skip(page * query.Limit).Take(query.Limit).ToListAsync();
 
         return result;
+    }
+
+    public async Task<IEnumerable<UserDto>> GetUsersInRoleAsync(string role, string? query)
+    {
+        var users = await userManager.GetUsersInRoleAsync(role);
+        return users.Select(x => mapper.Map<UserDto>(x));
     }
 }

@@ -6,13 +6,33 @@ namespace api.DTOs.User;
 
 public class UpdateUserDto
 {
+    // Names
+    [Required]
+    public string? FirstName { get; set; }
+    [Required]
+    public string? LastName { get; set; }
+    [Required]
     [EmailAddress]
     public string? Email { get; set; }
-    public string? PhoneNumber { get; set; }
+
+    // Identification parameters
+    [Required]
+    public char Gender { get; set; }
+    [Required]
     public DateOnly DateOfBirth { get; set; }
+    [Required]
+    public string? MaritalStatus { get; set; }
+    [Required]
     [DNI]
     public string? DNI { get; set; }
-    public string? Neighborhood { get; set; }
-    public string? MaritalStatus { get; set; }
+
+    // Contact
+    [Required]
+    public string? Address { get; set; }
+    public string? Landline { get; set; }   // Home's phone
+    public string? OfficePhoneNumber { get; set; }
+    public string? PhoneNumber { get; set; }
+
+    // Roles
     public List<string> Roles { get; set; } = [];
 }

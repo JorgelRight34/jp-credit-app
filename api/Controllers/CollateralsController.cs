@@ -17,6 +17,13 @@ namespace api.Controllers
             return Ok(collateral);
         }
 
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<IEnumerable<CollateralDto>>> GetById([FromRoute] int id)
+        {
+            var collateral = await collateralsRepository.GetByIdAsync(id);
+            return Ok(collateral);
+        }
+
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CollateralDto>>> GetAll([FromQuery] CollateralQuery query)
         {

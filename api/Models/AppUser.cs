@@ -8,15 +8,26 @@ namespace api.Models;
 
 public class AppUser : IdentityUser
 {
+    // Names
+    [Required]
+    public string? FirstName { get; set; }
+    [Required]
+    public string? LastName { get; set; }
+
+    // Identification parameters
     [Required]
     public char Gender { get; set; }
     [Required]
     public DateOnly DateOfBirth { get; set; }
     [Required]
+    public string? MaritalStatus { get; set; }
+    [Required]
     [DNI]
     public string? DNI { get; set; }
+
+    // Contact
     [Required]
-    public string? Neighborhood { get; set; }
-    [Required]
-    public string? MaritalStatus { get; set; }
+    public string? Address { get; set; }
+    public string? Landline { get; set; }   // Home's phone
+    public string? OfficePhone { get; set; }
 }

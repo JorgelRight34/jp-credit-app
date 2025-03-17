@@ -64,6 +64,15 @@ namespace api.Controllers
             return Ok(users);
         }
 
+        [HttpGet("role/{role}")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersInRole(
+            [FromRoute] string role, [FromQuery] string? query
+        )
+        {
+            var users = await usersRepository.GetUsersInRoleAsync(role, query);
+            return Ok(users);
+        }
+
         [HttpPut("{id}")]
         public async Task<ActionResult<AppUser?>> UpdateUser([FromBody] UpdateUserDto updateUserDto, [FromRoute] string id)
         {
