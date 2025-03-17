@@ -38,6 +38,17 @@ public class CollateralsRepository(ApplicationDbContext context, IMapper mapper)
     {
         var collaterals = context.Collaterals.ProjectTo<CollateralDto>(mapper.ConfigurationProvider).AsQueryable();
 
+        if (query.MinValue > 0)
+        {
+            if (query.MaxValue < query.MinValue) throw new Exception("Min value can't be greater than max value");
+            collaterals = collaterals.Where(x => x.Value >= query.MinValue);
+        }
+        if (query.MaxValue > 0)
+        {
+            if (query.MaxValue < query.MinValue) throw new Exception("Min value can't be greater than max value");
+            collaterals = collaterals.Where(x => x.Value <= query.MaxValue);
+        }
+
         if (!String.IsNullOrEmpty(query.Title))
         {
             collaterals = collaterals.Where(x => x.Title != null && x.Title.ToLower().Contains(query.Title.ToLower()));
@@ -68,11 +79,7 @@ public class CollateralsRepository(ApplicationDbContext context, IMapper mapper)
         var collateral = await context.Collaterals.FindAsync(id);
         if (collateral == null) return null;
 
-        collateral.AgreementType = updateCollateralDto.AgreementType;
-        collateral.Title = updateCollateralDto.Title;
-        collateral.Description = updateCollateralDto.Description;
-        collateral.Condition = updateCollateralDto.Condition;
-        collateral.DocumentUrl = updateCollateralDto.DocumentUrl;
+        mapper.Map(updateCollateralDto, collateral);
 
         await context.SaveChangesAsync();
 

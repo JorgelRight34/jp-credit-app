@@ -1,11 +1,9 @@
 using System;
 
-namespace api.DTOs.Collateral;
+namespace api.DTOs.AdjustmentNote;
 
-public class CollateralQuery
+public class AdjustmentNoteQuery
 {
-    public string? Title { get; set; }
-    public string? Description { get; set; }
     public decimal MinValue { get; set; }
     public decimal MaxValue { get; set; }
     public int Page { get; set; }

@@ -37,7 +37,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         .ProjectTo<TransactionDto>(mapper.ConfigurationProvider)
         .AsQueryable();
 
-        if (query.MinValue != 0)
+        if (query.MinValue > 0)
         {
             if (query.MaxValue < query.MinValue) throw new Exception("Min value can't be greater than max value");
             transactions = transactions.Where(
@@ -45,7 +45,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
             );
         }
 
-        if (query.MaxValue != 0)
+        if (query.MaxValue > 0)
         {
             if (query.MaxValue < query.MinValue) throw new Exception("Min value can't be greater than max value");
             transactions = transactions.Where(
@@ -77,10 +77,9 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
 
         if (transaction == null) return null;
 
-        transaction.CapitalValue = updateTransactionDto.CapitalValue;
-        transaction.InterestValue = updateTransactionDto.InterestValue;
-        transaction.Date = updateTransactionDto.Date;
-        transaction.Type = updateTransactionDto.Type;
+        mapper.Map(updateTransactionDto, transaction);
+
+        await context.SaveChangesAsync();
 
         return mapper.Map<TransactionDto>(transaction);
     }

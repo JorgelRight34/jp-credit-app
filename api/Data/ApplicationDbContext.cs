@@ -15,6 +15,7 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
     public DbSet<Loan> Loans { get; set; }
     public DbSet<Collateral> Collaterals { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
+    public DbSet<AdjustmentNote> AdjustmentNotes { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

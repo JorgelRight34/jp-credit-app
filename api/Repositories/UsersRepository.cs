@@ -56,14 +56,7 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
         var user = await userManager.FindByIdAsync(id);
         if (user == null) return null;
 
-        user.Email = updateUserDto.Email;
-        user.PhoneNumber = updateUserDto.PhoneNumber;
-        user.OfficePhone = updateUserDto.OfficePhoneNumber;
-        user.Address = updateUserDto.Address;
-        user.Landline = updateUserDto.Landline;
-        user.FirstName = updateUserDto.FirstName;
-        user.LastName = updateUserDto.LastName;
-        user.MaritalStatus = updateUserDto.MaritalStatus;
+        mapper.Map(updateUserDto, user);
 
         foreach (var role in updateUserDto.Roles)
         {
@@ -105,7 +98,6 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
         }
 
         var page = query.Page - 1 < 0 ? 0 : query.Page - 1;
-
         var result = await users.Skip(page * query.Limit).Take(query.Limit).ToListAsync();
 
         return result;

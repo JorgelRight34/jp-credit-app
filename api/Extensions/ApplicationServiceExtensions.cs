@@ -26,6 +26,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ICollateralsRepository, CollateralsRepository>();
         services.AddScoped<ITransactionsRepository, TransactionsRepository>();
         services.AddScoped<ILoansRepository, LoansRepository>();
+        services.AddScoped<IAdjustmentNotesRepository, AdjustmentNotesRepository>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
