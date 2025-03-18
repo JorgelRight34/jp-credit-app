@@ -1,17 +1,21 @@
 using System;
 using api.Data;
 using api.DTOs.User;
+using api.Extensions;
 using api.Interfaces;
 using api.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
-
 
 namespace api.Repositories;
 
-public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> userManager, RoleManager<IdentityRole> roleManager, IMapper mapper) : IUsersRepository
+public class UsersRepository(
+    ApplicationDbContext context,
+    UserManager<AppUser> userManager,
+    RoleManager<IdentityRole> roleManager,
+    IMapper mapper
+) : IUsersRepository
 {
     public async Task<UserDto?> CreateUserAsync(RegisterDto registerDto)
     {
@@ -44,7 +48,7 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
         {
             foreach (var error in result.Errors)
             {
-                Console.WriteLine(error);
+                throw new Exception(error.Description);
             }
         }
 
@@ -97,10 +101,7 @@ public class UsersRepository(ApplicationDbContext context, UserManager<AppUser> 
             );
         }
 
-        var page = query.Page - 1 < 0 ? 0 : query.Page - 1;
-        var result = await users.Skip(page * query.Limit).Take(query.Limit).ToListAsync();
-
-        return result;
+        return await users.PaginateAsync(query);
     }
 
     public async Task<IEnumerable<UserDto>> GetUsersInRoleAsync(string role, string? query)

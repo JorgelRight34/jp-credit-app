@@ -17,7 +17,21 @@ namespace api.Controllers
 
             var loan = await loansRepository.CreateAsync(createLoanDto);
 
+            return CreatedAtAction(nameof(GetById), new { id = loan.Id }, loan);
+        }
+
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<LoanDto>> GetById([FromRoute] int id)
+        {
+            var loan = await loansRepository.GetByIdAsync(id);
             return Ok(loan);
+        }
+
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<LoanDto>>> GetAll([FromQuery] LoanQuery query)
+        {
+            var loans = await loansRepository.GetAllAsync(query);
+            return Ok(loans);
         }
     }
 }

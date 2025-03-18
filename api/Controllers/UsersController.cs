@@ -1,4 +1,3 @@
-using api.DTOs;
 using api.DTOs.User;
 using api.Interfaces;
 using api.Models;
@@ -20,19 +19,11 @@ namespace api.Controllers
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            try
-            {
-                var createdUser = await usersRepository.CreateUserAsync(registerDto);
+            var createdUser = await usersRepository.CreateUserAsync(registerDto);
 
-                if (createdUser == null) return StatusCode(500, "Failed to create user");
+            if (createdUser == null) return StatusCode(500, "Failed to create user");
 
-                return Ok(createdUser);
-            }
-            catch (Exception e)
-            {
-                return BadRequest(e.Message);
-            }
-
+            return CreatedAtAction(nameof(GetUser), new { username = createdUser.Username }, createdUser);
         }
 
         [HttpPost("login")]
@@ -62,6 +53,15 @@ namespace api.Controllers
         {
             var users = await usersRepository.GetUsersAsync(query);
             return Ok(users);
+        }
+
+        [HttpGet("{username}")]
+        public async Task<ActionResult<UserDto>> GetUser([FromRoute] string username)
+        {
+            var user = await usersRepository.GetByUsernameAsync(username);
+            if (user == null) return NotFound();
+
+            return Ok(user);
         }
 
         [HttpGet("role/{role}")]

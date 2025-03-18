@@ -1,5 +1,6 @@
 using api.Data;
 using api.Extensions;
+using api.Middlewares;
 using api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -30,6 +31,13 @@ if (app.Environment.IsDevelopment())
         var logger = services.GetRequiredService<ILogger<Program>>();
         await Seed.SeedAdmins(userManager, roleManager, logger);
     }
+}
+
+app.UseMiddleware<ExceptionMiddleware>();
+
+if (app.Environment.IsDevelopment())
+{
+    app.UseCors(options => options.AllowAnyOrigin().AllowAnyHeader().AllowAnyMethod());
 }
 
 app.UseHttpsRedirection();

@@ -1,10 +1,11 @@
 using System;
 using api.Data;
 using api.DTOs.Loan;
+using api.Extensions;
 using api.Interfaces;
 using api.Models;
 using AutoMapper;
-using Microsoft.VisualBasic;
+using AutoMapper.QueryableExtensions;
 
 namespace api.Repositories;
 
@@ -12,31 +13,49 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
 {
     public async Task<LoanDto> CreateAsync(CreateLoanDto createLoanDto)
     {
-        // Convert to effective annual rate
-        double periodsPerYear = 12;
-        switch (createLoanDto.PaymentFrecuency)
-        {
-            case "M":
-                periodsPerYear = 12;
-                break;
-            case "A":
-                periodsPerYear = 1;
-                break;
-        }
-
-        double effectiveRate = Math.Pow(1 + ((double)createLoanDto.AnnualInterestRate / periodsPerYear), periodsPerYear) - 1;
-        Console.WriteLine(effectiveRate);
-
-        double annualPayment = Financial.Pmt(
-            effectiveRate,
-            createLoanDto.NumberOfPayments,
-            (double)-createLoanDto.DisbursedAmount
-        );
-
         var loan = mapper.Map<Loan>(createLoanDto);
-        loan.PaymentValue = (decimal)annualPayment;
+        loan.PrincipalBalance = loan.DisbursedAmount;
+        loan.AccruedInterest = 0;
+        loan.CalculatePaymentValue();
 
         await context.Loans.AddAsync(loan);
+        await context.SaveChangesAsync();
+
+        return mapper.Map<LoanDto>(loan);
+    }
+
+    public async Task<LoanDto?> DeleteAsync(int id)
+    {
+        var loan = await context.Loans.FindAsync(id);
+        if (loan == null) return null;
+
+        context.Loans.Remove(loan);
+        await context.SaveChangesAsync();
+
+        return mapper.Map<LoanDto>(loan);
+    }
+
+    public async Task<IEnumerable<LoanDto>> GetAllAsync(LoanQuery query)
+    {
+        var loans = context.Loans.ProjectTo<LoanDto>(mapper.ConfigurationProvider).AsQueryable();
+
+        return await loans.PaginateAsync(query);
+    }
+
+    public async Task<LoanDto?> GetByIdAsync(int id)
+    {
+        var loan = await context.Loans.FindAsync(id);
+        if (loan == null) return null;
+
+        return mapper.Map<LoanDto>(loan);
+    }
+
+    public async Task<LoanDto?> UpdateAsync(UpdateLoanDto updateLoanDto, int id)
+    {
+        var loan = await context.Loans.FindAsync(id);
+        if (loan == null) return null;
+
+        mapper.Map(updateLoanDto, loan);
         await context.SaveChangesAsync();
 
         return mapper.Map<LoanDto>(loan);

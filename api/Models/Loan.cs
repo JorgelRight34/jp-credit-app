@@ -16,10 +16,14 @@ public class Loan
     [Required]
     public decimal DisbursedAmount { get; set; }    // Monto desembolsado
     [Required]
+    public decimal PrincipalBalance { get; set; }
+    [Required]
+    public decimal AccruedInterest { get; set; }
+    [Required]
     public decimal AnnualInterestRate { get; set; }
     public int NumberOfPayments { get; set; }
     [Required]
-    public string? PaymentFrecuency { get; set; }
+    public decimal PaymentFrecuency { get; set; }
 
     // Details
     [Required]

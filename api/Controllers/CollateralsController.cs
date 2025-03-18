@@ -14,7 +14,7 @@ namespace api.Controllers
         public async Task<ActionResult<CollateralDto>> CreateCollateral([FromBody] CreateCollateralDto createCollateralDto)
         {
             var collateral = await collateralsRepository.CreateAsync(createCollateralDto);
-            return Ok(collateral);
+            return CreatedAtAction(nameof(GetById), new { id = collateral.Id }, collateral);
         }
 
         [HttpGet("{id:int}")]

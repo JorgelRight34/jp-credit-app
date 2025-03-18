@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using api.Dtos.Validators;
+using api.DTOs.Validators;
 
 namespace api.DTOs.User;
 
@@ -21,6 +22,7 @@ public class UserDto
 
     // Identification parameters
     [Required]
+    [Gender]
     public char Gender { get; set; }
     [Required]
     public int Age { get; set; }

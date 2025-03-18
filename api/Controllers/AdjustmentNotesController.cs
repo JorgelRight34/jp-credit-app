@@ -1,7 +1,6 @@
 using api.DTOs.AdjustmentNote;
 using api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -17,7 +16,13 @@ namespace api.Controllers
         )
         {
             var note = await adjustmentNotesRepository.CreateAsync(createAdjustmentNoteDto);
-            return Ok(note);
+            return CreatedAtAction(nameof(GetById), new { id = note.Id }, note);
+        }
+
+        [HttpGet("error")]
+        public ActionResult TestError()
+        {
+            throw new Exception("Testing error");
         }
 
         [HttpGet("{id:int}")]

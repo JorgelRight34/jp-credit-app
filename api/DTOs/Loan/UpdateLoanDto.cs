@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace api.DTOs.Loan;
 
-public class CreateLoanDto
+public class UpdateLoanDto
 {
     // Loan details
     [Required]
@@ -19,11 +19,5 @@ public class CreateLoanDto
     [Required]
     public DateOnly StartDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
-    public string Status { get; set; } = "Pending";
-
-    // Relationships
-    public string? LoanOfficerId { get; set; }
-    [Required]
-    public string? ClientId { get; set; }
-    public int? CollateralId { get; set; }
+    public string? Status { get; set; }
 }

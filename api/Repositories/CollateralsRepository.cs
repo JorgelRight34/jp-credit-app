@@ -1,6 +1,7 @@
 using System;
 using api.Data;
 using api.DTOs.Collateral;
+using api.Extensions;
 using api.Interfaces;
 using api.Models;
 using AutoMapper;
@@ -36,34 +37,40 @@ public class CollateralsRepository(ApplicationDbContext context, IMapper mapper)
 
     public async Task<IEnumerable<CollateralDto>> GetAllAsync(CollateralQuery query)
     {
-        var collaterals = context.Collaterals.ProjectTo<CollateralDto>(mapper.ConfigurationProvider).AsQueryable();
+        var collaterals = context.Collaterals
+        .ProjectTo<CollateralDto>(mapper.ConfigurationProvider)
+        .AsQueryable();
 
         if (query.MinValue > 0)
         {
-            if (query.MaxValue < query.MinValue) throw new Exception("Min value can't be greater than max value");
+            if (query.MaxValue < query.MinValue) throw new Exception(
+                "Min value can't be greater than max value"
+            );
             collaterals = collaterals.Where(x => x.Value >= query.MinValue);
         }
         if (query.MaxValue > 0)
         {
-            if (query.MaxValue < query.MinValue) throw new Exception("Min value can't be greater than max value");
+            if (query.MaxValue < query.MinValue) throw new Exception(
+                "Min value can't be greater than max value"
+            );
             collaterals = collaterals.Where(x => x.Value <= query.MaxValue);
         }
 
         if (!String.IsNullOrEmpty(query.Title))
         {
-            collaterals = collaterals.Where(x => x.Title != null && x.Title.ToLower().Contains(query.Title.ToLower()));
+            collaterals = collaterals.Where(
+                x => x.Title != null && x.Title.ToLower().Contains(query.Title.ToLower())
+            );
         }
 
         if (!String.IsNullOrEmpty(query.Description))
         {
-            collaterals = collaterals.Where(x => x.Description != null && x.Description.ToLower().Contains(query.Description.ToLower()));
+            collaterals = collaterals.Where(
+                x => x.Description != null && x.Description.ToLower().Contains(query.Description.ToLower())
+            );
         }
 
-        var page = query.Page - 1 < 0 ? 0 : query.Page - 1;
-        collaterals = collaterals.Skip(page * query.Limit).Take(query.Limit);
-        var result = await collaterals.ToListAsync();
-
-        return result;
+        return await collaterals.PaginateAsync(query);
     }
 
     public async Task<CollateralDto?> GetByIdAsync(int id)

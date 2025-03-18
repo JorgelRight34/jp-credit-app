@@ -9,9 +9,7 @@ public class UpdateTransactionDto
     [MaxLength(10)]
     public string? Type { get; set; }
     [Required]
-    public decimal CapitalValue { get; set; }
-    [Required]
-    public decimal InterestValue { get; set; }
+    public decimal Value { get; set; }
     [Required]
     public int LoanId { get; set; }
     [Required]

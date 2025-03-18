@@ -13,7 +13,7 @@ namespace api.Controllers
         public async Task<ActionResult<TransactionDto>> Create([FromBody] CreateTransactionDto createTransactionDto)
         {
             var transaction = await transactionsRepository.CreateAsync(createTransactionDto);
-            return Ok(transaction);
+            return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, transaction);
         }
 
         [HttpGet("{id:int}")]
