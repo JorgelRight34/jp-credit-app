@@ -16,6 +16,7 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
     public DbSet<Collateral> Collaterals { get; set; }
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<AdjustmentNote> AdjustmentNotes { get; set; }
+    public DbSet<Photo> Photos { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

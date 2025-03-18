@@ -1,5 +1,6 @@
 using System;
 using api.Data;
+using api.DTOs;
 using api.DTOs.User;
 using api.Extensions;
 using api.Interfaces;
@@ -14,7 +15,8 @@ public class UsersRepository(
     ApplicationDbContext context,
     UserManager<AppUser> userManager,
     RoleManager<IdentityRole> roleManager,
-    IMapper mapper
+    IMapper mapper,
+    IPhotoService photoService
 ) : IUsersRepository
 {
     public async Task<UserDto?> CreateUserAsync(RegisterDto registerDto)
@@ -108,5 +110,23 @@ public class UsersRepository(
     {
         var users = await userManager.GetUsersInRoleAsync(role);
         return users.Select(x => mapper.Map<UserDto>(x));
+    }
+
+    public async Task<PhotoDto> AddUserPhotoAsync(IFormFile file, AppUser user)
+    {
+        var result = await photoService.AddPhotoAsync(file);
+
+        var photo = new Photo
+        {
+            Url = result.SecureUrl.AbsoluteUri,
+            PublicId = result.PublicId
+        };
+
+        user.Photo = photo;
+
+        await context.Photos.AddAsync(photo);
+        await context.SaveChangesAsync();
+
+        return mapper.Map<PhotoDto>(photo);
     }
 }

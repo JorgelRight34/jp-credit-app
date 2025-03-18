@@ -1,3 +1,5 @@
+using api.Data;
+using api.DTOs;
 using api.DTOs.User;
 using api.Interfaces;
 using api.Models;
@@ -11,7 +13,8 @@ namespace api.Controllers
     public class UsersController(
         IUsersRepository usersRepository,
         UserManager<AppUser> userManager,
-        ITokenService tokenService
+        ITokenService tokenService,
+        IPhotoService photoService
     ) : BaseApiController
     {
         [HttpPost("register")]
@@ -89,6 +92,17 @@ namespace api.Controllers
             if (user == null) return NotFound();
 
             return NoContent();
+        }
+
+        [HttpPost("add-photo")]
+        public async Task<ActionResult<PhotoDto>> CreatePhoto([FromForm] IFormFile file, [FromForm] string username)
+        {
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null) return BadRequest("User can't be found");
+
+            var photo = await usersRepository.AddUserPhotoAsync(file, user);
+
+            return Ok(photo);
         }
     }
 }

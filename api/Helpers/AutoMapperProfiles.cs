@@ -1,4 +1,5 @@
 using System;
+using api.DTOs;
 using api.DTOs.AdjustmentNote;
 using api.DTOs.Collateral;
 using api.DTOs.Loan;
@@ -42,5 +43,8 @@ public class AutoMapperProfiles : Profile
         CreateMap<CreateAdjustmentNoteDto, AdjustmentNote>();
         CreateMap<AdjustmentNote, AdjustmentNoteDto>();
         CreateMap<UpdateAdjustmentNoteDto, AdjustmentNote>();
+
+        // Photo
+        CreateMap<Photo, PhotoDto>();
     }
 }

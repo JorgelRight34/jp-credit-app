@@ -1,4 +1,5 @@
 using System;
+using api.DTOs;
 using api.DTOs.User;
 using api.Models;
 
@@ -6,6 +7,7 @@ namespace api.Interfaces;
 
 public interface IUsersRepository
 {
+    Task<PhotoDto> AddUserPhotoAsync(IFormFile file, AppUser user);
     Task<UserDto?> CreateUserAsync(RegisterDto registerDto);
     Task<UserDto?> DeleteUserAsync(string id);
     Task<UserDto?> GetByUsernameAsync(string username);

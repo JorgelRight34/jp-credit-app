@@ -1,5 +1,6 @@
 using System;
 using api.Data;
+using api.Helpers;
 using api.Interfaces;
 using api.Models;
 using api.Repositories;
@@ -27,8 +28,11 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ITransactionsRepository, TransactionsRepository>();
         services.AddScoped<ILoansRepository, LoansRepository>();
         services.AddScoped<IAdjustmentNotesRepository, AdjustmentNotesRepository>();
+        services.AddScoped<IPhotoService, PhotoService>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+        services.Configure<CloudinarySettings>(configuration.GetSection("CloudinarySettings"));
 
         services.AddCors();
 

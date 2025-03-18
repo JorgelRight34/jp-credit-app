@@ -21,6 +21,10 @@ public class Collateral
     public string? DocumentUrl { get; set; }
     [Required]
     public string? AppUserId { get; set; }
-    public AppUser? AppUser { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+
+    // Navigation Properties
+    [ForeignKey("AppUserId")]
+    public AppUser? AppUser { get; set; }
+    public List<Photo>? Photos { get; set; }
 }

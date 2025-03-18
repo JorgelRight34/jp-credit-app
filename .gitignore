@@ -1,2 +1,2 @@
-**/appsettings.json
-**/appsettings.Development.json
+api/appsettings.json
+api/appsettings.Development.json

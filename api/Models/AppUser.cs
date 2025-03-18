@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using api.Dtos.Validators;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -24,10 +25,15 @@ public class AppUser : IdentityUser
     [Required]
     [DNI]
     public string? DNI { get; set; }
+    public int? PhotoId { get; set; }
 
     // Contact
     [Required]
     public string? Address { get; set; }
     public string? Landline { get; set; }   // Home's phone
     public string? OfficePhone { get; set; }
+
+    // Navigation properties
+    [ForeignKey("PhotoId")]
+    public Photo? Photo { get; set; }
 }

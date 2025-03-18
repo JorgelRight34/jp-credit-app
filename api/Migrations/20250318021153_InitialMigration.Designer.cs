@@ -11,8 +11,8 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20250317021004_UpdatePaymentValue")]
-    partial class UpdatePaymentValue
+    [Migration("20250318021153_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -174,6 +174,31 @@ namespace api.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
+            modelBuilder.Entity("api.Models.AdjustmentNote", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateOnly>("Date")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Description")
+                        .HasColumnType("TEXT");
+
+                    b.Property<int>("LoanId")
+                        .HasColumnType("INTEGER");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("LoanId");
+
+                    b.ToTable("AdjustmentNotes");
+                });
+
             modelBuilder.Entity("api.Models.AppUser", b =>
                 {
                     b.Property<string>("Id")
@@ -248,6 +273,9 @@ namespace api.Migrations
                     b.Property<bool>("PhoneNumberConfirmed")
                         .HasColumnType("INTEGER");
 
+                    b.Property<int>("PhotoId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
@@ -269,6 +297,8 @@ namespace api.Migrations
                     b.HasIndex("NormalizedUserName")
                         .IsUnique()
                         .HasDatabaseName("UserNameIndex");
+
+                    b.HasIndex("PhotoId");
 
                     b.ToTable("AspNetUsers", (string)null);
                 });
@@ -324,10 +354,13 @@ namespace api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("Amount")
+                    b.Property<decimal>("AccruedInterest")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("AnnualInterestRate")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("ApprovedAmount")
                         .HasColumnType("TEXT");
 
                     b.Property<string>("ClientId")
@@ -355,10 +388,13 @@ namespace api.Migrations
                     b.Property<int>("NumberOfPayments")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int>("PaymentFrecuency")
-                        .HasColumnType("INTEGER");
+                    b.Property<decimal>("PaymentFrecuency")
+                        .HasColumnType("TEXT");
 
                     b.Property<decimal>("PaymentValue")
+                        .HasColumnType("TEXT");
+
+                    b.Property<decimal>("PrincipalBalance")
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("StartDate")
@@ -380,6 +416,35 @@ namespace api.Migrations
                     b.HasIndex("LoanOfficerId");
 
                     b.ToTable("Loans");
+                });
+
+            modelBuilder.Entity("api.Models.Photo", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int?>("CollateralId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<string>("PublicId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("UserId")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CollateralId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Photos");
                 });
 
             modelBuilder.Entity("api.Models.Transaction", b =>
@@ -469,6 +534,28 @@ namespace api.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("api.Models.AdjustmentNote", b =>
+                {
+                    b.HasOne("api.Models.Loan", "Loan")
+                        .WithMany()
+                        .HasForeignKey("LoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Loan");
+                });
+
+            modelBuilder.Entity("api.Models.AppUser", b =>
+                {
+                    b.HasOne("api.Models.Photo", "Photo")
+                        .WithMany()
+                        .HasForeignKey("PhotoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Photo");
+                });
+
             modelBuilder.Entity("api.Models.Collateral", b =>
                 {
                     b.HasOne("api.Models.AppUser", "AppUser")
@@ -503,6 +590,21 @@ namespace api.Migrations
                     b.Navigation("LoanOfficer");
                 });
 
+            modelBuilder.Entity("api.Models.Photo", b =>
+                {
+                    b.HasOne("api.Models.Collateral", "Collateral")
+                        .WithMany("Photos")
+                        .HasForeignKey("CollateralId");
+
+                    b.HasOne("api.Models.AppUser", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
+
+                    b.Navigation("Collateral");
+
+                    b.Navigation("User");
+                });
+
             modelBuilder.Entity("api.Models.Transaction", b =>
                 {
                     b.HasOne("api.Models.Loan", "Loan")
@@ -520,6 +622,11 @@ namespace api.Migrations
                     b.Navigation("Loan");
 
                     b.Navigation("Payer");
+                });
+
+            modelBuilder.Entity("api.Models.Collateral", b =>
+                {
+                    b.Navigation("Photos");
                 });
 #pragma warning restore 612, 618
         }

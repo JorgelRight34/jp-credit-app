@@ -20,8 +20,17 @@ public class Seed
         {
             var user = new AppUser
             {
-                UserName = email,
-                Email = email
+                UserName = "Jorge",
+                FirstName = "John",
+                Email = email,
+                LastName = "Doe",
+                Gender = 'M',
+                DateOfBirth = new DateOnly(1985, 7, 15),
+                MaritalStatus = "Single",
+                DNI = "1234567890",
+                Address = "123 Admin Street, City, Country",
+                Landline = "555-1234",
+                OfficePhone = "555-5678"
             };
 
             var result = await userManager.CreateAsync(user, "#Juan3:16Porquedetalmaneraamodiosalmundoque");
