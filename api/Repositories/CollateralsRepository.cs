@@ -6,11 +6,14 @@ using api.Interfaces;
 using api.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
-using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories;
 
-public class CollateralsRepository(ApplicationDbContext context, IMapper mapper) : ICollateralsRepository
+public class CollateralsRepository(
+    ApplicationDbContext context,
+    IMapper mapper,
+    IPhotoService photoService
+) : ICollateralsRepository
 {
     public async Task<CollateralDto> CreateAsync(CreateCollateralDto createCollateralDto)
     {
@@ -91,5 +94,27 @@ public class CollateralsRepository(ApplicationDbContext context, IMapper mapper)
         await context.SaveChangesAsync();
 
         return mapper.Map<CollateralDto>(collateral);
+    }
+
+    public async Task<CollateralDto> AddCollateralPhotoAsync(IFormFile file, Collateral collateral)
+    {
+        var result = await photoService.AddPhotoAsync(file);
+
+        var photo = new Photo
+        {
+            Url = result.SecureUrl.AbsoluteUri,
+            PublicId = result.PublicId
+        };
+
+        collateral.Photos.Add(photo);
+        await context.SaveChangesAsync();
+
+        return mapper.Map<CollateralDto>(collateral);
+    }
+
+    public async Task DeleteCollateralPhotoAsync(string publicId)
+    {
+        var result = await photoService.DeletePhotoAsync(publicId);
+        if (result.Result != "ok") throw new Exception(result.Result);
     }
 }

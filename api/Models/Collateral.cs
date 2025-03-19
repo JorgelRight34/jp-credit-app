@@ -26,5 +26,5 @@ public class Collateral
     // Navigation Properties
     [ForeignKey("AppUserId")]
     public AppUser? AppUser { get; set; }
-    public List<Photo>? Photos { get; set; }
+    public List<Photo> Photos { get; set; } = [];
 }

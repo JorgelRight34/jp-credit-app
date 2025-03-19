@@ -25,5 +25,4 @@ public class CreateLoanDto
     public string? LoanOfficerId { get; set; }
     [Required]
     public string? ClientId { get; set; }
-    public int? CollateralId { get; set; }
 }

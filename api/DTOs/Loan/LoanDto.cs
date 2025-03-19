@@ -30,6 +30,8 @@ public class LoanDto
     [Required]
     public decimal PaymentValue { get; set; }
     public DateOnly StartDate { get; set; }
+    public DateOnly NextPaymentDate { get; set; }
+    public DateOnly LastPaymentDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
     public string Status { get; set; } = "Pending";
 

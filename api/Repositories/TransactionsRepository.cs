@@ -11,11 +11,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories;
 
-public class TransactionsRepository(
-    ApplicationDbContext context,
-    IAdjustmentNotesRepository adjustmentNotesRepository,
-    IMapper mapper
-) : ITransactionsRepository
+public class TransactionsRepository(ApplicationDbContext context, IMapper mapper) : ITransactionsRepository
 {
     public async Task<TransactionDto> CreateAsync(CreateTransactionDto createTransactionDto)
     {
@@ -25,10 +21,20 @@ public class TransactionsRepository(
         var loan = await context.Loans.FindAsync(createTransactionDto.LoanId);
         if (loan == null) throw new Exception("Loan doesn't exist");
 
+        // Get payment dates
+        var payday = loan.NextPaymentDate;
+        var principalBalance = loan.PrincipalBalance;
+
+        // Check if transaction is 5 days late from the payday
+        if (transaction.Date >= payday.AddDays(createTransactionDto.MaxiumDelayDays))
+        {
+            principalBalance = principalBalance + principalBalance * createTransactionDto.PenaltyRate;
+        }
+
         // Get monthly interest 
         var monthlyInterest = loan.AnnualInterestRate / loan.PaymentFrecuency;
         // Get interests I = balance * monthly interst
-        var interests = loan.PrincipalBalance * monthlyInterest;
+        var interests = principalBalance * monthlyInterest;
         // Get capital, capital = P - I
         var capital = createTransactionDto.Value - interests;
 
@@ -38,38 +44,43 @@ public class TransactionsRepository(
         transaction.InterestValue = interests;
         transaction.CapitalValue = capital;
 
-        // Calculate the new payment value (A)
-        var previousPaymentValue = loan.PaymentValue;
-        loan.NumberOfPayments -= 1;
-        loan.CalculatePaymentValue();
+        // Update next payment date
+        var days = (int)(loan.PaymentFrecuency / 12) * 30;
+        loan.NextPaymentDate = loan.NextPaymentDate.AddDays(days);
 
-        // Generate credit note if neccesary
-        decimal tolerance = 0.5M;
-        if (createTransactionDto.Value - loan.PaymentValue > tolerance)
-        {
-            var noteDto = new CreateAdjustmentNoteDto
-            {
-                Description = "Description",
-                Amount = previousPaymentValue,
-                Date = DateOnly.FromDateTime(DateTime.UtcNow),
-                LoanId = loan.Id
-            };
-            await adjustmentNotesRepository.CreateAsync(noteDto);
-        }
+        // Calculate the new payment value (A)
+        loan.NumberOfPayments -= 1;
+        loan.CalculatePaymentValue(loan.PrincipalBalance);
 
         await context.Transactions.AddAsync(transaction);
-        await context.SaveChangesAsync();
+        await SaveChanges();
 
         return mapper.Map<TransactionDto>(transaction);
     }
 
     public async Task<TransactionDto?> DeleteAsync(int id)
     {
+        // Get transaction
         var transaction = await context.Transactions.FindAsync(id);
         if (transaction == null) return null;
 
+        // Get loan
+        var loan = await context.Loans.FindAsync(transaction.LoanId);
+        if (loan == null) throw new Exception("Invalid loanId for transaction");
+
+        // Update loan accrued interest and principal balance
+        loan.AccruedInterest -= transaction.InterestValue;
+        loan.PrincipalBalance += transaction.CapitalValue;
+        // Update next payment date
+        var days = (int)(loan.PaymentFrecuency / 12) * 30;
+        loan.NextPaymentDate = loan.NextPaymentDate.AddDays(-days);
+
+        loan.NumberOfPayments += 1;
+        loan.CalculatePaymentValue(loan.PrincipalBalance);
+
+        // Remove transaction
         context.Transactions.Remove(transaction);
-        await context.SaveChangesAsync();
+        await SaveChanges();
 
         return mapper.Map<TransactionDto>(transaction);
     }
@@ -101,25 +112,20 @@ public class TransactionsRepository(
 
     public async Task<TransactionDto?> GetByIdAsync(int id)
     {
-        var transaction = await context.Transactions
-        .Include(x => x.Payer)
-        .FirstOrDefaultAsync(x => x.Id == id);
+        var transaction = await context.Transactions.FindAsync(id);
 
         return mapper.Map<TransactionDto>(transaction);
     }
 
-    public async Task<TransactionDto?> UpdateAsync(UpdateTransactionDto updateTransactionDto, int id)
+    public async Task SaveChanges()
     {
-        var transaction = await context.Transactions
-        .Include(x => x.Payer)
-        .FirstOrDefaultAsync(x => x.Id == id);
-
-        if (transaction == null) return null;
-
-        mapper.Map(updateTransactionDto, transaction);
-
-        await context.SaveChangesAsync();
-
-        return mapper.Map<TransactionDto>(transaction);
+        try
+        {
+            await context.SaveChangesAsync();
+        }
+        catch (DbUpdateConcurrencyException)
+        {
+            throw new Exception("Another transaction was being made at the same time for this loan, try again.");
+        }
     }
 }

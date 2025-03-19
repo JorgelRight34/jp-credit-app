@@ -5,6 +5,7 @@ using api.Interfaces;
 using api.Models;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 
 namespace api.Services;
@@ -44,8 +45,21 @@ public class PhotoService : IPhotoService
 
     public async Task<DeletionResult> DeletePhotoAsync(string publicId)
     {
-        var deleteParams = new DeletionParams(publicId);
 
-        return await _cloudinary.DestroyAsync(deleteParams);
+        var deleteParams = new DeletionParams($"jp-credit-app/{publicId}");
+        var result = await _cloudinary.DestroyAsync(deleteParams);
+
+        // Delete photo from the database if result is successful
+        if (result.Result == "ok")
+        {
+            var photo = await _context.Photos.FirstOrDefaultAsync(x => x.PublicId == publicId);
+            if (photo != null)
+            {
+                _context.Photos.Remove(photo);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        return result;
     }
 }

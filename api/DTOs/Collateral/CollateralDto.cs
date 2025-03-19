@@ -20,4 +20,5 @@ public class CollateralDto
     [Required]
     public string? ClientId { get; set; }
 
+    public List<PhotoDto> Photos { get; set; } = [];
 }

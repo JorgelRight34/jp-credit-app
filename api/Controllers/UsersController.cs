@@ -13,20 +13,63 @@ namespace api.Controllers
     public class UsersController(
         IUsersRepository usersRepository,
         UserManager<AppUser> userManager,
-        ITokenService tokenService,
-        IPhotoService photoService
+        ITokenService tokenService
     ) : BaseApiController
     {
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetAll([FromQuery] UserQuery query)
+        {
+            var users = await usersRepository.GetAllAsync(query);
+            return Ok(users);
+        }
+
+        [HttpGet("role/{role}")]
+        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersInRole(
+            [FromRoute] string role, [FromQuery] string? query
+        )
+        {
+            var users = await usersRepository.GetUsersInRoleAsync(role, query);
+            return Ok(users);
+        }
+
+
+        [HttpGet("{username}")]
+        public async Task<ActionResult<UserDto>> GetByUsername([FromRoute] string username)
+        {
+            var user = await usersRepository.GetByUsernameAsync(username);
+            if (user == null) return NotFound();
+
+            return Ok(user);
+        }
+
         [HttpPost("register")]
-        public async Task<ActionResult<UserDto>> CreateUser(RegisterDto registerDto)
+        public async Task<ActionResult<UserDto>> Create(RegisterDto registerDto)
         {
             if (!ModelState.IsValid) return BadRequest();
 
-            var createdUser = await usersRepository.CreateUserAsync(registerDto);
+            var createdUser = await usersRepository.CreateAsync(registerDto);
 
             if (createdUser == null) return StatusCode(500, "Failed to create user");
 
-            return CreatedAtAction(nameof(GetUser), new { username = createdUser.Username }, createdUser);
+            return CreatedAtAction(nameof(GetByUsername), new { username = createdUser.Username }, createdUser);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<ActionResult<AppUser?>> UpdateUser([FromBody] UpdateUserDto updateUserDto, [FromRoute] string id)
+        {
+            var user = await usersRepository.UpdateAsync(updateUserDto, id);
+            if (user == null) return NotFound();
+
+            return Ok(user);
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteUser([FromRoute] string id)
+        {
+            var user = await usersRepository.DeleteAsync(id);
+            if (user == null) return NotFound();
+
+            return NoContent();
         }
 
         [HttpPost("login")]
@@ -51,58 +94,29 @@ namespace api.Controllers
             return Unauthorized();
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsers([FromQuery] UserQuery query)
-        {
-            var users = await usersRepository.GetUsersAsync(query);
-            return Ok(users);
-        }
 
-        [HttpGet("{username}")]
-        public async Task<ActionResult<UserDto>> GetUser([FromRoute] string username)
-        {
-            var user = await usersRepository.GetByUsernameAsync(username);
-            if (user == null) return NotFound();
+        // Photos
 
-            return Ok(user);
-        }
-
-        [HttpGet("role/{role}")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersInRole(
-            [FromRoute] string role, [FromQuery] string? query
-        )
-        {
-            var users = await usersRepository.GetUsersInRoleAsync(role, query);
-            return Ok(users);
-        }
-
-        [HttpPut("{id}")]
-        public async Task<ActionResult<AppUser?>> UpdateUser([FromBody] UpdateUserDto updateUserDto, [FromRoute] string id)
-        {
-            var user = await usersRepository.UpdateUserAsync(updateUserDto, id);
-            if (user == null) return NotFound();
-
-            return Ok(user);
-        }
-
-        [HttpDelete("{id}")]
-        public async Task<ActionResult> DeleteUser([FromRoute] string id)
-        {
-            var user = await usersRepository.DeleteUserAsync(id);
-            if (user == null) return NotFound();
-
-            return NoContent();
-        }
-
-        [HttpPost("add-photo")]
-        public async Task<ActionResult<PhotoDto>> CreatePhoto([FromForm] IFormFile file, [FromForm] string username)
+        [HttpPost("{username}/photo")]
+        public async Task<ActionResult<UserDto>> CreatePhoto([FromForm] IFormFile file, [FromRoute] string username)
         {
             var user = await userManager.FindByNameAsync(username);
             if (user == null) return BadRequest("User can't be found");
 
-            var photo = await usersRepository.AddUserPhotoAsync(file, user);
+            var userWithPhoto = await usersRepository.AddUserPhotoAsync(file, user);
 
-            return Ok(photo);
+            return CreatedAtAction(nameof(GetByUsername), new { username = userWithPhoto.Username }, userWithPhoto);
+        }
+
+        [HttpDelete("{username}/photo/{photoId}")]
+        public async Task<ActionResult> DeletePhoto([FromRoute] string username, [FromRoute] string photoId)
+        {
+            var user = await userManager.FindByNameAsync(username);
+            if (user == null) return BadRequest("User doesn't exist");
+
+            await usersRepository.DeleteUserPhotoAsync(photoId);
+
+            return NoContent();
         }
     }
 }

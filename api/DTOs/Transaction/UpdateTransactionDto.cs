@@ -11,6 +11,10 @@ public class UpdateTransactionDto
     [Required]
     public decimal Value { get; set; }
     [Required]
+    public decimal PenaltyRate { get; set; } = 0.05M;
+    [Required]
+    public int MaxiumDelayDays { get; set; } = 5;
+    [Required]
     public int LoanId { get; set; }
     [Required]
     public DateOnly? Date { get; set; } = DateOnly.FromDateTime(DateTime.UtcNow);

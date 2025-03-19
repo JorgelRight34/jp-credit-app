@@ -1,3 +1,4 @@
+using api.Data;
 using api.DTOs.AdjustmentNote;
 using api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
@@ -7,22 +8,17 @@ namespace api.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public class AdjustmentNotesController(
-        IAdjustmentNotesRepository adjustmentNotesRepository
+        IAdjustmentNotesRepository adjustmentNotesRepository,
+        ApplicationDbContext context
     ) : BaseApiController
     {
-        [HttpPost]
-        public async Task<ActionResult<AdjustmentNoteDto>> Create(
-            [FromBody] CreateAdjustmentNoteDto createAdjustmentNoteDto
-        )
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<AdjustmentNoteDto>>> GetAll(
+          [FromQuery] AdjustmentNoteQuery query
+      )
         {
-            var note = await adjustmentNotesRepository.CreateAsync(createAdjustmentNoteDto);
-            return CreatedAtAction(nameof(GetById), new { id = note.Id }, note);
-        }
-
-        [HttpGet("error")]
-        public ActionResult TestError()
-        {
-            throw new Exception("Testing error");
+            var notes = await adjustmentNotesRepository.GetAllAsync(query);
+            return Ok(notes);
         }
 
         [HttpGet("{id:int}")]
@@ -34,13 +30,16 @@ namespace api.Controllers
             return Ok(note);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<AdjustmentNoteDto>>> GetAll(
-            [FromQuery] AdjustmentNoteQuery query
+        [HttpPost]
+        public async Task<ActionResult<AdjustmentNoteDto>> Create(
+            [FromBody] CreateAdjustmentNoteDto createAdjustmentNoteDto
         )
         {
-            var notes = await adjustmentNotesRepository.GetAllAsync(query);
-            return Ok(notes);
+            var loan = await context.Loans.FindAsync(createAdjustmentNoteDto.LoanId);
+            if (loan == null) return BadRequest("Loan doesn't exist");
+
+            var note = await adjustmentNotesRepository.CreateAsync(createAdjustmentNoteDto);
+            return CreatedAtAction(nameof(GetById), new { id = note.Id }, note);
         }
 
         [HttpPut("{id:int}")]

@@ -1,14 +1,19 @@
 using System;
+using api.DTOs;
 using api.DTOs.Collateral;
+using api.Models;
 
 
 namespace api.Interfaces;
 
 public interface ICollateralsRepository
 {
-    public Task<CollateralDto> CreateAsync(CreateCollateralDto createCollateralDto);
-    public Task<CollateralDto?> DeleteAsync(int id);
-    public Task<IEnumerable<CollateralDto>> GetAllAsync(CollateralQuery collateralQuery);
-    public Task<CollateralDto?> GetByIdAsync(int id);
-    public Task<CollateralDto?> UpdateAsync(UpdateCollateralDto updateCollateralDto, int id);
+
+    Task<CollateralDto> AddCollateralPhotoAsync(IFormFile file, Collateral collateral);
+    Task<CollateralDto> CreateAsync(CreateCollateralDto createCollateralDto);
+    Task<CollateralDto?> DeleteAsync(int id);
+    Task DeleteCollateralPhotoAsync(string publicId);
+    Task<IEnumerable<CollateralDto>> GetAllAsync(CollateralQuery collateralQuery);
+    Task<CollateralDto?> GetByIdAsync(int id);
+    Task<CollateralDto?> UpdateAsync(UpdateCollateralDto updateCollateralDto, int id);
 }

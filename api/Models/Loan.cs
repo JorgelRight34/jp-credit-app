@@ -23,12 +23,14 @@ public class Loan
     public decimal AnnualInterestRate { get; set; }
     public int NumberOfPayments { get; set; }
     [Required]
-    public decimal PaymentFrecuency { get; set; }
+    public decimal PaymentFrecuency { get; set; }   // Times on a year it repeats, e.g a month = 1, semester = 6
 
     // Details
     [Required]
     public decimal PaymentValue { get; set; }
     public DateOnly StartDate { get; set; }
+    public DateOnly LastPaymentDate { get; set; }
+    public DateOnly NextPaymentDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
     public string Status { get; set; } = "Pending";
 
@@ -36,16 +38,16 @@ public class Loan
     [Required]
     public string? ClientId { get; set; }
     public string? LoanOfficerId { get; set; }
-    public int? CollateralId { get; set; }
 
     // Navigation properties
     [ForeignKey("ClientId")]
     public AppUser? Client { get; set; }
     [ForeignKey("LoanOfficerId")]
     public AppUser? LoanOfficer { get; set; }
-    public Collateral? Collateral { get; set; }
+    public List<Collateral>? Collateral { get; set; }
 
     // Audit fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    [ConcurrencyCheck]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
 }

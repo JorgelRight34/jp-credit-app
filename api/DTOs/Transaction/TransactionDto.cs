@@ -15,6 +15,7 @@ public class TransactionDto
     public decimal CapitalValue { get; set; }
     [Required]
     public decimal InterestValue { get; set; }
+    public decimal Delinquency { get; set; }
     [Required]
     public int LoanId { get; set; }
     [Required]

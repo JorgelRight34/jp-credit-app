@@ -15,12 +15,13 @@ public class Transaction
     public decimal CapitalValue { get; set; }
     [Required]
     public decimal InterestValue { get; set; }
+    public decimal Delinquency { get; set; }
     [Required]
     public int LoanId { get; set; }
     [Required]
     public string? PayerId { get; set; }
     [Required]
-    public DateOnly? Date { get; set; }
+    public DateOnly Date { get; set; }
     public Loan? Loan { get; set; }
     [ForeignKey("PayerId")]
     public AppUser? Payer { get; set; }

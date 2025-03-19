@@ -7,12 +7,14 @@ namespace api.Interfaces;
 
 public interface IUsersRepository
 {
-    Task<PhotoDto> AddUserPhotoAsync(IFormFile file, AppUser user);
-    Task<UserDto?> CreateUserAsync(RegisterDto registerDto);
-    Task<UserDto?> DeleteUserAsync(string id);
+    Task<UserDto> AddUserPhotoAsync(IFormFile file, AppUser user);
+    Task<UserDto?> CreateAsync(RegisterDto registerDto);
+    Task DeleteUserPhotoAsync(string publicId);
+    Task<UserDto?> DeleteAsync(string id);
+    Task<UserDto?> GetByIdAsync(string id);
     Task<UserDto?> GetByUsernameAsync(string username);
-    Task<IEnumerable<UserDto>> GetUsersAsync(UserQuery query);
+    Task<IEnumerable<UserDto>> GetAllAsync(UserQuery query);
     Task<IEnumerable<UserDto>> GetUsersInRoleAsync(string role, string? query);
-    Task<UserDto?> UpdateUserAsync(UpdateUserDto updateUserDto, string id);
+    Task<UserDto?> UpdateAsync(UpdateUserDto updateUserDto, string id);
 
 }

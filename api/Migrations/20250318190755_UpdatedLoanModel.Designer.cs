@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using api.Data;
 
@@ -10,9 +11,11 @@ using api.Data;
 namespace api.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250318190755_UpdatedLoanModel")]
+    partial class UpdatedLoanModel
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder.HasAnnotation("ProductVersion", "9.0.3");
@@ -381,13 +384,7 @@ namespace api.Migrations
                     b.Property<decimal>("DisbursedAmount")
                         .HasColumnType("TEXT");
 
-                    b.Property<DateOnly>("LastPaymentDate")
-                        .HasColumnType("TEXT");
-
                     b.Property<string>("LoanOfficerId")
-                        .HasColumnType("TEXT");
-
-                    b.Property<DateOnly>("NextPaymentDate")
                         .HasColumnType("TEXT");
 
                     b.Property<int>("NumberOfPayments")
@@ -410,7 +407,6 @@ namespace api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateTime>("UpdatedAt")
-                        .IsConcurrencyToken()
                         .HasColumnType("TEXT");
 
                     b.HasKey("Id");
@@ -461,9 +457,6 @@ namespace api.Migrations
                         .HasColumnType("TEXT");
 
                     b.Property<DateOnly>("Date")
-                        .HasColumnType("TEXT");
-
-                    b.Property<decimal>("Delinquency")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("InterestValue")

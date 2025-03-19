@@ -19,7 +19,7 @@ public class UsersRepository(
     IPhotoService photoService
 ) : IUsersRepository
 {
-    public async Task<UserDto?> CreateUserAsync(RegisterDto registerDto)
+    public async Task<UserDto?> CreateAsync(RegisterDto registerDto)
     {
         foreach (var role in registerDto.Roles)
         {
@@ -57,7 +57,7 @@ public class UsersRepository(
         return null;
     }
 
-    public async Task<UserDto?> UpdateUserAsync(UpdateUserDto updateUserDto, string id)
+    public async Task<UserDto?> UpdateAsync(UpdateUserDto updateUserDto, string id)
     {
         var user = await userManager.FindByIdAsync(id);
         if (user == null) return null;
@@ -74,7 +74,7 @@ public class UsersRepository(
         return mapper.Map<UserDto>(user);
     }
 
-    public async Task<UserDto?> DeleteUserAsync(string id)
+    public async Task<UserDto?> DeleteAsync(string id)
     {
         var user = await userManager.FindByIdAsync(id);
         if (user == null) return null;
@@ -91,7 +91,7 @@ public class UsersRepository(
         return mapper.Map<UserDto>(user);
     }
 
-    public async Task<IEnumerable<UserDto>> GetUsersAsync(UserQuery query)
+    public async Task<IEnumerable<UserDto>> GetAllAsync(UserQuery query)
     {
         var users = context.Users.ProjectTo<UserDto>(mapper.ConfigurationProvider).AsQueryable();
 
@@ -112,7 +112,7 @@ public class UsersRepository(
         return users.Select(x => mapper.Map<UserDto>(x));
     }
 
-    public async Task<PhotoDto> AddUserPhotoAsync(IFormFile file, AppUser user)
+    public async Task<UserDto> AddUserPhotoAsync(IFormFile file, AppUser user)
     {
         var result = await photoService.AddPhotoAsync(file);
 
@@ -122,11 +122,28 @@ public class UsersRepository(
             PublicId = result.PublicId
         };
 
+        // Delete previous user photo
+        if (user.Photo != null) await photoService.DeletePhotoAsync(user.Photo.PublicId!);
+
         user.Photo = photo;
 
         await context.Photos.AddAsync(photo);
         await context.SaveChangesAsync();
 
-        return mapper.Map<PhotoDto>(photo);
+        return mapper.Map<UserDto>(user);
+    }
+
+    public async Task DeleteUserPhotoAsync(string publicId)
+    {
+        var result = await photoService.DeletePhotoAsync($"jp-credit-app/{publicId}");
+        if (result.Result != "ok") throw new Exception(result.Result);
+    }
+
+    public async Task<UserDto?> GetByIdAsync(string id)
+    {
+        var user = await userManager.FindByIdAsync(id);
+        if (user == null) return null;
+
+        return mapper.Map<UserDto>(user);
     }
 }

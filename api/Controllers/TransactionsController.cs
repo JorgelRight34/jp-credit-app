@@ -1,19 +1,24 @@
 using api.DTOs.Transaction;
 using api.Interfaces;
+using api.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
-    public class TransactionsController(ITransactionsRepository transactionsRepository) : BaseApiController
+    public class TransactionsController(
+        ITransactionsRepository transactionsRepository,
+        UserManager<AppUser> userManager
+    ) : BaseApiController
     {
-        [HttpPost]
-        public async Task<ActionResult<TransactionDto>> Create([FromBody] CreateTransactionDto createTransactionDto)
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetAll([FromQuery] TransactionQuery query)
         {
-            var transaction = await transactionsRepository.CreateAsync(createTransactionDto);
-            return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, transaction);
+            var transactions = await transactionsRepository.GetAllAsync(query);
+            return Ok(transactions);
         }
 
         [HttpGet("{id:int}")]
@@ -25,20 +30,16 @@ namespace api.Controllers
             return Ok(transaction);
         }
 
-        [HttpGet]
-        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetAll([FromQuery] TransactionQuery query)
-        {
-            var transactions = await transactionsRepository.GetAllAsync(query);
-            return Ok(transactions);
-        }
-
-        [HttpPut("{id:int}")]
-        public async Task<ActionResult<TransactionDto>> Update(
-            [FromBody] UpdateTransactionDto updateTransactionDto, [FromRoute] int id
+        [HttpPost]
+        public async Task<ActionResult<TransactionDto>> Create(
+            [FromBody] CreateTransactionDto createTransactionDto
         )
         {
-            var transaction = await transactionsRepository.UpdateAsync(updateTransactionDto, id);
-            return Ok(transaction);
+            var user = await userManager.FindByIdAsync(createTransactionDto.PayerId!);
+            if (user == null) return BadRequest("User doesn't exist");
+
+            var transaction = await transactionsRepository.CreateAsync(createTransactionDto);
+            return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, transaction);
         }
 
         [HttpDelete("{id:int}")]

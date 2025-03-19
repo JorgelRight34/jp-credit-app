@@ -19,6 +19,7 @@ public class UserDto
     [Required]
     [EmailAddress]
     public string? Email { get; set; }
+    public PhotoDto? Photo { get; set; }
 
     // Identification parameters
     [Required]

@@ -32,8 +32,7 @@ public class AutoMapperProfiles : Profile
         // Transactions
         CreateMap<CreateTransactionDto, Transaction>();
         CreateMap<UpdateTransactionDto, Transaction>();
-        CreateMap<Transaction, TransactionDto>()
-        .ForMember(d => d.Payer, o => o.MapFrom(s => s.Payer));
+        CreateMap<Transaction, TransactionDto>();
 
         // Loans
         CreateMap<CreateLoanDto, Loan>();
@@ -45,6 +44,9 @@ public class AutoMapperProfiles : Profile
         CreateMap<UpdateAdjustmentNoteDto, AdjustmentNote>();
 
         // Photo
-        CreateMap<Photo, PhotoDto>();
+        CreateMap<Photo, PhotoDto>()
+        .ForMember(
+            d => d.PublicId, o => o.MapFrom(s => s.PublicId != null ? s.PublicId.Replace("jp-credit-app/", "") : "")
+        );
     }
 }

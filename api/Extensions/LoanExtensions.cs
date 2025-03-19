@@ -6,12 +6,12 @@ namespace api.Extensions;
 
 public static class LoanExtensions
 {
-    public static Loan CalculatePaymentValue(this Loan loan)
+    public static Loan CalculatePaymentValue(this Loan loan, decimal balance)
     {
         loan.PaymentValue = (decimal)Financial.Pmt(
             (double)(loan.AnnualInterestRate / loan.PaymentFrecuency),
             loan.NumberOfPayments,
-            (double)-loan.PrincipalBalance
+            (double)-balance
         );
 
         return loan;
