@@ -1,6 +1,5 @@
 using System;
 using api.Data;
-using api.DTOs.AdjustmentNote;
 using api.DTOs.Transaction;
 using api.Extensions;
 using api.Interfaces;
@@ -25,16 +24,16 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         var payday = loan.NextPaymentDate;
         var principalBalance = loan.PrincipalBalance;
 
-        // Check if transaction is 5 days late from the payday
+        // Check if transaction is late
         if (transaction.Date >= payday.AddDays(createTransactionDto.MaxiumDelayDays))
         {
             principalBalance = principalBalance + principalBalance * createTransactionDto.PenaltyRate;
         }
 
-        // Get monthly interest 
-        var monthlyInterest = loan.AnnualInterestRate / loan.PaymentFrecuency;
-        // Get interests I = balance * monthly interst
-        var interests = principalBalance * monthlyInterest;
+        // Get periodly interest 
+        var periodlyInterest = loan.AnnualInterestRate / loan.PaymentFrecuency;
+        // Get interests I = balance * periodly interest
+        var interests = principalBalance * periodlyInterest;
         // Get capital, capital = P - I
         var capital = createTransactionDto.Value - interests;
 
@@ -115,6 +114,26 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         var transaction = await context.Transactions.FindAsync(id);
 
         return mapper.Map<TransactionDto>(transaction);
+    }
+
+    public async Task<IEnumerable<TransactionDto>> GetLoanTransactions(int loanId)
+    {
+        var transactions = await context.Transactions
+            .ProjectTo<TransactionDto>(mapper.ConfigurationProvider)
+            .Where(x => x.LoanId == loanId)
+            .ToListAsync();
+
+        return transactions;
+    }
+
+    public async Task<IEnumerable<TransactionDto>> GetUserTransactions(string userId)
+    {
+        var transactions = await context.Transactions
+            .ProjectTo<TransactionDto>(mapper.ConfigurationProvider)
+            .Where(x => x.PayerId == userId)
+            .ToListAsync();
+
+        return transactions;
     }
 
     public async Task SaveChanges()

@@ -1,6 +1,7 @@
 using System;
 using api.Data;
 using api.DTOs.Loan;
+using api.DTOs.Transaction;
 using api.Extensions;
 using api.Interfaces;
 using api.Models;
@@ -13,6 +14,7 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
 {
     public async Task<LoanDto> CreateAsync(CreateLoanDto createLoanDto)
     {
+        // Create loan
         var loan = mapper.Map<Loan>(createLoanDto);
         loan.PrincipalBalance = loan.DisbursedAmount;
         loan.AccruedInterest = 0;

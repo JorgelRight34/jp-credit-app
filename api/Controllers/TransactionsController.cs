@@ -1,3 +1,4 @@
+using api.Data;
 using api.DTOs.Transaction;
 using api.Interfaces;
 using api.Models;
@@ -11,7 +12,7 @@ namespace api.Controllers
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public class TransactionsController(
         ITransactionsRepository transactionsRepository,
-        UserManager<AppUser> userManager
+        ApplicationDbContext context
     ) : BaseApiController
     {
         [HttpGet]
@@ -35,7 +36,7 @@ namespace api.Controllers
             [FromBody] CreateTransactionDto createTransactionDto
         )
         {
-            var user = await userManager.FindByIdAsync(createTransactionDto.PayerId!);
+            var user = await context.Users.FindAsync(createTransactionDto.PayerId!);
             if (user == null) return BadRequest("User doesn't exist");
 
             var transaction = await transactionsRepository.CreateAsync(createTransactionDto);
@@ -49,6 +50,28 @@ namespace api.Controllers
             if (transaction == null) return NotFound();
 
             return NoContent();
+        }
+
+        [HttpGet("users/{userId}")]
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetUserTransactions([FromRoute] string userId)
+        {
+            var user = await context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            var transactions = await transactionsRepository.GetUserTransactions(userId);
+
+            return Ok(transactions);
+        }
+
+        [HttpGet("loans/{loanId:int}")]
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> GetLoanTransactions([FromRoute] int loanId)
+        {
+            var loan = await context.Loans.FindAsync(loanId);
+            if (loan == null) return NotFound();
+
+            var transactions = await transactionsRepository.GetLoanTransactions(loanId);
+
+            return Ok(transactions);
         }
     }
 }

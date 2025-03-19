@@ -6,9 +6,6 @@ namespace api.DTOs.Transaction;
 public class CreateTransactionDto
 {
     [Required]
-    [MaxLength(10)]
-    public string? Type { get; set; }
-    [Required]
     public decimal Value { get; set; }
     [Required]
     public decimal PenaltyRate { get; set; } = 0.05M;

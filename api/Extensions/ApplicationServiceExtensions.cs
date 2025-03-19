@@ -29,6 +29,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ILoansRepository, LoansRepository>();
         services.AddScoped<IAdjustmentNotesRepository, AdjustmentNotesRepository>();
         services.AddScoped<IPhotoService, PhotoService>();
+        services.AddScoped<IArmotizationService, ArmotizationService>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
