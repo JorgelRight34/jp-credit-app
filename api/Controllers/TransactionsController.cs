@@ -1,10 +1,10 @@
+using System.Text;
 using api.Data;
 using api.DTOs.Transaction;
 using api.Interfaces;
-using api.Models;
+
+
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace api.Controllers
@@ -12,6 +12,7 @@ namespace api.Controllers
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public class TransactionsController(
         ITransactionsRepository transactionsRepository,
+        IReportsService reportsService,
         ApplicationDbContext context
     ) : BaseApiController
     {
@@ -73,5 +74,34 @@ namespace api.Controllers
 
             return Ok(transactions);
         }
+
+        [HttpGet("users/{userId}/csv")]
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> ExportUserTransactions([FromRoute] string userId)
+        {
+            var user = await context.Users.FindAsync(userId);
+            if (user == null) return NotFound();
+
+            var transactions = await transactionsRepository.GetUserTransactions(userId);
+            var transactionsReport = reportsService.GenerateTransactionsCSVString(transactions);
+            var buffer = Encoding.UTF8.GetBytes(transactionsReport);
+            var stream = new MemoryStream(buffer);
+
+            return File(stream, "text/csv", "user.csv");
+        }
+
+        [HttpGet("loans/{loanId:int}/csv")]
+        public async Task<ActionResult<IEnumerable<TransactionDto>>> ExportLoanTransactions([FromRoute] int loanId)
+        {
+            var loan = await context.Loans.FindAsync(loanId);
+            if (loan == null) return NotFound();
+
+            var transactions = await transactionsRepository.GetLoanTransactions(loanId);
+            var transactionsReport = reportsService.GenerateTransactionsCSVString(transactions);
+            var buffer = Encoding.UTF8.GetBytes(transactionsReport);
+            var stream = new MemoryStream(buffer);
+
+            return File(stream, "text/csv", "loan.csv");
+        }
+
     }
 }

@@ -3,6 +3,7 @@ using api.DTOs;
 using api.DTOs.User;
 using api.Interfaces;
 using api.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
@@ -13,6 +14,7 @@ namespace api.Controllers
     public class UsersController(
         IUsersRepository usersRepository,
         UserManager<AppUser> userManager,
+        IMapper mapper,
         ITokenService tokenService
     ) : BaseApiController
     {
@@ -32,7 +34,6 @@ namespace api.Controllers
             return Ok(users);
         }
 
-
         [HttpGet("{username}")]
         public async Task<ActionResult<UserDto>> GetByUsername([FromRoute] string username)
         {
@@ -51,7 +52,7 @@ namespace api.Controllers
 
             if (createdUser == null) return StatusCode(500, "Failed to create user");
 
-            return CreatedAtAction(nameof(GetByUsername), new { username = createdUser.Username }, createdUser);
+            return CreatedAtAction(nameof(GetByUsername), new { username = createdUser.Username }, mapper.Map<UserDto>(createdUser));
         }
 
         [HttpPut("{id}")]
@@ -85,8 +86,7 @@ namespace api.Controllers
                 var token = await tokenService.CreateToken(user);
                 return Ok(new
                 {
-                    Username = user.UserName,
-                    Email = user.Email,
+                    User = mapper.Map<UserDto>(user),
                     Token = token
                 });
             }

@@ -1,17 +1,17 @@
+using System.Net;
+using System.Text;
 using api.Data;
 using api.DTOs.Armotization;
-using api.DTOs.Transaction;
 using api.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.VisualBasic;
 
 namespace api.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public class ArmotizationsController(
         IArmotizationService armotizationService,
+        IReportsService reportsService,
         ApplicationDbContext context
     ) : BaseApiController
     {
@@ -21,13 +21,7 @@ namespace api.Controllers
             var loan = await context.Loans.FindAsync(loanId);
             if (loan == null) return BadRequest("Loan doesn't exist");
 
-            var armotizations = armotizationService.GenerateArmotization(
-                loan.PrincipalBalance,
-                loan.AnnualInterestRate,
-                loan.PaymentFrecuency,
-                loan.PaymentValue,
-                loan.NumberOfPayments
-            );
+            var armotizations = armotizationService.GenerateLoanArmotization(loan);
 
             return Ok(armotizations);
         }
@@ -37,21 +31,32 @@ namespace api.Controllers
             [FromQuery] GenerateArmotizationDto generateArmotizationDto
         )
         {
-            var paymentValue = (decimal)Financial.Pmt(
-                (double)(generateArmotizationDto.AnnualInterestRate / generateArmotizationDto.PaymentFrecuency),
-                generateArmotizationDto.NumberOfPayments,
-                (double)-generateArmotizationDto.PrincipalBalance
-            );
-
-            var armotizations = armotizationService.GenerateArmotization(
-                generateArmotizationDto.PrincipalBalance,
-                generateArmotizationDto.AnnualInterestRate,
-                generateArmotizationDto.PaymentFrecuency,
-                paymentValue,
-                generateArmotizationDto.NumberOfPayments
-            );
+            var armotizations = armotizationService.GenerateCustomArmotization(generateArmotizationDto);
 
             return Ok(armotizations);
+        }
+
+        [HttpGet("loans/{loanId:int}/csv")]
+        public async Task<ActionResult> ExportLoanArmotization([FromRoute] int loanId)
+        {
+            var loan = await context.Loans.FindAsync(loanId);
+            if (loan == null) return BadRequest("Loan doesn't exist");
+
+            var armotizations = armotizationService.GenerateLoanArmotization(loan);
+            var csvBuffer = Encoding.UTF8.GetBytes(reportsService.GenerateArmotizationsCSVString(armotizations));
+            var stream = new MemoryStream(csvBuffer);
+
+            return File(stream, "text/csv", "loan-armotizations.csv");
+        }
+
+        [HttpGet("csv")]
+        public ActionResult ExportArmotization([FromQuery] GenerateArmotizationDto generateArmotizationDto)
+        {
+            var armotizations = armotizationService.GenerateCustomArmotization(generateArmotizationDto);
+            var csvBuffer = Encoding.UTF8.GetBytes(reportsService.GenerateArmotizationsCSVString(armotizations));
+            var stream = new MemoryStream(csvBuffer);
+
+            return File(stream, "text/csv", "armotization.csv");
         }
     }
 }

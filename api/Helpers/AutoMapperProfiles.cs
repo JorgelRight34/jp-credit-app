@@ -31,7 +31,6 @@ public class AutoMapperProfiles : Profile
 
         // Transactions
         CreateMap<CreateTransactionDto, Transaction>();
-        CreateMap<UpdateTransactionDto, Transaction>();
         CreateMap<Transaction, TransactionDto>();
 
         // Loans

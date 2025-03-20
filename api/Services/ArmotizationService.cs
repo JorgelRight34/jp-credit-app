@@ -2,6 +2,8 @@ using System;
 using api.DTOs.Armotization;
 using api.DTOs.Transaction;
 using api.Interfaces;
+using api.Models;
+using Microsoft.VisualBasic;
 
 namespace api.Services;
 
@@ -34,5 +36,34 @@ public class ArmotizationService : IArmotizationService
         }
 
         return transactions;
+    }
+
+    public List<ArmotizationPaymentDto> GenerateCustomArmotization(GenerateArmotizationDto generateArmotizationDto)
+    {
+        var paymentValue = (decimal)Financial.Pmt(
+            (double)(generateArmotizationDto.AnnualInterestRate / generateArmotizationDto.PaymentFrecuency),
+            generateArmotizationDto.NumberOfPayments,
+            (double)-generateArmotizationDto.PrincipalBalance
+        );
+
+        return GenerateArmotization(
+            generateArmotizationDto.PrincipalBalance,
+            generateArmotizationDto.AnnualInterestRate,
+            generateArmotizationDto.PaymentFrecuency,
+            paymentValue,
+            generateArmotizationDto.NumberOfPayments
+        );
+
+    }
+
+    public List<ArmotizationPaymentDto> GenerateLoanArmotization(Loan loan)
+    {
+        return GenerateArmotization(
+            loan.PrincipalBalance,
+            loan.AnnualInterestRate,
+            loan.PaymentFrecuency,
+            loan.PaymentValue,
+            loan.NumberOfPayments
+        );
     }
 }
