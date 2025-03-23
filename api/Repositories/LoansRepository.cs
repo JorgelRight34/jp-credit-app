@@ -7,6 +7,7 @@ using api.Interfaces;
 using api.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories;
 
@@ -48,7 +49,7 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
 
     public async Task<LoanDto?> GetByIdAsync(int id)
     {
-        var loan = await context.Loans.FindAsync(id);
+        var loan = await context.Loans.Include(x => x.Client).FirstAsync(x => x.Id == id);
         if (loan == null) return null;
 
         return mapper.Map<LoanDto>(loan);

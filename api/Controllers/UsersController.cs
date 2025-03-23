@@ -94,9 +94,7 @@ namespace api.Controllers
             return Unauthorized();
         }
 
-
         // Photos
-
         [HttpPost("{username}/photo")]
         public async Task<ActionResult<UserDto>> CreatePhoto([FromForm] IFormFile file, [FromRoute] string username)
         {

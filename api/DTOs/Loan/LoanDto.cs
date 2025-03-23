@@ -38,7 +38,7 @@ public class LoanDto
     // Navigation properties
     public UserDto? Client { get; set; }
     public UserDto? LoanOfficer { get; set; }
-    public CollateralDto? Collateral { get; set; }
+    public List<CollateralDto>? Collateral { get; set; }
 
     // Audit fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

@@ -1,0 +1,21 @@
+.login-background {
+    height: 100dvh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-form {
+    width: 50dvw;
+}
+
+.header-photo {
+    height: 15rem;
+    object-fit: contain;
+}
+
+@media (max-width: 500px) {
+    .login-form {
+        width: 95dvw;
+    }
+}
