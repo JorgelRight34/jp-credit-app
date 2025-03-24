@@ -10,7 +10,7 @@ const LoanPage = () => {
 
   if (loan) {
     return (
-      <EntityLayout>
+      <EntityLayout title={`Loan ${loan.id}`}>
         <Tabs>
           <Tab className="tab" eventKey="info" title="Information">
             <div className="tab-content py-3">

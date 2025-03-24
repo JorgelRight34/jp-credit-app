@@ -19,17 +19,17 @@ const Navbar = () => {
     },
     {
       name: "Collaterals",
-      icon: "fa-car",
+      icon: "fa-folder-open",
       route: "collaterals",
     },
     {
       name: "Transactions",
-      icon: "fa-money-check",
+      icon: "fa-credit-card",
       route: "transactions",
     },
     {
       name: "Loans",
-      icon: "fa-landmark",
+      icon: "fa-envelope",
       route: "loans",
     },
     {
@@ -39,13 +39,13 @@ const Navbar = () => {
     },
     {
       name: "Armotizations",
-      icon: "fa-list",
+      icon: "fa-rectangle-list",
       route: "armotizations",
     },
   ];
 
   return (
-    <div className="bg-white h-100 w-100 p-3">
+    <div className="bg-white h-100 w-100 p-3 shadow-sm">
       <div className="container mb-3">
         <img className="img-fluid brand" src="/header.jpg" />
       </div>
@@ -61,7 +61,7 @@ const Navbar = () => {
             key={key}
             to={option.route}
           >
-            <i className={`fa-solid ${option.icon} me-2`}></i>
+            <i className={`fa-regular ${option.icon} me-2`}></i>
             {option.name}
           </NavLink>
         ))}

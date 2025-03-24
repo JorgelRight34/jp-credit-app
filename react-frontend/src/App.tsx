@@ -12,6 +12,9 @@ import Index from "./pages/Index/Index";
 import LoansPage from "./components/Loans/pages/LoansPage";
 import CollateralsPage from "./components/Collaterals/pages/CollateralsPage";
 import LoanPage from "./components/Loans/pages/LoanPage";
+import ClientsPage from "./components/Clients/pages/ClientsPage";
+import LoanOfficersPage from "./components/LoanOfficers/pages/LoanOfficersPage";
+import AdminsPage from "./components/Admins/pages/AdminsPage";
 
 function App() {
   return (
@@ -26,9 +29,12 @@ function App() {
               </ProtectedRoute>
             }
           >
+            <Route path="admins" element={<AdminsPage />} />
             <Route path="collaterals" element={<CollateralsPage />} />
+            <Route path="clients" element={<ClientsPage />} />
             <Route path="loans" element={<LoansPage />} />
             <Route path="loans/:id" element={<LoanPage />} />
+            <Route path="loan-officers" element={<LoanOfficersPage />} />
           </Route>
           <Route path="login" element={<Login />} />
         </Routes>
