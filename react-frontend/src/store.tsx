@@ -1,14 +1,20 @@
 import { configureStore } from "@reduxjs/toolkit";
-import authReducer from "./components/Auth/authSlice";
-import clientsReducer from "./components/Clients/clientsSlice";
-import loanOfficersReducer from "./components/LoanOfficers/loanOfficersSlice";
+import authReducer from "./features/Auth/authSlice";
+import clientsReducer from "./features/Clients/clientsSlice";
+import collateralsReducer from "./features/Collaterals/collateralsSlice";
+import loansReducer from "./features/Loans/loansSlice";
+import transactionsReducer from "./features/Transactions/transactionsSlice";
 
 const store = configureStore({
   reducer: {
     auth: authReducer,
     clients: clientsReducer,
-    loanOfficers: loanOfficersReducer,
+    collaterals: collateralsReducer,
+    loans: loansReducer,
+    transactions: transactionsReducer,
   },
 });
+
+export type RootState = ReturnType<typeof store.getState>;
 
 export default store;

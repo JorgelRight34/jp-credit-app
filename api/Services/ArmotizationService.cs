@@ -10,7 +10,7 @@ namespace api.Services;
 public class ArmotizationService : IArmotizationService
 {
     public List<ArmotizationPaymentDto> GenerateArmotization(
-        decimal principal, decimal annualRate, decimal paymentFrecuency, decimal paymentValue, int n
+        decimal principal, decimal annualRate, decimal paymentFrequency, decimal paymentValue, int n
     )
     {
         var transactions = new List<ArmotizationPaymentDto>();
@@ -18,7 +18,7 @@ public class ArmotizationService : IArmotizationService
         for (int i = 0; i < n; i++)
         {
             // Get periodly interest 
-            var periodlyInterest = annualRate / paymentFrecuency;
+            var periodlyInterest = annualRate / paymentFrequency;
             // Get interests I = balance * periodly interest
             var interests = principal * periodlyInterest;
             // Get capital, capital = P - I
@@ -41,7 +41,7 @@ public class ArmotizationService : IArmotizationService
     public List<ArmotizationPaymentDto> GenerateCustomArmotization(GenerateArmotizationDto generateArmotizationDto)
     {
         var paymentValue = (decimal)Financial.Pmt(
-            (double)(generateArmotizationDto.AnnualInterestRate / generateArmotizationDto.PaymentFrecuency),
+            (double)(generateArmotizationDto.AnnualInterestRate / generateArmotizationDto.PaymentFrequency),
             generateArmotizationDto.NumberOfPayments,
             (double)-generateArmotizationDto.PrincipalBalance
         );
@@ -49,7 +49,7 @@ public class ArmotizationService : IArmotizationService
         return GenerateArmotization(
             generateArmotizationDto.PrincipalBalance,
             generateArmotizationDto.AnnualInterestRate,
-            generateArmotizationDto.PaymentFrecuency,
+            generateArmotizationDto.PaymentFrequency,
             paymentValue,
             generateArmotizationDto.NumberOfPayments
         );
@@ -61,7 +61,7 @@ public class ArmotizationService : IArmotizationService
         return GenerateArmotization(
             loan.PrincipalBalance,
             loan.AnnualInterestRate,
-            loan.PaymentFrecuency,
+            loan.PaymentFrequency,
             loan.PaymentValue,
             loan.NumberOfPayments
         );

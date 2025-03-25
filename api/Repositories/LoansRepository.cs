@@ -19,7 +19,7 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
         var loan = mapper.Map<Loan>(createLoanDto);
         loan.PrincipalBalance = loan.DisbursedAmount;
         loan.AccruedInterest = 0;
-        var days = (int)(createLoanDto.PaymentFrecuency / 12) * 30;
+        var days = (int)(createLoanDto.PaymentFrequency / 12) * 30;
         loan.NextPaymentDate = createLoanDto.StartDate.AddDays(days);
         loan.CalculatePaymentValue(loan.DisbursedAmount);
 
@@ -42,9 +42,14 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
 
     public async Task<IEnumerable<LoanDto>> GetAllAsync(LoanQuery query)
     {
-        var loans = context.Loans.ProjectTo<LoanDto>(mapper.ConfigurationProvider).AsQueryable();
+        var loans = context.Loans.AsQueryable();
 
-        return await loans.PaginateAsync(query);
+        if (query.ClientId != null)
+        {
+            loans = loans.Where(x => x.ClientId == query.ClientId);
+        }
+
+        return await loans.ProjectTo<LoanDto>(mapper.ConfigurationProvider).PaginateAsync(query);
     }
 
     public async Task<LoanDto?> GetByIdAsync(int id)

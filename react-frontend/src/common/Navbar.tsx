@@ -1,21 +1,17 @@
+import { useSelector } from "react-redux";
 import { NavLink } from "react-router";
+import { RootState } from "../store";
+import useLogout from "../features/Auth/hooks/useLogout";
 
 const Navbar = () => {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const [logout] = useLogout();
+
   const options = [
     {
-      name: "Clients",
+      name: "Users",
       icon: "fa-user",
       route: "clients",
-    },
-    {
-      name: "Loan Officers",
-      icon: "fa-user",
-      route: "loan-officers",
-    },
-    {
-      name: "Admins",
-      icon: "fa-user",
-      route: "admins",
     },
     {
       name: "Collaterals",
@@ -45,18 +41,17 @@ const Navbar = () => {
   ];
 
   return (
-    <div className="bg-white h-100 w-100 p-3 shadow-sm">
-      <div className="container mb-3">
+    <div className="side-navbar position-relative bg-white h-100 w-100 shadow-sm">
+      <div className="container p-3 border-bottom">
         <img className="img-fluid brand" src="/header.jpg" />
       </div>
-      <div className="mt-3">
-        <input className="form-control" type="search" />
-      </div>
-      <div className="d-flex flex-column justify-content-center">
+      <div className="d-flex flex-column justify-content-center p-3">
         {options.map((option, key) => (
           <NavLink
             className={({ isActive }) =>
-              `${isActive ? "nav-link-active " : ""}nav-link mt-4 p-2 rounded-3`
+              `${
+                isActive ? "nav-link-active shadow-sm " : ""
+              }nav-link mb-3 p-2 text-muted`
             }
             key={key}
             to={option.route}
@@ -65,6 +60,20 @@ const Navbar = () => {
             {option.name}
           </NavLink>
         ))}
+      </div>
+      <div className="d-flex flex-column justify-content-center position-absolute bottom-0 border-top p-3 w-100">
+        <NavLink className={"nav-link p-2 text-muted mb-3"} to={"/login"}>
+          <i className="fa-solid fa-user-tie me-2"></i>
+          {user?.firstName} {user?.lastName}
+        </NavLink>
+        <NavLink
+          className={"nav-link p-2 text-muted mb-3"}
+          onClick={logout}
+          to={"/login"}
+        >
+          <i className="fa-solid fa-right-from-bracket me-2"></i>
+          Logout
+        </NavLink>
       </div>
     </div>
   );

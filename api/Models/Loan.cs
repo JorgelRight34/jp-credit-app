@@ -23,7 +23,7 @@ public class Loan
     public decimal AnnualInterestRate { get; set; }
     public int NumberOfPayments { get; set; }
     [Required]
-    public decimal PaymentFrecuency { get; set; }   // Times on a year it repeats, e.g a month = 1, semester = 6
+    public decimal PaymentFrequency { get; set; }   // Times on a year it repeats, e.g a month = 1, semester = 6
 
     // Details
     [Required]

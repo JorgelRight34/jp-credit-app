@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using api.DTOs.Validators;
 
 namespace api.Models;
 
@@ -10,6 +11,7 @@ public class Transaction
     public int Id { get; set; }
     [Required]
     [MaxLength(10)]
+    [TransactionType]
     public string? Type { get; set; }
     [Required]
     public decimal CapitalValue { get; set; }

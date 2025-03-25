@@ -5,10 +5,7 @@ namespace api.DTOs.Validators;
 
 public class Gender : ValidationAttribute
 {
-    public Gender() : base("Gender must be 'M' for masculine or 'F' for feminine")
-    {
-
-    }
+    public Gender() : base("Gender must be 'M' for masculine or 'F' for feminine") { }
 
     protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {

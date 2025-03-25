@@ -1,6 +1,6 @@
 import "./login.css";
 import React, { useState } from "react";
-import useLogin from "../../components/Auth/hooks/useLogin";
+import useLogin from "../../features/Auth/hooks/useLogin";
 
 const Login = () => {
   const [form, setForm] = useState<{ username: string; password: string }>({

@@ -393,7 +393,7 @@ namespace api.Migrations
                     b.Property<int>("NumberOfPayments")
                         .HasColumnType("INTEGER");
 
-                    b.Property<decimal>("PaymentFrecuency")
+                    b.Property<decimal>("PaymentFrequency")
                         .HasColumnType("TEXT");
 
                     b.Property<decimal>("PaymentValue")

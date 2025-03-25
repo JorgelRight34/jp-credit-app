@@ -31,7 +31,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         }
 
         // Get periodly interest 
-        var periodlyInterest = loan.AnnualInterestRate / loan.PaymentFrecuency;
+        var periodlyInterest = loan.AnnualInterestRate / loan.PaymentFrequency;
         // Get interests I = balance * periodly interest
         var interests = principalBalance * periodlyInterest;
         // Get capital, capital = P - I
@@ -44,7 +44,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         transaction.CapitalValue = capital;
 
         // Update next payment date
-        var days = (int)(loan.PaymentFrecuency / 12) * 30;
+        var days = (int)(loan.PaymentFrequency / 12) * 30;
         loan.NextPaymentDate = loan.NextPaymentDate.AddDays(days);
 
         // Calculate the new payment value (A)
@@ -71,7 +71,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         loan.AccruedInterest -= transaction.InterestValue;
         loan.PrincipalBalance += transaction.CapitalValue;
         // Update next payment date
-        var days = (int)(loan.PaymentFrecuency / 12) * 30;
+        var days = (int)(loan.PaymentFrequency / 12) * 30;
         loan.NextPaymentDate = loan.NextPaymentDate.AddDays(-days);
 
         loan.NumberOfPayments += 1;

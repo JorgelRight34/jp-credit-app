@@ -13,7 +13,7 @@ public class CreateLoanDto
     public decimal AnnualInterestRate { get; set; }
     public int NumberOfPayments { get; set; }
     [Required]
-    public decimal PaymentFrecuency { get; set; }
+    public decimal PaymentFrequency { get; set; }
 
     // Details
     [Required]
