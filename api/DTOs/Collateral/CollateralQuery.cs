@@ -8,4 +8,6 @@ public class CollateralQuery : Query
     public string? Description { get; set; }
     public decimal MinValue { get; set; }
     public decimal MaxValue { get; set; }
+    public string? Username { get; set; }
+    public int? LoanId { get; set; }
 }

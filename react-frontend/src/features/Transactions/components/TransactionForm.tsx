@@ -3,7 +3,7 @@ import { Controller, useForm } from "react-hook-form";
 import { schema, transactionFormFields } from "../lib/utils";
 import useNewTransaction from "../hooks/useNewTransaction";
 import { renderFormInputs } from "../../../utils/formUtils";
-import ClientsDataList from "../../Clients/components/ClientsDataList";
+import ClientsDataList from "../../Profiles/components/ProfilesDataList";
 import LoansDataList from "../../Loans/components/LoansDataList";
 
 const TransactionForm = () => {

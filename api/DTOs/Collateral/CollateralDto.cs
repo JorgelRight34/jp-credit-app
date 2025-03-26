@@ -1,5 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using api.DTOs.User;
+using api.Models;
 
 namespace api.DTOs.Collateral;
 
@@ -9,7 +11,6 @@ public class CollateralDto
     [Required]
     public string? Title { get; set; }
     public string? Description { get; set; }
-    [Required]
     public string? AgreementType { get; set; }
     public decimal Value { get; set; }
     [Required]
@@ -19,6 +20,9 @@ public class CollateralDto
     public string? DocumentUrl { get; set; }
     [Required]
     public string? ClientId { get; set; }
+    [Required]
+    public int LoanId { get; set; }
 
     public List<PhotoDto> Photos { get; set; } = [];
+    public UserDto? Client { get; set; }
 }

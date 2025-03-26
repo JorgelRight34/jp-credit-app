@@ -1,6 +1,7 @@
 using System;
 using api.Models;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Data;
 
@@ -16,7 +17,7 @@ public class Seed
             await roleManager.CreateAsync(new IdentityRole(role));
         }
 
-        if (await userManager.FindByEmailAsync(email) == null)
+        if (await userManager.Users.FirstOrDefaultAsync(x => x.Email == email) == null)
         {
             var user = new AppUser
             {

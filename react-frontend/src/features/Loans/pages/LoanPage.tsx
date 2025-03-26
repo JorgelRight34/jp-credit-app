@@ -2,29 +2,44 @@ import { Tab, Tabs } from "react-bootstrap";
 import EntityLayout from "../../../common/EntityLayout";
 import LoanInformation from "../components/LoanInformation";
 import useLoan from "../hooks/useLoan";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
+import ProfileInfo from "../../Profiles/components/ProfileInfo";
+import CollateralsDataTable from "../../Collaterals/components/CollateralsDataTable";
+import useCollaterals from "../../Collaterals/hooks/useCollaterals";
+import useTransactions from "../../Transactions/hooks/useTransactions";
+import TransactionsDataTable from "../../Transactions/components/TransactionsDataTable";
+import useDeleteLoan from "../hooks/useDeleteLoan";
 
 const LoanPage = () => {
   const { id } = useParams<{ id: string }>();
   const [loan] = useLoan(id || "");
+  const [collaterals] = useCollaterals(`loanId=${id}`);
+  const [transactions] = useTransactions(`loanId=${id}`);
+  const [deleteLoan] = useDeleteLoan(id || "");
+  const navigate = useNavigate();
+
+  const handleOnDeleteLoan = () => {
+    if (confirm("Are you sure you want to delete this record?")) {
+      deleteLoan();
+      navigate("/loans");
+    }
+  };
 
   if (loan) {
     return (
-      <EntityLayout title={`Loan ${loan.id}`}>
+      <EntityLayout title={`Loan #${loan.id}`} onDelete={handleOnDeleteLoan}>
         <Tabs>
-          <Tab className="tab" eventKey="info" title="Information">
-            <div className="tab-content py-3">
-              <LoanInformation loan={loan} />
-            </div>
+          <Tab className="p-3" eventKey="info" title="Information">
+            <LoanInformation loan={loan} />
           </Tab>
-          <Tab className="tab" eventKey="client" title="Client">
-            <div className="tab-content py-3">Clients</div>
+          <Tab className="p-3" eventKey="client" title="Client">
+            {loan.client && <ProfileInfo profile={loan.client} />}
           </Tab>
-          <Tab className="tab" eventKey="collaterals" title="Collaterals">
-            <div className="tab-content py-3">Collaterals</div>
+          <Tab className="p-3" eventKey="collaterals" title="Collaterals">
+            <CollateralsDataTable collaterals={collaterals} />
           </Tab>
-          <Tab className="tab" eventKey="transactions" title="Transactions">
-            <div className="tab-content py-3">Transactions</div>
+          <Tab className="p-3" eventKey="transactions" title="Transactions">
+            <TransactionsDataTable transactions={transactions} />
           </Tab>
         </Tabs>
       </EntityLayout>

@@ -1,4 +1,6 @@
+import InfoTable from "../../../common/InfoTable";
 import { Loan } from "../../../models/loan";
+import { getFullName, toCurrency } from "../../../utils/utils";
 
 interface LoanInformationProps {
   loan: Loan;
@@ -6,51 +8,55 @@ interface LoanInformationProps {
 
 const LoanInformation = ({ loan }: LoanInformationProps) => {
   return (
-    <div className="d-flex">
-      <ul>
-        <li>
-          <b>Id:</b> #{loan.id}
-        </li>
-        <li>
-          <b>Approved amount</b>: {loan.approvedAmount}
-        </li>
-        <li>
-          <b>Disbursed amount</b>: {loan.disbursedAmount}
-        </li>
-        <li>
-          <b>Principal balance</b>: {loan.principalBalance}
-        </li>
-        <li>
-          <b>Accrued interest</b>: {loan.accruedInterest}
-        </li>
-        <li>
-          <b>Annual interest rate</b>: {loan.annualInterestRate}
-        </li>
-        <li>
-          <b>Number of payments</b>: {loan.numberOfPayments}
-        </li>
-      </ul>
-      <ul>
-        <li>
-          <b>Payment frecuency</b>: {loan.paymentFrecuency}
-        </li>
-        <li>
-          <b>Payment value</b>: {loan.paymentValue}
-        </li>
-        <li>
-          <b>Start date</b>: {loan.startDate}
-        </li>
-        <li>
-          <b>Next payment date</b>: {loan.nextPaymentDate}
-        </li>
-        <li>
-          <b>Delivery date</b>: {loan.deliveryDate}
-        </li>
-        <li>
-          <b>Status</b>: {loan.status}
-        </li>
-      </ul>
-    </div>
+    <>
+      <InfoTable
+        data={[
+          ["Id", loan.id?.toString(), "Client", getFullName(loan.client)],
+          [
+            "Approved Amount",
+            toCurrency(loan.approvedAmount),
+            "Disbursed Amount",
+            toCurrency(loan.disbursedAmount),
+          ],
+          [
+            "Interest Rate",
+            loan.annualInterestRate?.toString(),
+            "Payment Frecuency",
+            loan.paymentFrecuency?.toString(),
+          ],
+          [
+            "Principal",
+            toCurrency(loan.principalBalance),
+            "Interests",
+            toCurrency(loan.accruedInterest),
+          ],
+          [
+            "Loan Officer",
+            getFullName(loan.loanOfficer),
+            "Status",
+            loan.status,
+          ],
+          [
+            "# Payments",
+            loan.numberOfPayments?.toString(),
+            "Payment Value",
+            loan.paymentValue?.toString(),
+          ],
+          [
+            "Start Date",
+            loan.startDate?.toString(),
+            "Delivery",
+            loan.deliveryDate?.toString(),
+          ],
+          [
+            "Last Payment",
+            loan.lastPaymentDate?.toString(),
+            "Next Payment",
+            loan.nextPaymentDate?.toString(),
+          ],
+        ]}
+      />
+    </>
   );
 };
 

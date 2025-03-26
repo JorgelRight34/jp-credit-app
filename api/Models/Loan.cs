@@ -44,7 +44,7 @@ public class Loan
     public AppUser? Client { get; set; }
     [ForeignKey("LoanOfficerId")]
     public AppUser? LoanOfficer { get; set; }
-    public List<Collateral>? Collateral { get; set; }
+    public List<Collateral>? Collaterals { get; set; }
 
     // Audit fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

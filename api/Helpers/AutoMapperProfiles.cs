@@ -26,7 +26,8 @@ public class AutoMapperProfiles : Profile
         CreateMap<CreateCollateralDto, Collateral>()
         .ForMember(d => d.AppUserId, o => o.MapFrom(s => s.ClientId));
         CreateMap<Collateral, CollateralDto>()
-        .ForMember(d => d.ClientId, o => o.MapFrom(s => s.AppUserId));
+        .ForMember(d => d.ClientId, o => o.MapFrom(s => s.AppUserId))
+        .ForMember(d => d.Client, o => o.MapFrom(s => s.AppUser));
         CreateMap<UpdateCollateralDto, Collateral>();
 
         // Transactions

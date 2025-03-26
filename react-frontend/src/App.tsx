@@ -12,10 +12,12 @@ import Index from "./pages/Index/Index";
 import LoansPage from "./features/Loans/pages/LoansPage";
 import CollateralsPage from "./features/Collaterals/pages/CollateralsPage";
 import LoanPage from "./features/Loans/pages/LoanPage";
-import ClientsPage from "./features/Clients/pages/ClientsPage";
-import ClientPage from "./features/Clients/pages/ClientPage";
+import ProfilesPage from "./features/Profiles/pages/ProfilesPage";
+import ProfilePage from "./features/Profiles/pages/ProfilePage";
 import TransactionsPage from "./features/Transactions/pages/TransactionsPage";
 import TransactionPage from "./features/Transactions/pages/TransactionPage";
+import CollateralPage from "./features/Collaterals/pages/CollateralPage";
+import ArmotizationsPage from "./features/Armotizations/pages/ArmotizationsPage";
 
 function App() {
   return (
@@ -30,9 +32,11 @@ function App() {
               </ProtectedRoute>
             }
           >
+            <Route path="armotizations" element={<ArmotizationsPage />} />
             <Route path="collaterals" element={<CollateralsPage />} />
-            <Route path="clients" element={<ClientsPage />} />
-            <Route path="clients/:username" element={<ClientPage />} />
+            <Route path="collaterals/:id" element={<CollateralPage />} />
+            <Route path="profiles" element={<ProfilesPage />} />
+            <Route path="profiles/:username" element={<ProfilePage />} />
             <Route path="loans" element={<LoansPage />} />
             <Route path="loans/:id" element={<LoanPage />} />
             <Route path="transactions" element={<TransactionsPage />} />

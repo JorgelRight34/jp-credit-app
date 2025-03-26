@@ -6,6 +6,7 @@ using api.Interfaces;
 using api.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories;
 
@@ -71,6 +72,17 @@ public class CollateralsRepository(
             collaterals = collaterals.Where(
                 x => x.Description != null && x.Description.ToLower().Contains(query.Description.ToLower())
             );
+        }
+
+        if (!String.IsNullOrEmpty(query.Username))
+        {
+            var clientId = await context.Users.Where(x => x.UserName == query.Username).Select(x => x.Id).FirstOrDefaultAsync();
+            collaterals = collaterals.Where(x => x.ClientId == clientId);
+        }
+
+        if (query.LoanId != null && query.LoanId != 0)
+        {
+            collaterals = collaterals.Where(x => x.LoanId == query.LoanId);
         }
 
         return await collaterals.PaginateAsync(query);

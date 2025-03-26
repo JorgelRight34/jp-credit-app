@@ -30,8 +30,16 @@ public class UsersRepository(
         }
 
         var user = mapper.Map<AppUser>(registerDto);
+        IdentityResult result;
 
-        var result = await userManager.CreateAsync(user, registerDto.Password!);
+        if (registerDto.Roles.Any(x => x.ToLower() == "admin"))
+        {
+            result = await userManager.CreateAsync(user, registerDto.Password!);
+        }
+        else
+        {
+            result = await userManager.CreateAsync(user);
+        }
 
         if (result.Succeeded)
         {
@@ -87,29 +95,32 @@ public class UsersRepository(
     public async Task<UserDto?> GetByUsernameAsync(string username)
     {
         var user = await userManager.FindByNameAsync(username);
+        if (user == null) return null;
 
-        return mapper.Map<UserDto>(user);
+        var roles = await userManager.GetRolesAsync(user);
+        var userDto = mapper.Map<UserDto>(user);
+
+        userDto.Roles = roles.ToList();
+
+        return userDto;
     }
 
     public async Task<IEnumerable<UserDto>> GetAllAsync(UserQuery query)
     {
         var users = context.Users.ProjectTo<UserDto>(mapper.ConfigurationProvider).AsQueryable();
 
-        if (!String.IsNullOrEmpty(query.Username))
-        {
-            users = users
-            .Where(
-                x => x.Username != null && x.Username.ToLower().Contains(query.Username.ToLower())
-            );
-        }
+        users = FilterByQuery(users, query);
 
         return await users.PaginateAsync(query);
     }
 
-    public async Task<IEnumerable<UserDto>> GetUsersInRoleAsync(string role, string? query)
+    public async Task<IEnumerable<UserDto>> GetUsersInRoleAsync(string role, UserQuery? query)
     {
         var users = await userManager.GetUsersInRoleAsync(role);
-        return users.Select(x => mapper.Map<UserDto>(x));
+        var userDtos = users.AsQueryable().Select(x => mapper.Map<UserDto>(x));
+        if (query != null) userDtos = FilterByQuery(userDtos, query);
+
+        return userDtos;
     }
 
     public async Task<UserDto> AddUserPhotoAsync(IFormFile file, AppUser user)
@@ -145,5 +156,35 @@ public class UsersRepository(
         if (user == null) return null;
 
         return mapper.Map<UserDto>(user);
+    }
+
+    public IQueryable<UserDto> FilterByQuery(IQueryable<UserDto> users, UserQuery query)
+    {
+        if (!String.IsNullOrEmpty(query.Username))
+        {
+            users = users
+            .Where(
+                x => x.Username != null && x.Username.ToLower().Contains(query.Username.ToLower())
+            );
+        }
+
+        if (!String.IsNullOrEmpty(query.FirstName))
+        {
+            users = users.Where(x => x.FirstName != null && x.FirstName.ToLower().Contains(query.FirstName.ToLower()));
+        }
+
+
+        if (!String.IsNullOrEmpty(query.LastName))
+        {
+            users = users.Where(x => x.LastName != null && x.LastName.ToLower().Contains(query.LastName.ToLower()));
+        }
+
+
+        if (!String.IsNullOrEmpty(query.DNI))
+        {
+            users = users.Where(x => x.DNI != null && x.DNI.ToLower().Contains(query.DNI.ToLower()));
+        }
+
+        return users;
     }
 }

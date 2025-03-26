@@ -1,3 +1,5 @@
+import { User } from "../models/user";
+
 export const toCurrency = (money: number): string => {
   const formattedAmount = new Intl.NumberFormat("en-US", {
     style: "currency",
@@ -10,4 +12,10 @@ export const toCurrency = (money: number): string => {
 export const toFormattedDate = (date: Date): string => {
   const formattedDate = new Intl.DateTimeFormat("fr-FR").format(date);
   return formattedDate;
+};
+
+export const getFullName = (user?: User): string => {
+  if (!user) return "";
+
+  return `${user?.firstName} ${user?.lastName}`;
 };

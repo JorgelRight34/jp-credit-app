@@ -9,9 +9,9 @@ const Navbar = () => {
 
   const options = [
     {
-      name: "Users",
+      name: "Profiles",
       icon: "fa-user",
-      route: "clients",
+      route: "profiles",
     },
     {
       name: "Collaterals",

@@ -17,8 +17,13 @@ const loans = createSlice({
     addLoan: (state, action) => {
       state.loans = [...state.loans, action.payload];
     },
+    removeLoan: (state, action) => {
+      state.loans = [
+        ...state.loans.filter((loan) => loan.id !== action.payload.id),
+      ];
+    },
   },
 });
 
-export const { addLoan, setLoans } = loans.actions;
+export const { addLoan, removeLoan, setLoans } = loans.actions;
 export default loans.reducer;

@@ -27,7 +27,7 @@ namespace api.Controllers
 
         [HttpGet("role/{role}")]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersInRole(
-            [FromRoute] string role, [FromQuery] string? query
+            [FromRoute] string role, [FromQuery] UserQuery? query
         )
         {
             var users = await usersRepository.GetUsersInRoleAsync(role, query);

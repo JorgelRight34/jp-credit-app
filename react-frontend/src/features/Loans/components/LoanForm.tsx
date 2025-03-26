@@ -1,10 +1,9 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import useNewLoan from "../hooks/useNewLoan";
-import ClientsDataList from "../../Clients/components/ClientsDataList";
+import ProfilesDataList from "../../Profiles/components/ProfilesDataList";
 import { loanFormFields, schema } from "../lib/constants";
-import useClients from "../../Clients/hooks/useClients";
-import useLoanOfficers from "../../Clients/hooks/useLoanOfficers";
+import useProfiles from "../../Profiles/hooks/useProfiles";
 import { renderFormInputs } from "../../../utils/formUtils";
 
 const LoanForm = () => {
@@ -17,8 +16,8 @@ const LoanForm = () => {
     resolver: zodResolver(schema),
   });
   const [onSubmit] = useNewLoan();
-  useClients(); // Load clients
-  useLoanOfficers();
+  useProfiles("user"); // Load clients
+  useProfiles("loanOfficer");
 
   const renderFormInputsSlice = (start: number, end: number) =>
     renderFormInputs(loanFormFields, start, end, register, errors);
@@ -36,7 +35,7 @@ const LoanForm = () => {
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <ClientsDataList
+                <ProfilesDataList
                   role="client"
                   error={errors?.clientId?.message}
                   {...field} // This binds react-select to React Hook Form
@@ -51,7 +50,7 @@ const LoanForm = () => {
               control={control}
               defaultValue=""
               render={({ field }) => (
-                <ClientsDataList
+                <ProfilesDataList
                   role="loanOfficer"
                   error={errors?.clientId?.message}
                   {...field}

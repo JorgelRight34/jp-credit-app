@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using api.Dtos.Validators;
 using api.DTOs.Validators;
+using Microsoft.AspNetCore.Identity;
 
 namespace api.DTOs.User;
 

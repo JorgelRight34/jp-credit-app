@@ -106,6 +106,18 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
             );
         }
 
+        if (query.LoanId != null && query.LoanId != 0)
+        {
+            transactions = transactions.Where(x => x.LoanId == query.LoanId);
+        }
+
+        if (!String.IsNullOrEmpty(query.Username))
+        {
+            var clientId = await context.Users.Where(x => x.UserName == query.Username).Select(x => x.Id).FirstOrDefaultAsync();
+            transactions = transactions.Where(x => x.PayerId == clientId);
+        }
+
+
         return await transactions.PaginateAsync(query);
     }
 

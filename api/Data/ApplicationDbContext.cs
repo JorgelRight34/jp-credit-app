@@ -26,8 +26,15 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
             .HasIndex(x => x.DNI)
             .IsUnique();
 
+        /*
+        builder.Entity<AppUser>()
+            .HasIndex(x => x.Email)
+            .IsUnique();
+        */
+
         var roles = new List<IdentityRole>
         {
+            new IdentityRole { Id = "Client", Name= "Client", NormalizedName = "CLIENT"},
             new IdentityRole { Id = "Admin", Name = "Admin", NormalizedName = "ADMIN" },
             new IdentityRole { Id = "User", Name = "User", NormalizedName = "USER" },
             new IdentityRole { Id = "LoanOfficer", Name = "LoanOfficer", NormalizedName = "LOANOFFICER" },

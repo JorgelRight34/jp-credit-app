@@ -21,10 +21,14 @@ public class Collateral
     public string? DocumentUrl { get; set; }
     [Required]
     public string? AppUserId { get; set; }
+    [Required]
+    public int LoanId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
 
     // Navigation Properties
     [ForeignKey("AppUserId")]
     public AppUser? AppUser { get; set; }
+    [ForeignKey("LoanId")]
+    public Loan? Loan { get; set; }
     public List<Photo> Photos { get; set; } = [];
 }

@@ -14,7 +14,7 @@ public interface IUsersRepository
     Task<UserDto?> GetByIdAsync(string id);
     Task<UserDto?> GetByUsernameAsync(string username);
     Task<IEnumerable<UserDto>> GetAllAsync(UserQuery query);
-    Task<IEnumerable<UserDto>> GetUsersInRoleAsync(string role, string? query);
+    Task<IEnumerable<UserDto>> GetUsersInRoleAsync(string role, UserQuery? query);
     Task<UserDto?> UpdateAsync(UpdateUserDto updateUserDto, string id);
 
 }

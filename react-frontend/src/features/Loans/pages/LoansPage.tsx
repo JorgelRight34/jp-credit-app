@@ -6,6 +6,7 @@ import { useState } from "react";
 import LoanForm from "../components/LoanForm";
 import LoansDataTable from "../components/LoansDataTable";
 import useLoans from "../hooks/useLoans";
+import LoanSearchInput from "../components/LoanSearchInput";
 
 const LoansPage = () => {
   const [loans] = useLoans();
@@ -18,6 +19,9 @@ const LoansPage = () => {
       <EntityLayout title="Loans" onAddNew={() => setIsModalShowing(true)}>
         <Tabs>
           <Tab eventKey={"active"} title="Active" className="p-3">
+            <div className="mb-3">
+              <LoanSearchInput />
+            </div>
             <LoansDataTable loans={loans} />
           </Tab>
           <Tab eventKey={"pending"} title="Pending" className="p-3"></Tab>

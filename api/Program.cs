@@ -29,6 +29,16 @@ if (app.Environment.IsDevelopment())
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var logger = services.GetRequiredService<ILogger<Program>>();
+        var roles = new List<string> { "Client", "LoanOfficer", "Admin" };
+
+        foreach (var role in roles)
+        {
+            if (roleManager.RoleExistsAsync(role) != null)
+            {
+                await roleManager.CreateAsync(new IdentityRole(role));
+            }
+        }
+
         await Seed.SeedAdmins(userManager, roleManager, logger);
     }
 }

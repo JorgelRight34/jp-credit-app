@@ -18,4 +18,6 @@ public class CreateCollateralDto
     public string? DocumentUrl { get; set; }
     [Required]
     public string? ClientId { get; set; }
+    [Required]
+    public int LoanId { get; set; }
 }

@@ -4,12 +4,26 @@ import { FormField } from "../../../models/formField";
 export const schema = z.object({
   title: z.string(),
   description: z.string(),
-  value: z.string().transform((val) => Number(val)),
+  // This union is for when editing, the collateral may initially have value as a number
+  value: z.union([z.string().transform((val) => Number(val)), z.number()]),
   condition: z.string(),
   state: z.string(),
-  documentUrl: z.string(),
+  // This union is for when editing, the collateral may initially have documentUrl as null
+  documentUrl: z.union([z.string(), z.null()]),
   clientId: z.string(),
 });
+
+export type CollateralFormValues = z.infer<typeof schema>;
+
+export const collateralFormDefaultValues: CollateralFormValues = {
+  title: "",
+  description: "",
+  value: 0,
+  condition: "",
+  state: "",
+  documentUrl: "",
+  clientId: "",
+};
 
 export const collateralsFormFields: FormField[] = [
   {
@@ -29,9 +43,5 @@ export const collateralsFormFields: FormField[] = [
   {
     name: "documentUrl",
     label: "Document URL",
-  },
-  {
-    name: "clientId",
-    label: "Client Id",
   },
 ];

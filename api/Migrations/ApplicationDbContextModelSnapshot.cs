@@ -45,6 +45,12 @@ namespace api.Migrations
                     b.HasData(
                         new
                         {
+                            Id = "Client",
+                            Name = "Client",
+                            NormalizedName = "CLIENT"
+                        },
+                        new
+                        {
                             Id = "Admin",
                             Name = "Admin",
                             NormalizedName = "ADMIN"
@@ -327,7 +333,7 @@ namespace api.Migrations
                     b.Property<string>("DocumentUrl")
                         .HasColumnType("TEXT");
 
-                    b.Property<int?>("LoanId")
+                    b.Property<int>("LoanId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("State")
@@ -569,11 +575,15 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("api.Models.Loan", null)
-                        .WithMany("Collateral")
-                        .HasForeignKey("LoanId");
+                    b.HasOne("api.Models.Loan", "Loan")
+                        .WithMany("Collaterals")
+                        .HasForeignKey("LoanId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("AppUser");
+
+                    b.Navigation("Loan");
                 });
 
             modelBuilder.Entity("api.Models.Loan", b =>
@@ -634,7 +644,7 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.Loan", b =>
                 {
-                    b.Navigation("Collateral");
+                    b.Navigation("Collaterals");
                 });
 #pragma warning restore 612, 618
         }

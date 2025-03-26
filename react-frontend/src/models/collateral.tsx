@@ -1,3 +1,5 @@
+import { User } from "./user";
+
 export interface Collateral {
   id: number;
   title: string;
@@ -5,4 +7,7 @@ export interface Collateral {
   value: number;
   documentUrl: string;
   clientId: string;
+  condition: string;
+  state: string;
+  client: User;
 }
