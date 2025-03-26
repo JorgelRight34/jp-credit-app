@@ -25,10 +25,19 @@
   color: #fff;
 }
 
+.btn-accent-secondary {
+  background: var(--secondary-color);
+  color: #fff;
+}
+
 .nav-link:hover {
   position: relative;
   color: #fff !important;
   z-index: 1;
+}
+
+.hover:hover {
+  cursor: pointer;
 }
 
 .side-navbar .nav-link:hover::before {

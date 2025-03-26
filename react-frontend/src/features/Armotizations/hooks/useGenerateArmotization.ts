@@ -26,7 +26,7 @@ const useGenerateArmotization = () => {
         setArmotization(response.data);
     }
 
-    return { handleOnChange, handleOnSubmit, armotization }
+    return { handleOnChange, handleOnSubmit, armotization, form }
 }
 
 export default useGenerateArmotization;

@@ -1,20 +1,40 @@
-import Select from "react-select";
-import useLoans from "../hooks/useLoans";
+import AsyncSelect from "react-select/async";
+import { useState } from "react";
+import { SingleValue } from "react-select";
+import api from "../../../api";
+import { Loan } from "../../../models/loan";
 
 interface LoansDataListProps {
   error?: string;
 }
 
+interface Option {
+  value: string | number;
+  label: string;
+}
+
 const LoansDataList = ({ error, ...props }: LoansDataListProps) => {
-  const [data] = useLoans();
+  const [query, setQuery] = useState<Option | null>(null);
+
+  const loadOptions = async (inputValue: string): Promise<Option[]> => {
+    const response = await api.get(`loans/${inputValue}/`);
+
+    return response.data.map((item: Loan) => ({
+      value: item.id,
+      label: item.id,
+    }));
+  };
 
   return (
     <>
-      <Select
-        options={data?.map((loan) => ({
-          value: loan.id,
-          label: String(loan.id),
-        }))}
+      <AsyncSelect
+        cacheOptions={true}
+        defaultOptions
+        onChange={(selectedOption: SingleValue<Option> | null) =>
+          setQuery(selectedOption)
+        }
+        loadOptions={loadOptions}
+        value={query}
         required
         {...props}
       />

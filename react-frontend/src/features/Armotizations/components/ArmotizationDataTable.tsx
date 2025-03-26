@@ -13,8 +13,8 @@ const ArmotizationDataTable = ({
 
   return (
     <DataTable headers={headers}>
-      {armotization.map((payment) => (
-        <ArmotizationPaymentDataRow payment={payment} />
+      {armotization.map((payment, key) => (
+        <ArmotizationPaymentDataRow key={key} payment={payment} />
       ))}
     </DataTable>
   );

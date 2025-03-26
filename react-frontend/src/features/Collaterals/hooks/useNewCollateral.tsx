@@ -12,6 +12,7 @@ const useNewCollateral = () => {
       agreementType: "car",
     });
     dispatch(addCollateral(response.data));
+    return response.data;
   };
 
   return [addNewCollateral];

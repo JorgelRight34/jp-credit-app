@@ -1,3 +1,4 @@
+import { Loan } from "./loan";
 import { User } from "./user";
 
 export interface Collateral {
@@ -10,4 +11,5 @@ export interface Collateral {
   condition: string;
   state: string;
   client: User;
+  loan: Loan;
 }

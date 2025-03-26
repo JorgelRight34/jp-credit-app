@@ -30,8 +30,10 @@ public class CollateralsRepository(
 
     public async Task<CollateralDto?> DeleteAsync(int id)
     {
-        var collateral = await context.Collaterals.FindAsync(id);
+        var collateral = await context.Collaterals.FirstOrDefaultAsync(x => x.Id == id);
+        Console.WriteLine($"checking collateral with id {id}..............");
         if (collateral == null) return null;
+        Console.WriteLine("Exists..............");
 
         context.Collaterals.Remove(collateral);
         await context.SaveChangesAsync();
@@ -90,7 +92,10 @@ public class CollateralsRepository(
 
     public async Task<CollateralDto?> GetByIdAsync(int id)
     {
-        var collateral = await context.Collaterals.FindAsync(id);
+        var collateral = await context.Collaterals
+        .Include(x => x.AppUser)
+        .Include(x => x.Loan)
+        .FirstOrDefaultAsync(x => x.Id == id);
         if (collateral == null) return null;
 
         return mapper.Map<CollateralDto>(collateral);

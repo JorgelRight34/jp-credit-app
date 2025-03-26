@@ -2,9 +2,11 @@ import { useDispatch } from "react-redux";
 import api from "../../../api";
 import { removeAdmin, removeClient, removeLoanOfficer } from "../profilesSlice";
 import { Role } from "../../../models/role";
+import { useNavigate } from "react-router";
 
 const useDeleteProfile = (role: Role, id: string) => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const deleteClient = async () => {
     const response = await api.delete(`users/${id}`);
@@ -22,6 +24,8 @@ const useDeleteProfile = (role: Role, id: string) => {
       default:
         dispatch(removeClient(response.data));
     }
+
+    navigate("/profiles");
   };
 
   return [deleteClient];

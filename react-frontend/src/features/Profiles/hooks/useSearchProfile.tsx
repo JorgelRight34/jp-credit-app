@@ -1,16 +1,27 @@
 import { useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import api from "../../../api";
 import { setAdmins, setClients, setLoanOfficers } from "../profilesSlice";
 import { Role } from "../../../models/role";
+import { RootState } from "../../../store";
 
 const useSearchProfile = (role: Role, field: "firstname" | "lastname") => {
   const [query, setQuery] = useState("");
+  const profiles = useSelector((state: RootState) => state.profiles);
   const dispatch = useDispatch();
 
   const fetchProfiles = async () => {
-    const response = await api.get(`users/role/${role}/?${field}=${query}`);
+    // Try to find item in memory
+    const found = profiles[role as keyof typeof profiles].find(
+      (profile) => profile[field as keyof typeof profile] === query
+    );
+    if (found) {
+      dispatch(setClients(found));
+      return;
+    }
 
+    // If item not in memory then fetch it
+    const response = await api.get(`users/role/${role}/?${field}=${query}`);
     switch (role) {
       case "user":
         dispatch(setClients(response.data));

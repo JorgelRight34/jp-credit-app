@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using api.DTOs.Loan;
 using api.DTOs.User;
 using api.Models;
 
@@ -25,4 +26,5 @@ public class CollateralDto
 
     public List<PhotoDto> Photos { get; set; } = [];
     public UserDto? Client { get; set; }
+    public LoanDto? Loan { get; set; }
 }

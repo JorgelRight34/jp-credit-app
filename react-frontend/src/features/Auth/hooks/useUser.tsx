@@ -10,7 +10,6 @@ const useUser = () => {
 
   const fetchUser = async () => {
     const response = await api.get("users/Jorge");
-    console.log(response.data);
     dispatch(setUser(response.data));
   };
 

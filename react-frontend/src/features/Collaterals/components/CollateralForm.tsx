@@ -12,6 +12,10 @@ import useEditCollateral from "../hooks/useEditCollateral";
 import useDeleteCollateral from "../hooks/useDeleteCollateral";
 import ProfilesDataList from "../../Profiles/components/ProfilesDataList";
 import { useNavigate } from "react-router";
+import useUploadFile from "../../../hooks/useUploadFile";
+import FormInput from "../../../common/FormInput";
+import EntityFormLayout from "../../../common/EntityFormLayout";
+import LoansDataList from "../../Loans/components/LoansDataList";
 
 interface CollateralFormProps {
   edit?: number;
@@ -35,6 +39,7 @@ const CollateralForm = ({
   const [onSubmit] = useNewCollateral();
   const [onEdit] = useEditCollateral(edit);
   const [onDelete] = useDeleteCollateral(edit);
+  const { handleOnFileChange, uploadFile } = useUploadFile();
   const navigate = useNavigate();
 
   const renderFormInputsSlice = (start: number, end: number) =>
@@ -44,9 +49,10 @@ const CollateralForm = ({
     if (edit) {
       await onEdit(data);
     } else {
-      await onSubmit(data);
+      const response = await onSubmit(data);
+      uploadFile(`collaterals/${response.id}/photo`);
+      reset();
     }
-    reset();
   };
 
   const handleOnDelete = async () => {
@@ -55,66 +61,73 @@ const CollateralForm = ({
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit(handleOnSubmit)}>
-        <div className="row mx-0 pt-3">
-          <div className="col-lg-6">{renderFormInputsSlice(0, 4)}</div>
-          <div className="col-lg-6">
-            {renderFormInputsSlice(4, 8)}
-            <div className="mb-3">
-              <label className="form-label" htmlFor="state">
-                State
-              </label>
-              <select id="state" className="form-select" {...register("state")}>
-                <option value="good">good</option>
-                <option value="bad">bad</option>
-              </select>
-            </div>
-            <div className="mb-3">
-              <label className="form-label" htmlFor="condition">
-                Condition
-              </label>
-              <select
-                id="condition"
-                className="form-select"
-                {...register("condition")}
-              >
-                <option value="good">Good</option>
-                <option value="old">Old</option>
-              </select>
-            </div>
-            {!edit && (
-              <div className="mb-3">
-                <label className="form-label">Client</label>
-                <Controller
-                  name="clientId"
-                  control={control}
-                  render={({ field }) => (
-                    <ProfilesDataList
-                      error={errors.clientId?.message}
-                      role="client"
-                      {...field}
-                    />
-                  )}
-                />
-              </div>
-            )}
-          </div>
-          <button type="submit" className="btn btn-accent w-100">
-            Submit
-          </button>
-          {edit && (
-            <button
-              type="button"
-              className="btn btn-danger w-100 mt-3"
-              onClick={handleOnDelete}
-            >
-              Delete
-            </button>
-          )}
+    <EntityFormLayout
+      onSubmit={handleSubmit(handleOnSubmit)}
+      onDelete={handleOnDelete}
+      allowDelete={edit ? true : false}
+    >
+      <div className="col-lg-4">{renderFormInputsSlice(0, 4)}</div>
+      <div className="col-lg-4">
+        <div className="mb-3">
+          <label className="form-label" htmlFor="state">
+            State
+          </label>
+          <select id="state" className="form-select" {...register("state")}>
+            <option value="good">good</option>
+            <option value="bad">bad</option>
+          </select>
         </div>
-      </form>
-    </>
+        <div className="mb-3">
+          <label className="form-label" htmlFor="condition">
+            Condition
+          </label>
+          <select
+            id="condition"
+            className="form-select"
+            {...register("condition")}
+          >
+            <option value="good">Good</option>
+            <option value="old">Old</option>
+          </select>
+        </div>
+        {!edit && (
+          <>
+            <div className="mb-3">
+              <label className="form-label">Client</label>
+              <Controller
+                name="clientId"
+                control={control}
+                render={({ field }) => (
+                  <ProfilesDataList
+                    error={errors.clientId?.message}
+                    role="client"
+                    {...field}
+                  />
+                )}
+              />
+            </div>
+            <div className="mb-3">
+              <FormInput
+                label="Loan Id"
+                type="number"
+                error={errors.loanId?.message}
+                {...register("loanId")}
+              />
+            </div>
+          </>
+        )}
+      </div>
+      <div className="col-lg-4">
+        <div className="mb-3">
+          <FormInput
+            label="Photo"
+            name="photo"
+            type="file"
+            onChange={handleOnFileChange}
+          />
+        </div>
+      </div>
+    </EntityFormLayout>
   );
 };
 

@@ -8,6 +8,7 @@ using api.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories;
 
@@ -94,7 +95,8 @@ public class UsersRepository(
 
     public async Task<UserDto?> GetByUsernameAsync(string username)
     {
-        var user = await userManager.FindByNameAsync(username);
+        var user = await context.Users.Include(x => x.Photo)
+            .FirstOrDefaultAsync(x => x.UserName != null && x.UserName.ToLower() == username.ToLower());
         if (user == null) return null;
 
         var roles = await userManager.GetRolesAsync(user);

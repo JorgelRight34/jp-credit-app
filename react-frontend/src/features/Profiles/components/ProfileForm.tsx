@@ -12,6 +12,8 @@ import useDeleteProfile from "../hooks/useDeleteProfile";
 import { Role } from "../../../models/role";
 import { renderFormInputs } from "../../../utils/formUtils";
 import FormInput from "../../../common/FormInput";
+import useUploadFile from "../../../hooks/useUploadFile";
+import EntityFormLayout from "../../../common/EntityFormLayout";
 
 interface ProfileFormProps {
   role: Role;
@@ -35,7 +37,8 @@ const ProfileForm = ({
   });
   const [onSubmit] = useNewProfile(role);
   const [onEdit] = useEditProfile(edit, role);
-  const [deleteprofile] = useDeleteProfile(role, edit);
+  const [deleteProfile] = useDeleteProfile(role, edit);
+  const { handleOnFileChange, uploadFile } = useUploadFile();
 
   const renderFormInputsSlice = (start: number, end: number) =>
     renderFormInputs(profileFormFields, start, end, register, errors);
@@ -44,65 +47,76 @@ const ProfileForm = ({
     if (edit) {
       await onEdit(data);
     } else {
-      await onSubmit(data);
+      const response = await onSubmit(data);
+      await uploadFile(`users/${response.username}/photo`);
+      reset();
     }
-    reset();
   };
 
   return (
-    <form onSubmit={handleSubmit(handleOnSubmit)}>
-      <div className="row mx-0 pt-3">
-        <div className="col-lg-4">{renderFormInputsSlice(0, 4)}</div>
-        <div className="col-lg-4">{renderFormInputsSlice(4, 8)}</div>
-        <div className="col-lg-4">
-          {renderFormInputsSlice(8, 12)}
+    <EntityFormLayout
+      onSubmit={handleSubmit(handleOnSubmit)}
+      allowDelete={edit ? true : false}
+      onDelete={deleteProfile}
+    >
+      <div className="col-lg-4">
+        {edit ? (
           <div className="mb-3">
-            <label className="form-label" htmlFor="gender">
-              Gender
-            </label>
-            <select className="form-select" id="gender" {...register("gender")}>
-              <option value="M">Masculino</option>
-              <option value="F">Femenino</option>
-            </select>
-          </div>
-          <div className="mb-3">
-            <label className="form-label" htmlFor="maritalStatus">
-              Marital Status
-            </label>
-            <select
-              className="form-select"
-              id="maritalStatus"
-              {...register("maritalStatus")}
-            >
-              <option value="single">Soltero</option>
-              <option value="married">Casado</option>
-              <option value="divorced">Divorciado</option>
-              <option value="widow">Viudo</option>
-            </select>
-          </div>
-          {role === "admin" && (
             <FormInput
-              label="Password"
-              required={true}
-              {...register("password")}
-              type="password"
+              name="username"
+              value={defaultValues.username}
+              label="Username"
+              disabled={true}
             />
-          )}
-        </div>
+          </div>
+        ) : (
+          ""
+        )}
+        {renderFormInputsSlice(edit ? 1 : 0, 4)}
       </div>
-      <button type="submit" className="btn btn-accent w-100">
-        Submit
-      </button>
-      {edit && (
-        <button
-          type="button"
-          className="btn btn-danger w-100"
-          onClick={deleteprofile}
-        >
-          Delete
-        </button>
-      )}
-    </form>
+      <div className="col-lg-4">{renderFormInputsSlice(4, 8)}</div>
+      <div className="col-lg-4">
+        {renderFormInputsSlice(8, 12)}
+        <div className="mb-3">
+          <label className="form-label" htmlFor="gender">
+            Gender
+          </label>
+          <select className="form-select" id="gender" {...register("gender")}>
+            <option value="M">Masculino</option>
+            <option value="F">Femenino</option>
+          </select>
+        </div>
+        <div className="mb-3">
+          <label className="form-label" htmlFor="maritalStatus">
+            Marital Status
+          </label>
+          <select
+            className="form-select"
+            id="maritalStatus"
+            {...register("maritalStatus")}
+          >
+            <option value="single">Soltero</option>
+            <option value="married">Casado</option>
+            <option value="divorced">Divorciado</option>
+            <option value="widow">Viudo</option>
+          </select>
+        </div>
+        <FormInput
+          label="Photo"
+          name="photo"
+          type="file"
+          onChange={handleOnFileChange}
+        />
+        {role === "admin" && (
+          <FormInput
+            label="Password"
+            required={true}
+            {...register("password")}
+            type="password"
+          />
+        )}
+      </div>
+    </EntityFormLayout>
   );
 };
 

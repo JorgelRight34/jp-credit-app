@@ -6,6 +6,7 @@ interface EntityLayoutProps {
   onAddNew?: () => void;
   onEdit?: () => void;
   onDelete?: () => void;
+  onDownload?: () => void;
 }
 
 const EntityLayout = ({
@@ -14,6 +15,7 @@ const EntityLayout = ({
   onAddNew,
   onEdit,
   onDelete,
+  onDownload,
 }: EntityLayoutProps) => {
   return (
     <div className="p-lg-5">
@@ -42,6 +44,14 @@ const EntityLayout = ({
               onClick={onDelete}
             >
               Delete
+            </button>
+          )}
+          {onDownload && (
+            <button
+              className="btn btn-accent shadow-sm ms-auto"
+              onClick={onDownload}
+            >
+              Download
             </button>
           )}
         </div>

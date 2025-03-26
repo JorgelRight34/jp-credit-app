@@ -27,6 +27,9 @@ const useEditProfile = (id: string, role: Role) => {
       default:
         dispatch(updateClient(response.data));
     }
+
+    window.location.reload();
+    return response.data;
   };
 
   return [editClient];

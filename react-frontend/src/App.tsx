@@ -19,10 +19,12 @@ import TransactionPage from "./features/Transactions/pages/TransactionPage";
 import CollateralPage from "./features/Collaterals/pages/CollateralPage";
 import ArmotizationsPage from "./features/Armotizations/pages/ArmotizationsPage";
 import NotFound from "./pages/NotFound";
+import LoadingBar from "./common/LoadingBar";
 
 function App() {
   return (
     <Provider store={store}>
+      <LoadingBar />
       <BrowserRouter>
         <Routes>
           <Route

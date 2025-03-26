@@ -5,6 +5,7 @@ import useNewTransaction from "../hooks/useNewTransaction";
 import { renderFormInputs } from "../../../utils/formUtils";
 import ClientsDataList from "../../Profiles/components/ProfilesDataList";
 import LoansDataList from "../../Loans/components/LoansDataList";
+import EntityFormLayout from "../../../common/EntityFormLayout";
 
 const TransactionForm = () => {
   const {
@@ -22,58 +23,53 @@ const TransactionForm = () => {
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit)}>
-        <div className="row mx-0 pt-3">
-          <div className="col-lg-4">{renderTransactionFormInputs(0, 2)}</div>
-          <div className="col-lg-4">
-            <div className="mb-3">
-              <label className="form-label">Client</label>
-              <Controller
-                name="payerId"
-                control={control}
-                render={({ field }) => (
-                  <ClientsDataList
-                    role="client"
-                    {...field}
-                    error={errors.payerId?.message}
-                  />
-                )}
-              />
-            </div>
-            <div className="mb-3">
-              <label className="form-label">Loan Id</label>
-              <Controller
-                name="loanId"
-                control={control}
-                render={({ field }) => (
-                  <LoansDataList error={errors.loanId?.message} {...field} />
-                )}
-              />
-              {errors.loanId?.message}
-            </div>
+      <EntityFormLayout onSubmit={handleSubmit(onSubmit)}>
+        <div className="col-lg-4">{renderTransactionFormInputs(0, 2)}</div>
+        <div className="col-lg-4">
+          <div className="mb-3">
+            <label className="form-label">Client</label>
+            <Controller
+              name="payerId"
+              control={control}
+              render={({ field }) => (
+                <ClientsDataList
+                  role="client"
+                  {...field}
+                  error={errors.payerId?.message}
+                />
+              )}
+            />
           </div>
-          <div className="col-lg-4">
-            <div className="mb-3">
-              <label className="form-label">Type</label>
-              <select
-                className="form-select"
-                id="type"
-                {...register("type")}
-                required
-              >
-                <option value="DS">DS | Desembolso</option>
-                <option value="PC">PC | Pago Cuota</option>
-                <option value="NC">NC | Nota de Crédito</option>
-                <option value="ND">ND | Nota de Débito</option>
-              </select>
-              {errors.loanId?.message}
-            </div>
+          <div className="mb-3">
+            <label className="form-label">Loan Id</label>
+            <Controller
+              name="loanId"
+              control={control}
+              render={({ field }) => (
+                <LoansDataList error={errors.loanId?.message} {...field} />
+              )}
+            />
+            {errors.loanId?.message}
           </div>
         </div>
-        <button type="submit" className="btn btn-accent w-100">
-          Submit
-        </button>
-      </form>
+        <div className="col-lg-4">
+          <div className="mb-3">
+            <label className="form-label">Type</label>
+            <select
+              className="form-select"
+              id="type"
+              {...register("type")}
+              required
+            >
+              <option value="DS">DS | Desembolso</option>
+              <option value="PC">PC | Pago Cuota</option>
+              <option value="NC">NC | Nota de Crédito</option>
+              <option value="ND">ND | Nota de Débito</option>
+            </select>
+            {errors.loanId?.message}
+          </div>
+        </div>
+      </EntityFormLayout>
     </>
   );
 };

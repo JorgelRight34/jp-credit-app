@@ -10,7 +10,13 @@ export const schema = z.object({
   state: z.string(),
   // This union is for when editing, the collateral may initially have documentUrl as null
   documentUrl: z.union([z.string(), z.null()]),
-  clientId: z.string(),
+  clientId: z
+    .object({
+      label: z.string(),
+      value: z.string(),
+    })
+    .transform((val) => val.value),
+  loanId: z.string().transform((val) => Number(val)),
 });
 
 export type CollateralFormValues = z.infer<typeof schema>;
@@ -23,6 +29,7 @@ export const collateralFormDefaultValues: CollateralFormValues = {
   state: "",
   documentUrl: "",
   clientId: "",
+  loanId: 0,
 };
 
 export const collateralsFormFields: FormField[] = [

@@ -24,6 +24,7 @@ namespace api.Controllers
         public async Task<ActionResult<IEnumerable<CollateralDto>>> GetById([FromRoute] int id)
         {
             var collateral = await collateralsRepository.GetByIdAsync(id);
+            if (collateral == null) return NotFound();
             return Ok(collateral);
         }
 
@@ -32,6 +33,9 @@ namespace api.Controllers
         {
             var user = await context.Users.FindAsync(createCollateralDto.ClientId);
             if (user == null) return BadRequest("User doesn't exist");
+
+            var loan = await context.Loans.FindAsync(createCollateralDto.LoanId);
+            if (loan == null) return BadRequest("Loan doesn't exist");
 
             var collateral = await collateralsRepository.CreateAsync(createCollateralDto);
             return CreatedAtAction(nameof(GetById), new { id = collateral.Id }, collateral);
@@ -56,7 +60,6 @@ namespace api.Controllers
         }
 
         // Photos
-
         [HttpPost("{id:int}/photo")]
         public async Task<ActionResult<CollateralDto>> CreatePhoto([FromForm] IFormFile file, [FromRoute] int id)
         {

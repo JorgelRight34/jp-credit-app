@@ -5,6 +5,7 @@ import ProfilesDataList from "../../Profiles/components/ProfilesDataList";
 import { loanFormFields, schema } from "../lib/constants";
 import useProfiles from "../../Profiles/hooks/useProfiles";
 import { renderFormInputs } from "../../../utils/formUtils";
+import EntityFormLayout from "../../../common/EntityFormLayout";
 
 const LoanForm = () => {
   const {
@@ -23,52 +24,43 @@ const LoanForm = () => {
     renderFormInputs(loanFormFields, start, end, register, errors);
 
   return (
-    <form onSubmit={handleSubmit(onSubmit)}>
-      <div className="row mx-0 pt-3">
-        <div className="col-lg-4">{renderFormInputsSlice(0, 3)}</div>
-        <div className="col-lg-4">{renderFormInputsSlice(3, 6)}</div>
-        <div className="col-lg-4">
-          <div className="mb-3">
-            <label className="form-label">Client</label>
-            <Controller
-              name="clientId"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <ProfilesDataList
-                  role="client"
-                  error={errors?.clientId?.message}
-                  {...field} // This binds react-select to React Hook Form
-                />
-              )}
-            />
-          </div>
-          <div className="mb-3">
-            <label className="form-label">Loan Officer</label>
-            <Controller
-              name="loanOfficerId"
-              control={control}
-              defaultValue=""
-              render={({ field }) => (
-                <ProfilesDataList
-                  role="loanOfficer"
-                  error={errors?.clientId?.message}
-                  {...field}
-                />
-              )}
-            />
-          </div>
-          {renderFormInputsSlice(6, 7)}
+    <EntityFormLayout onSubmit={handleSubmit(onSubmit)}>
+      <div className="col-lg-4">{renderFormInputsSlice(0, 3)}</div>
+      <div className="col-lg-4">{renderFormInputsSlice(3, 6)}</div>
+      <div className="col-lg-4">
+        <div className="mb-3">
+          <label className="form-label">Client</label>
+          <Controller
+            name="clientId"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <ProfilesDataList
+                role="client"
+                error={errors?.clientId?.message}
+                {...field} // This binds react-select to React Hook Form
+              />
+            )}
+          />
         </div>
-        <button
-          type="submit"
-          className="btn btn-accent w-100"
-          onClick={() => console.log(errors)}
-        >
-          Submit loan
-        </button>
+        <div className="mb-3">
+          <label className="form-label">Loan Officer</label>
+          <Controller
+            name="loanOfficerId"
+            control={control}
+            defaultValue=""
+            render={({ field }) => (
+              <ProfilesDataList
+                role="loanOfficer"
+                error={errors?.clientId?.message}
+                {...field}
+              />
+            )}
+          />
+        </div>
+        {renderFormInputsSlice(6, 7)}
       </div>
-    </form>
+    </EntityFormLayout>
   );
 };
 

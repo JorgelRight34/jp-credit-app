@@ -2,6 +2,10 @@ th, td {
     padding: 1rem;
 }
 
+th {
+    white-space: nowrap;
+}
+
 table {
     border-collapse: collapse;
 }

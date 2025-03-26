@@ -14,7 +14,7 @@ const ProfilesPage = () => {
   const [admins] = useProfiles("admin");
   const [guarantors] = useProfiles("guarantor");
   const [showModal, setShowModal] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<Role>("user");
+  const [selectedRole, setSelectedRole] = useState<Role>("client");
 
   return (
     <>
