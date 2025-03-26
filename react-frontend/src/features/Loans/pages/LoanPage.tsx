@@ -9,10 +9,11 @@ import useCollaterals from "../../Collaterals/hooks/useCollaterals";
 import useTransactions from "../../Transactions/hooks/useTransactions";
 import TransactionsDataTable from "../../Transactions/components/TransactionsDataTable";
 import useDeleteLoan from "../hooks/useDeleteLoan";
+import NotFound from "../../../pages/NotFound";
 
 const LoanPage = () => {
   const { id } = useParams<{ id: string }>();
-  const [loan] = useLoan(id || "");
+  const { loan, error } = useLoan(id || "");
   const [collaterals] = useCollaterals(`loanId=${id}`);
   const [transactions] = useTransactions(`loanId=${id}`);
   const [deleteLoan] = useDeleteLoan(id || "");
@@ -24,6 +25,8 @@ const LoanPage = () => {
       navigate("/loans");
     }
   };
+
+  if (error) return <NotFound />;
 
   if (loan) {
     return (

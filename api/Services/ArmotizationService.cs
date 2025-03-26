@@ -28,6 +28,7 @@ public class ArmotizationService : IArmotizationService
 
             var transaction = new ArmotizationPaymentDto
             {
+                Number = i + 1,
                 InterestValue = interests,
                 CapitalValue = capital,
                 PrincipalBalance = principal,

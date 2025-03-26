@@ -6,53 +6,42 @@ import Modal from "../../../common/Modal";
 import { Tab, Tabs } from "react-bootstrap";
 import { Role } from "../../../models/role";
 import ProfilesDataTable from "../components/ProfilesDataTable";
-import ProfileSearchInput from "../components/ProfileSearchInput";
+import ProfileSearchForm from "../components/ProfileSearchForm";
 
 const ProfilesPage = () => {
   const [clients] = useProfiles("client");
   const [loanOfficers] = useProfiles("loanOfficer");
   const [admins] = useProfiles("admin");
+  const [guarantors] = useProfiles("guarantor");
   const [showModal, setShowModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role>("user");
-
-  const hideModal = () => setShowModal(false);
 
   return (
     <>
       <EntityLayout title="Profiles" onAddNew={() => setShowModal(true)}>
         <Tabs onSelect={(k) => setSelectedRole(k as Role)}>
           <Tab title="Clients" eventKey="client" className="p-3">
-            <div className="mb-3">
-              <ProfileSearchInput role={"client"} />
-            </div>
+            <ProfileSearchForm role="client" />
             <ProfilesDataTable profiles={clients} />
           </Tab>
           <Tab eventKey="loanOfficer" title="Loan Officers" className="p-3">
-            <div className="p-3">
-              <input
-                className="form-control"
-                type="search"
-                placeholder="Search a loan"
-              />
-            </div>
+            <ProfileSearchForm role="loanOfficer" />
             <ProfilesDataTable profiles={loanOfficers} />
           </Tab>
           <Tab eventKey="admin" title="Admins" className="p-3">
-            <div className="p-3">
-              <input
-                className="form-control"
-                type="search"
-                placeholder="Search a loan"
-              />
-            </div>
+            <ProfileSearchForm role="admin" />
             <ProfilesDataTable profiles={admins} />
+          </Tab>
+          <Tab eventKey="guarantor" title="Guarantors" className="p-3">
+            <ProfileSearchForm role="guarantor" />
+            <ProfilesDataTable profiles={guarantors} />
           </Tab>
         </Tabs>
       </EntityLayout>
       <Modal
         title={`Add New ${selectedRole}`}
         show={showModal}
-        onHide={hideModal}
+        onHide={() => setShowModal(false)}
       >
         <ProfileForm role={selectedRole} />
       </Modal>

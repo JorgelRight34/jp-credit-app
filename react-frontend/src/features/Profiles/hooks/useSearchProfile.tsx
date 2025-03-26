@@ -4,12 +4,12 @@ import api from "../../../api";
 import { setAdmins, setClients, setLoanOfficers } from "../profilesSlice";
 import { Role } from "../../../models/role";
 
-const useSearchProfile = (role: Role) => {
+const useSearchProfile = (role: Role, field: "firstname" | "lastname") => {
   const [query, setQuery] = useState("");
   const dispatch = useDispatch();
 
   const fetchProfiles = async () => {
-    const response = await api.get(`users/role/${role}/?firstName=${query}`);
+    const response = await api.get(`users/role/${role}/?${field}=${query}`);
 
     switch (role) {
       case "user":

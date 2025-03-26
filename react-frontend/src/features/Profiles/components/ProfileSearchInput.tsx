@@ -3,24 +3,35 @@ import useSearchProfile from "../hooks/useSearchProfile";
 
 interface ProfileSearchInputProps {
   role: Role;
+  field: "firstname" | "lastname";
+  placeholder?: string;
 }
 
-const ProfileSearchInput = ({ role }: ProfileSearchInputProps) => {
-  const { query, handleOnChange, fetchProfiles } = useSearchProfile(role);
+const ProfileSearchInput = ({
+  role,
+  field = "firstname",
+  placeholder,
+}: ProfileSearchInputProps) => {
+  const { query, handleOnChange, fetchProfiles } = useSearchProfile(
+    role,
+    field
+  );
 
   const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
     if (event.key === "Enter") fetchProfiles();
   };
 
   return (
-    <input
-      className="form-control"
-      type="search"
-      placeholder="Search a user"
-      value={query}
-      onChange={handleOnChange}
-      onKeyDown={handleOnKeyDown}
-    />
+    <>
+      <input
+        className="form-control"
+        type="search"
+        placeholder={placeholder}
+        value={query}
+        onChange={handleOnChange}
+        onKeyDown={handleOnKeyDown}
+      />
+    </>
   );
 };
 

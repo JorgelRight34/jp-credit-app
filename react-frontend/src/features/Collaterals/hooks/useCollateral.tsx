@@ -4,17 +4,20 @@ import { Collateral } from "../../../models/collateral";
 
 const useCollateral = (id?: string) => {
   const [collateral, setCollateral] = useState<Collateral | null>(null);
+  const [error, setError] = useState(false);
 
-  const fetchCollateral = async () => {
-    const response = await api.get(`collaterals/${id}`);
-    setCollateral(response.data);
+  const fetchCollateral = () => {
+    api
+      .get(`collaterals/${id}`)
+      .then((res) => setCollateral(res.data))
+      .catch(() => setError(true));
   };
 
   useEffect(() => {
     fetchCollateral();
   }, []);
 
-  return [collateral];
+  return { collateral, error };
 };
 
 export default useCollateral;

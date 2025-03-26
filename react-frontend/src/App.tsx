@@ -18,6 +18,7 @@ import TransactionsPage from "./features/Transactions/pages/TransactionsPage";
 import TransactionPage from "./features/Transactions/pages/TransactionPage";
 import CollateralPage from "./features/Collaterals/pages/CollateralPage";
 import ArmotizationsPage from "./features/Armotizations/pages/ArmotizationsPage";
+import NotFound from "./pages/NotFound";
 
 function App() {
   return (
@@ -43,6 +44,7 @@ function App() {
             <Route path="transactions/:id" element={<TransactionPage />} />
           </Route>
           <Route path="login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </BrowserRouter>
       <ToastContainer

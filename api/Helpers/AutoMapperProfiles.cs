@@ -32,7 +32,8 @@ public class AutoMapperProfiles : Profile
 
         // Transactions
         CreateMap<CreateTransactionDto, Transaction>();
-        CreateMap<Transaction, TransactionDto>();
+        CreateMap<Transaction, TransactionDto>()
+        .ForMember(d => d.Payer, o => o.MapFrom(s => s.Payer));
 
         // Loans
         CreateMap<CreateLoanDto, Loan>();

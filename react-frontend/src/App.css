@@ -10,6 +10,16 @@
   background-color: var(--background-color);
 }
 
+.bg-accent {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+
+.bg-accent-secondary {
+  background-color: var(--secondary-color);
+  color: #fff;
+}
+
 .btn-accent {
   background: var(--primary-color);
   color: #fff;

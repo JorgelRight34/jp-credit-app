@@ -1,6 +1,9 @@
 import useSearchLoan from "../hooks/useSearchLoan";
 
-const LoanSearchInput = () => {
+interface LoanSearchInput {
+  placeholder?: string;
+}
+const LoanSearchInput = ({ placeholder }: LoanSearchInput) => {
   const { query, search, handleOnChange } = useSearchLoan();
 
   const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -15,6 +18,7 @@ const LoanSearchInput = () => {
       onChange={handleOnChange}
       onKeyDown={handleOnKeyDown}
       value={query?.toString()}
+      placeholder={placeholder}
     />
   );
 };

@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using api.DTOs.Loan;
 using api.DTOs.User;
 using api.Models;
 
@@ -21,4 +22,5 @@ public class TransactionDto
     [Required]
     public DateOnly? Date { get; set; }
     public UserDto? Payer { get; set; }
+    public LoanDto? Loan { get; set; }
 }

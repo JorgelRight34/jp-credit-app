@@ -4,17 +4,20 @@ import { Client } from "../../../models/client";
 
 const useProfile = (username: string) => {
   const [profile, setProfile] = useState<Client | null>(null);
+  const [error, setError] = useState(false);
 
-  const fetchProfile = async () => {
-    const response = await api.get(`users/${username}`);
-    setProfile(response.data);
+  const fetchProfile = () => {
+    api
+      .get(`users/${username}`)
+      .then((res) => setProfile(res.data))
+      .catch(() => setError(true));
   };
 
   useEffect(() => {
     fetchProfile();
   }, []);
 
-  return [profile];
+  return { profile, error };
 };
 
 export default useProfile;

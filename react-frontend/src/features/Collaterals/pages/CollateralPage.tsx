@@ -5,11 +5,14 @@ import { useParams } from "react-router";
 import useCollateral from "../hooks/useCollateral";
 import Modal from "../../../common/Modal";
 import { useState } from "react";
+import NotFound from "../../../pages/NotFound";
 
 const CollateralPage = () => {
   const { id } = useParams();
-  const [collateral] = useCollateral(id);
+  const { collateral, error } = useCollateral(id);
   const [showModal, setShowModal] = useState(false);
+
+  if (error) return <NotFound />;
 
   if (!collateral) return <>Not Found</>;
 

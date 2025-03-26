@@ -4,23 +4,28 @@ import ProfileInfo from "../components/ProfileInfo";
 import { useParams } from "react-router";
 import LoansDataTable from "../../Loans/components/LoansDataTable";
 import useLoans from "../../Loans/hooks/useLoans";
-import { useEffect, useState } from "react";
 import Modal from "../../../common/Modal";
 import useProfile from "../hooks/useProfile";
 import CollateralsDataTable from "../../Collaterals/components/CollateralsDataTable";
 import useCollaterals from "../../Collaterals/hooks/useCollaterals";
 import useTransactions from "../../Transactions/hooks/useTransactions";
 import TransactionsDataTable from "../../Transactions/components/TransactionsDataTable";
+import { useState } from "react";
+import NotFound from "../../../pages/NotFound";
 
 const ProfilePage = () => {
   const { username } = useParams();
-  const [profile] = useProfile(username || "");
+  const { profile, error } = useProfile(username || "");
   const [userLoans] = useLoans(`username=${username}`);
   const [collaterals] = useCollaterals(`username=${username}`);
   const [transactions] = useTransactions(`username=${username}`);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {}, [profile]);
+  if (error) return <NotFound />;
+
+  if (!profile) {
+    return <h1>Loading...</h1>;
+  }
 
   if (profile)
     return (

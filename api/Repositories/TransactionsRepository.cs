@@ -123,7 +123,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
 
     public async Task<TransactionDto?> GetByIdAsync(int id)
     {
-        var transaction = await context.Transactions.FindAsync(id);
+        var transaction = await context.Transactions.Include(x => x.Loan).Include(x => x.Payer).FirstOrDefaultAsync(x => x.Id == id);
 
         return mapper.Map<TransactionDto>(transaction);
     }

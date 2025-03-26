@@ -1,6 +1,11 @@
 import { useDispatch, useSelector } from "react-redux";
 import api from "../../../api";
-import { setClients, setLoanOfficers, setAdmins } from "../profilesSlice";
+import {
+  setClients,
+  setLoanOfficers,
+  setAdmins,
+  setGuarantors,
+} from "../profilesSlice";
 import { useEffect } from "react";
 import { RootState } from "../../../store";
 import { Role } from "../../../models/role";
@@ -21,6 +26,9 @@ const useProfiles = (role: Role = "user") => {
         break;
       case "admin":
         dispatch(setAdmins(response.data));
+        break;
+      case "guarantor":
+        dispatch(setGuarantors(response.data));
         break;
       default:
         dispatch(setClients(response.data));

@@ -1,6 +1,10 @@
 import useSearchCollateral from "../hooks/useSearchCollateral";
 
-const CollateralSearchInput = () => {
+interface CollateralSearchInput {
+  placeholder: string;
+}
+
+const CollateralSearchInput = ({ placeholder }: CollateralSearchInput) => {
   const { query, search, handleOnChange } = useSearchCollateral();
 
   const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
@@ -14,6 +18,7 @@ const CollateralSearchInput = () => {
       value={query}
       onChange={handleOnChange}
       onKeyDown={handleOnKeyDown}
+      placeholder={placeholder}
     />
   );
 };

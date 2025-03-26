@@ -1,3 +1,4 @@
+import { useNavigate } from "react-router";
 import { Transaction } from "../../../models/transaction";
 import { toCurrency } from "../../../utils/utils";
 
@@ -6,8 +7,10 @@ interface TransactionDataRowProps {
 }
 
 const TransactionDataRow = ({ transaction }: TransactionDataRowProps) => {
+  const navigate = useNavigate();
+
   return (
-    <tr>
+    <tr onClick={() => navigate(`/transactions/${transaction.id}`)}>
       <td>{transaction.id}</td>
       <td>{toCurrency(transaction.capitalValue)}</td>
       <td>{toCurrency(transaction.interestValue)}</td>

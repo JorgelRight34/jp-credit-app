@@ -42,7 +42,7 @@ const Navbar = () => {
 
   return (
     <div className="side-navbar position-relative bg-white h-100 w-100 shadow-sm">
-      <div className="container p-3 border-bottom">
+      <div className="container p-3 mb-3">
         <img className="img-fluid brand" src="/header.jpg" />
       </div>
       <div className="d-flex flex-column justify-content-center p-3">
@@ -67,7 +67,7 @@ const Navbar = () => {
           {user?.firstName} {user?.lastName}
         </NavLink>
         <NavLink
-          className={"nav-link p-2 text-muted mb-3"}
+          className={"nav-link p-2 text-muted"}
           onClick={logout}
           to={"/login"}
         >

@@ -4,17 +4,20 @@ import { Transaction } from "../../../models/transaction";
 
 const useTransaction = (id: number) => {
   const [transaction, setTransaction] = useState<Transaction | null>(null);
+  const [error, setError] = useState(false);
 
-  const fetchTransaction = async () => {
-    const response = await api.get(`transactions/${id}`);
-    setTransaction(response.data);
+  const fetchTransaction = () => {
+    api
+      .get(`transactions/${id}`)
+      .then((res) => setTransaction(res.data))
+      .catch(() => setError(true));
   };
 
   useEffect(() => {
     fetchTransaction();
   }, []);
 
-  return [transaction];
+  return { transaction, error };
 };
 
 export default useTransaction;

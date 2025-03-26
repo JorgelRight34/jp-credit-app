@@ -33,9 +33,9 @@ const ProfileForm = ({
     resolver: zodResolver(schema),
     defaultValues: defaultValues,
   });
-  const [onSubmit] = useNewProfile([role]);
+  const [onSubmit] = useNewProfile(role);
   const [onEdit] = useEditProfile(edit, role);
-  const [deleteprofile] = useDeleteProfile(edit);
+  const [deleteprofile] = useDeleteProfile(role, edit);
 
   const renderFormInputsSlice = (start: number, end: number) =>
     renderFormInputs(profileFormFields, start, end, register, errors);

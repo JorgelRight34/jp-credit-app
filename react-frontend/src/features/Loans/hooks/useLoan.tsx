@@ -4,19 +4,20 @@ import api from "../../../api";
 
 const useLoan = (id: string) => {
   const [loan, setLoan] = useState<Loan | undefined>();
+  const [error, setError] = useState(false);
 
-  const fetchLoan = async () => {
-    const response = await api.get(`loans/${id}`);
-    const data: Loan = response.data;
-    console.dir(response.data, { depth: null });
-    setLoan({ ...data, createdAt: new Date(data.createdAt) });
+  const fetchLoan = () => {
+    api
+      .get(`loans/${id}`)
+      .then((res) => setLoan(res.data))
+      .catch(() => setError(true));
   };
 
   useEffect(() => {
     fetchLoan();
   }, []);
 
-  return [loan];
+  return { loan, error };
 };
 
 export default useLoan;

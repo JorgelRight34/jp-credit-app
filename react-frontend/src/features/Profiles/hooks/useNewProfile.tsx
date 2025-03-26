@@ -1,18 +1,24 @@
 import { useDispatch } from "react-redux";
 import api from "../../../api.tsx";
-import { addAdmin, addClient, addLoanOfficer } from "../profilesSlice.tsx";
+import {
+  addAdmin,
+  addClient,
+  addGuarantor,
+  addLoanOfficer,
+} from "../profilesSlice.tsx";
 import { ProfileFormValues } from "../lib/constants.tsx";
 import { Role } from "../../../models/role.tsx";
 
-const useNewProfile = (roles: Role[]) => {
+const useNewProfile = (role: Role) => {
   const dispatch = useDispatch();
 
   const addNewprofile = async (data: ProfileFormValues) => {
     const response = await api.post("users/register", {
       ...data,
-      roles: roles,
+      roles: [role],
     });
-    switch (roles[0]) {
+
+    switch (role) {
       case "user":
         dispatch(addClient(response.data));
         break;
@@ -21,6 +27,9 @@ const useNewProfile = (roles: Role[]) => {
         break;
       case "admin":
         dispatch(addAdmin(response.data));
+        break;
+      case "guarantor":
+        dispatch(addGuarantor(response.data));
         break;
       default:
         dispatch(addClient(response.data));

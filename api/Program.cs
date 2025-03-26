@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
         var userManager = services.GetRequiredService<UserManager<AppUser>>();
         var roleManager = services.GetRequiredService<RoleManager<IdentityRole>>();
         var logger = services.GetRequiredService<ILogger<Program>>();
-        var roles = new List<string> { "Client", "LoanOfficer", "Admin" };
+        var roles = new List<string> { "Client", "LoanOfficer", "Admin", "Guarantor" };
 
         foreach (var role in roles)
         {

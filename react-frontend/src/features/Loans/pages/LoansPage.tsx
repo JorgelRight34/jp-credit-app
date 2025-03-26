@@ -20,7 +20,7 @@ const LoansPage = () => {
         <Tabs>
           <Tab eventKey={"active"} title="Active" className="p-3">
             <div className="mb-3">
-              <LoanSearchInput />
+              <LoanSearchInput placeholder="Search by id" />
             </div>
             <LoansDataTable loans={loans} />
           </Tab>
