@@ -49,6 +49,17 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
             loans = loans.Where(x => x.ClientId == query.ClientId);
         }
 
+        if (query.Username != null)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == query.Username);
+            if (user != null)
+            {
+                loans = loans.Where(x => x.ClientId == user.Id);
+            }
+        }
+
+        loans = loans.OrderBy(x => x.CreatedAt);
+
         return await loans.ProjectTo<LoanDto>(mapper.ConfigurationProvider).PaginateAsync(query);
     }
 

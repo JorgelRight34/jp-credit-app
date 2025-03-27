@@ -1,12 +1,16 @@
+import { NavLink } from "react-router";
 import InfoTable from "../../../common/InfoTable";
 import { User } from "../../../models/user";
 import { toFormattedDate } from "../../../utils/utils";
+import useProfileStats from "../hooks/useProfileStats";
 
 interface ProfileInfoProps {
   profile: User;
 }
 
 const ProfileInfo = ({ profile }: ProfileInfoProps) => {
+  const [stats] = useProfileStats(profile.username);
+
   return (
     <div className="row mx-0">
       <div className="col-lg-3 d-flex align-items-center">
@@ -17,6 +21,9 @@ const ProfileInfo = ({ profile }: ProfileInfoProps) => {
             src={profile.photo?.url || "/default-profile-pic.webp"}
           />
           <h4 className="text-center">{profile.roles?.[0] || "User"}</h4>
+          <NavLink to={`/profiles/${profile.username}`}>
+            {profile.username}
+          </NavLink>
         </div>
       </div>
       <div className="col-lg-9 d-flex align-items-center">
@@ -30,6 +37,18 @@ const ProfileInfo = ({ profile }: ProfileInfoProps) => {
               toFormattedDate(new Date(profile.dateOfBirth)),
               "Gender",
               profile.gender,
+            ],
+            [
+              "Marital Status",
+              profile.maritalStatus,
+              "Landline",
+              profile.landline,
+            ],
+            [
+              "Current Loan",
+              stats?.lastLoan?.id?.toString() || "---",
+              "Last Payment",
+              stats?.lastTransaction?.id?.toString() || "---",
             ],
           ]}
         />

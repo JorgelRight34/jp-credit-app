@@ -29,9 +29,9 @@ const LoanInformation = ({ loan }: LoanInformationProps) => {
             ],
             [
               "Interest Rate",
-              loan.annualInterestRate?.toString(),
-              "Payment Frecuency",
-              loan.paymentFrecuency?.toString(),
+              (loan.annualInterestRate * 100)?.toString() + "%",
+              "Payment Frequency",
+              loan.paymentFrequency?.toString(),
             ],
             [
               "Principal",
@@ -49,7 +49,7 @@ const LoanInformation = ({ loan }: LoanInformationProps) => {
               "# Payments",
               loan.numberOfPayments?.toString(),
               "Payment Value",
-              loan.paymentValue?.toString(),
+              toCurrency(loan.paymentValue),
             ],
             [
               "Start Date",
@@ -59,9 +59,11 @@ const LoanInformation = ({ loan }: LoanInformationProps) => {
             ],
             [
               "Last Payment",
-              loan.lastPaymentDate?.toString(),
+              loan.lastPaymentDate === "0001-01-01"
+                ? "---"
+                : loan.lastPaymentDate,
               "Next Payment",
-              loan.nextPaymentDate?.toString(),
+              loan.nextPaymentDate,
             ],
           ]}
         />

@@ -4,8 +4,8 @@ import { schema, transactionFormFields } from "../lib/utils";
 import useNewTransaction from "../hooks/useNewTransaction";
 import { renderFormInputs } from "../../../utils/formUtils";
 import ClientsDataList from "../../Profiles/components/ProfilesDataList";
-import LoansDataList from "../../Loans/components/LoansDataList";
 import EntityFormLayout from "../../../common/EntityFormLayout";
+import FormInput from "../../../common/FormInput";
 
 const TransactionForm = () => {
   const {
@@ -41,15 +41,12 @@ const TransactionForm = () => {
             />
           </div>
           <div className="mb-3">
-            <label className="form-label">Loan Id</label>
-            <Controller
-              name="loanId"
-              control={control}
-              render={({ field }) => (
-                <LoansDataList error={errors.loanId?.message} {...field} />
-              )}
+            <FormInput
+              label="Loan Id"
+              type="number"
+              error={errors.loanId?.message}
+              {...register("loanId")}
             />
-            {errors.loanId?.message}
           </div>
         </div>
         <div className="col-lg-4">

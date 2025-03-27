@@ -94,6 +94,15 @@ namespace api.Controllers
             return Unauthorized();
         }
 
+        [HttpGet("{username}/stats")]
+        public async Task<ActionResult<UserStatsDto?>> GetUserStats([FromRoute] string username)
+        {
+            var stats = await usersRepository.GetUserStatsAsync(username);
+            if (stats == null) return NotFound();
+
+            return Ok(stats);
+        }
+
         // Photos
         [HttpPost("{username}/photo")]
         public async Task<ActionResult<UserDto>> CreatePhoto([FromForm] IFormFile file, [FromRoute] string username)

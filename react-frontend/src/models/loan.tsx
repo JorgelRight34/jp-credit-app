@@ -11,7 +11,7 @@ export interface Loan {
   accruedInterest: number;
   annualInterestRate: number;
   numberOfPayments: number;
-  paymentFrecuency: number; // Typo in C# model: "PaymentFrecuency" (should likely be "PaymentFrequency")
+  paymentFrequency: number; // Typo in C# model: "PaymentFrecuency" (should likely be "PaymentFrequency")
 
   // Details
   paymentValue: number;

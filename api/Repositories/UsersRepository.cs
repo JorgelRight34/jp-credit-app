@@ -1,6 +1,8 @@
 using System;
 using api.Data;
 using api.DTOs;
+using api.DTOs.Loan;
+using api.DTOs.Transaction;
 using api.DTOs.User;
 using api.Extensions;
 using api.Interfaces;
@@ -188,5 +190,45 @@ public class UsersRepository(
         }
 
         return users;
+    }
+
+    public async Task<UserStatsDto?> GetUserStatsAsync(string username)
+    {
+        var user = await userManager.FindByNameAsync(username);
+        if (user == null) return null;
+
+        var loan = await context.Loans
+            .Where(x => x.ClientId == user.Id)
+            .OrderByDescending(x => x.StartDate)
+            .Select(x => new LoanDto
+            {
+                Id = x.Id,
+                DisbursedAmount = x.DisbursedAmount,
+                PrincipalBalance = x.PrincipalBalance,
+                AccruedInterest = x.AccruedInterest,
+                StartDate = x.StartDate
+            })
+            .FirstOrDefaultAsync();
+
+        var transaction = await context.Transactions
+            .Where(x => x.PayerId == user.Id)
+            .OrderByDescending(x => x.Date)
+            .Select(x => new TransactionDto
+            {
+                Id = x.Id,
+                CapitalValue = x.CapitalValue,
+                InterestValue = x.InterestValue,
+                LoanId = x.LoanId,
+                Delinquency = x.Delinquency
+            })
+            .FirstOrDefaultAsync();
+
+        var stats = new UserStatsDto
+        {
+            LastLoan = mapper.Map<LoanDto>(loan),
+            LastTransaction = mapper.Map<TransactionDto>(transaction)
+        };
+
+        return stats;
     }
 }
