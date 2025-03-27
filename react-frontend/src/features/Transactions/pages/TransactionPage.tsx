@@ -11,12 +11,12 @@ import useDeleteTransaction from "../hooks/useDeleteTransaction";
 const TransactionPage = () => {
   const { id } = useParams();
   const { transaction, error } = useTransaction(Number(id));
-  const [onDelete] = useDeleteTransaction(id);
+  const [onDelete] = useDeleteTransaction();
   const navigate = useNavigate();
 
   const handleOnDelete = () => {
-    if (confirm("Are you sure you want to delete this record?")) {
-      onDelete().then(() => navigate("/transactions"));
+    if (confirm("Are you sure you want to delete this record?") && id) {
+      onDelete(id).then(() => navigate("/transactions"));
     }
   };
   if (error) return <NotFound />;

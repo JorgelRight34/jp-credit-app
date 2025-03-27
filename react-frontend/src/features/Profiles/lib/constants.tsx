@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { FormField } from "../../../models/formField";
 
+export const baseUrl = "users";
+
 export const schema = z.object({
   username: z.string(),
   password: z.string(),

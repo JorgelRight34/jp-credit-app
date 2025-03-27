@@ -3,13 +3,14 @@ import api from "../../../api";
 import { removeAdmin, removeClient, removeLoanOfficer } from "../profilesSlice";
 import { Role } from "../../../models/role";
 import { useNavigate } from "react-router";
+import { baseUrl } from "../lib/constants";
 
-const useDeleteProfile = (role: Role, id: string) => {
+const useDeleteProfile = (role: Role) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const deleteClient = async () => {
-    const response = await api.delete(`users/${id}`);
+  const deleteClient = async (id: string) => {
+    const response = await api.delete(`${baseUrl}/${id}`);
 
     switch (role) {
       case "user":

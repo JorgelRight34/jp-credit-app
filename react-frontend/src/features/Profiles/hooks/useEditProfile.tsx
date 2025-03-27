@@ -1,5 +1,5 @@
 import { useDispatch } from "react-redux";
-import { ProfileFormValues } from "../lib/constants.tsx";
+import { baseUrl, ProfileFormValues } from "../lib/constants.tsx";
 import api from "../../../api.tsx";
 import {
   updateAdmin,
@@ -8,11 +8,11 @@ import {
 } from "../profilesSlice.tsx";
 import { Role } from "../../../models/role.tsx";
 
-const useEditProfile = (id: string, role: Role) => {
+const useEditProfile = (role: Role) => {
   const dispatch = useDispatch();
 
-  const editClient = async (data: ProfileFormValues) => {
-    const response = await api.put(`users/${id}`, data);
+  const editClient = async (data: ProfileFormValues, id: string) => {
+    const response = await api.put(`${baseUrl}/${id}`, data);
 
     switch (role) {
       case "user":

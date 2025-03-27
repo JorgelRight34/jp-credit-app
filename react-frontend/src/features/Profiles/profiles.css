@@ -1,0 +1,10 @@
+.profile-info-photo-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 60%;
+}
+
+.profile-info-header, .profile-info-contact {
+    height: 20%;
+}

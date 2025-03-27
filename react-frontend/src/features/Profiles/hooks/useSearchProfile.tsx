@@ -4,6 +4,7 @@ import api from "../../../api";
 import { setAdmins, setClients, setLoanOfficers } from "../profilesSlice";
 import { Role } from "../../../models/role";
 import { RootState } from "../../../store";
+import { baseUrl } from "../lib/constants";
 
 const useSearchProfile = (role: Role, field: "firstname" | "lastname") => {
   const [query, setQuery] = useState("");
@@ -21,7 +22,9 @@ const useSearchProfile = (role: Role, field: "firstname" | "lastname") => {
     }
 
     // If item not in memory then fetch it
-    const response = await api.get(`users/role/${role}/?${field}=${query}`);
+    const response = await api.get(
+      `${baseUrl}/role/${role}/?${field}=${query}`
+    );
     switch (role) {
       case "user":
         dispatch(setClients(response.data));

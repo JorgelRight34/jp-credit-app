@@ -15,6 +15,7 @@ import NotFound from "../../../pages/NotFound";
 import ProfileForm from "../components/ProfileForm";
 import { Role } from "../../../models/role";
 import { getFullName } from "../../../utils/utils";
+import LoanSearchInput from "../../Loans/components/LoanSearchInput";
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -39,6 +40,9 @@ const ProfilePage = () => {
             {profile && <ProfileInfo profile={profile} />}
           </Tab>
           <Tab eventKey={"loans"} title="Loans" className="p-3">
+            <div className="mb-3">
+              <LoanSearchInput placeholder="Search by id" fetchData={false} />
+            </div>
             <LoansDataTable loans={userLoans} />
           </Tab>
           <Tab eventKey={"collaterals"} title="Collaterals" className="p-3">

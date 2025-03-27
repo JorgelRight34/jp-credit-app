@@ -1,13 +1,14 @@
 import useSearchLoan from "../hooks/useSearchLoan";
 
 interface LoanSearchInput {
-  placeholder?: string;
+  fetchData?: boolean;
 }
-const LoanSearchInput = ({ placeholder }: LoanSearchInput) => {
-  const { query, search, handleOnChange } = useSearchLoan();
+
+const LoanSearchInput = ({ fetchData = true }: LoanSearchInput) => {
+  const { id, search, handleOnChange } = useSearchLoan();
 
   const handleOnKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === "Enter") search();
+    if (event.key === "Enter") search(fetchData);
   };
 
   return (
@@ -17,8 +18,8 @@ const LoanSearchInput = ({ placeholder }: LoanSearchInput) => {
       className="form-control"
       onChange={handleOnChange}
       onKeyDown={handleOnKeyDown}
-      value={query?.toString()}
-      placeholder={placeholder}
+      value={id?.toString()}
+      placeholder={"Search by loan id"}
     />
   );
 };

@@ -31,7 +31,7 @@ const Navbar = () => {
     {
       name: "Adjustment Notes",
       icon: "fa-clipboard",
-      route: "adjusment-notes",
+      route: "notes",
     },
     {
       name: "Armotizations",

@@ -4,6 +4,7 @@ import profilesReducer from "./features/Profiles/profilesSlice";
 import collateralsReducer from "./features/Collaterals/collateralsSlice";
 import loansReducer from "./features/Loans/loansSlice";
 import transactionsReducer from "./features/Transactions/transactionsSlice";
+import notesReducer from "./features/Notes/notesSlice";
 
 const store = configureStore({
   reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
     collaterals: collateralsReducer,
     loans: loansReducer,
     transactions: transactionsReducer,
+    notes: notesReducer,
   },
 });
 

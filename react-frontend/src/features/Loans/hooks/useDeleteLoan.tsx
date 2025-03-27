@@ -1,15 +1,14 @@
 import { useDispatch } from "react-redux";
 import api from "../../../api";
 import { removeLoan } from "../loansSlice";
+import { baseUrl } from "../lib/constants";
 
-const useDeleteLoan = (id: string) => {
+const useDeleteLoan = () => {
   const dispatch = useDispatch();
 
-  const deleteLoan = async () => {
-    const numberId = Number(id);
-    if (isNaN(numberId)) return;
-    await api.delete(`loans/${id}`);
-    dispatch(removeLoan({ id: numberId }));
+  const deleteLoan = async (id: number) => {
+    await api.delete(`${baseUrl}/${id}`);
+    dispatch(removeLoan({ id: id }));
   };
 
   return [deleteLoan];

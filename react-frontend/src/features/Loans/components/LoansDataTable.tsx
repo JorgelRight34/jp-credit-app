@@ -9,6 +9,7 @@ interface LoansDataTable {
 const LoansDataTable = ({ loans }: LoansDataTable) => {
   const headers = [
     "Id",
+    "Client",
     "Approved",
     "Disbursed",
     "Principal",

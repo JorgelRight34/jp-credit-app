@@ -36,8 +36,8 @@ const ProfileForm = ({
     defaultValues: defaultValues,
   });
   const [onSubmit] = useNewProfile(role);
-  const [onEdit] = useEditProfile(edit, role);
-  const [deleteProfile] = useDeleteProfile(role, edit);
+  const [onEdit] = useEditProfile(role);
+  const [deleteProfile] = useDeleteProfile(role);
   const { handleOnFileChange, uploadFile } = useUploadFile();
 
   const renderFormInputsSlice = (start: number, end: number) =>
@@ -45,7 +45,7 @@ const ProfileForm = ({
 
   const handleOnSubmit = async (data: ProfileFormValues) => {
     if (edit) {
-      await onEdit(data);
+      await onEdit(data, edit);
     } else {
       const response = await onSubmit(data);
       await uploadFile(`users/${response.username}/photo`);
@@ -57,7 +57,7 @@ const ProfileForm = ({
     <EntityFormLayout
       onSubmit={handleSubmit(handleOnSubmit)}
       allowDelete={edit ? true : false}
-      onDelete={deleteProfile}
+      onDelete={() => deleteProfile(edit)}
     >
       <div className="col-lg-4">
         {edit ? (

@@ -10,18 +10,24 @@ import useTransactions from "../../Transactions/hooks/useTransactions";
 import TransactionsDataTable from "../../Transactions/components/TransactionsDataTable";
 import useDeleteLoan from "../hooks/useDeleteLoan";
 import NotFound from "../../../pages/NotFound";
+import { toast } from "react-toastify";
 
 const LoanPage = () => {
   const { id } = useParams<{ id: string }>();
   const { loan, error } = useLoan(id || "");
   const [collaterals] = useCollaterals(`loanId=${id}`);
   const [transactions] = useTransactions(`loanId=${id}`);
-  const [deleteLoan] = useDeleteLoan(id || "");
+  const [deleteLoan] = useDeleteLoan();
   const navigate = useNavigate();
 
   const handleOnDeleteLoan = () => {
     if (confirm("Are you sure you want to delete this record?")) {
-      deleteLoan();
+      const numberId = Number(id);
+      if (!isNaN(numberId)) {
+        deleteLoan(numberId);
+      } else {
+        toast.error("Invalid id for loan");
+      }
       navigate("/loans");
     }
   };

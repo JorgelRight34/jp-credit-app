@@ -52,6 +52,16 @@ public class AdjustmentNotesRepository(
             notes = notes.Where(x => x.Amount <= query.MaxValue);
         }
 
+        if (query.LoanId > 0)
+        {
+            notes = notes.Where(x => x.LoanId == query.LoanId);
+        }
+
+        if (query.NoteId > 0)
+        {
+            notes = notes.Where(x => x.Id == query.NoteId);
+        }
+
         return await notes.PaginateAsync(query);
     }
 

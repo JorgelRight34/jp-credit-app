@@ -15,7 +15,6 @@ import { useNavigate } from "react-router";
 import useUploadFile from "../../../hooks/useUploadFile";
 import FormInput from "../../../common/FormInput";
 import EntityFormLayout from "../../../common/EntityFormLayout";
-import LoansDataList from "../../Loans/components/LoansDataList";
 
 interface CollateralFormProps {
   edit?: number;
@@ -37,8 +36,8 @@ const CollateralForm = ({
     defaultValues: defaultValues,
   });
   const [onSubmit] = useNewCollateral();
-  const [onEdit] = useEditCollateral(edit);
-  const [onDelete] = useDeleteCollateral(edit);
+  const [onEdit] = useEditCollateral();
+  const [onDelete] = useDeleteCollateral();
   const { handleOnFileChange, uploadFile } = useUploadFile();
   const navigate = useNavigate();
 
@@ -47,7 +46,7 @@ const CollateralForm = ({
 
   const handleOnSubmit = async (data: CollateralFormValues) => {
     if (edit) {
-      await onEdit(data);
+      await onEdit(data, edit);
     } else {
       const response = await onSubmit(data);
       uploadFile(`collaterals/${response.id}/photo`);
@@ -56,7 +55,7 @@ const CollateralForm = ({
   };
 
   const handleOnDelete = async () => {
-    await onDelete();
+    await onDelete(edit);
     navigate("/collaterals");
   };
 

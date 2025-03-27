@@ -1,8 +1,9 @@
 import api from "../../../api";
+import { baseUrl, LoanFormValues } from "../lib/constants";
 
 const useNewLoan = () => {
-  const postNewLoan = async (data: any) => {
-    await api.post("loans", data);
+  const postNewLoan = async (data: LoanFormValues) => {
+    await api.post(baseUrl, data);
   };
 
   return [postNewLoan];

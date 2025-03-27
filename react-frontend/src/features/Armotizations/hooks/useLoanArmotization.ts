@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { ArmotizationPayment } from "../../../models/armotizationPayment"
 import api from "../../../api";
+import { baseUrl } from "../lib/constants";
 
 const useLoanArmotization = () => {
     const [armotization, setArmotization] = useState<ArmotizationPayment[]>();
@@ -8,7 +9,7 @@ const useLoanArmotization = () => {
 
     const fetchArmotization = async () => {
         if (!armotizationId) return;
-        const response = await api.get(`armotizations/loans/${armotizationId}`);
+        const response = await api.get(`${baseUrl}/loans/${armotizationId}`);
         setArmotization(response.data);
     }
 

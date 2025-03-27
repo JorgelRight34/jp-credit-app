@@ -3,6 +3,7 @@ import { useNavigate } from "react-router";
 import { login } from "../authSlice";
 import api from "../../../api";
 import { User } from "../../../models/user";
+import { baseUrl } from "../lib/constants";
 
 const useLogin = (data: Record<string, string>) => {
   const navigate = useNavigate();
@@ -11,7 +12,7 @@ const useLogin = (data: Record<string, string>) => {
   const handleOnSubmit = async (event: React.ChangeEvent<HTMLFormElement>) => {
     event.preventDefault();
     const response = await api.post<{ user: User; token: string }>(
-      "users/login",
+      `${baseUrl}/login`,
       data
     );
     const { user, token } = response.data;

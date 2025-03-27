@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { FormField } from "../../../models/formField";
 
+export const baseUrl = "loans";
+
 export const schema = z.object({
   approvedAmount: z
     .string()
@@ -34,6 +36,8 @@ export const schema = z.object({
     })
     .transform((val) => val.value),
 });
+
+export type LoanFormValues = z.infer<typeof schema>;
 
 export const loanFormFields: FormField[] = [
   {

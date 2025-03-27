@@ -3,12 +3,10 @@ import api from "../../../api";
 import { CollateralFormValues } from "../lib/constants";
 import { updateCollateral } from "../collateralsSlice";
 
-const useEditCollateral = (id?: number) => {
+const useEditCollateral = () => {
   const dispatch = useDispatch();
 
-  if (!id) return [];
-
-  const editCollateral = async (data: CollateralFormValues) => {
+  const editCollateral = async (data: CollateralFormValues, id?: number) => {
     const response = await api.put(`collaterals/${id}`, {
       ...data,
       agreementType: "car",

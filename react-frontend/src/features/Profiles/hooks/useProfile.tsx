@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import api from "../../../api";
 import { Client } from "../../../models/client";
+import { baseUrl } from "../lib/constants";
 
 const useProfile = (username: string) => {
   const [profile, setProfile] = useState<Client | null>(null);
@@ -8,7 +9,7 @@ const useProfile = (username: string) => {
 
   const fetchProfile = () => {
     api
-      .get(`users/${username}`)
+      .get(`${baseUrl}/${username}`)
       .then((res) => setProfile(res.data))
       .catch(() => setError(true));
   };

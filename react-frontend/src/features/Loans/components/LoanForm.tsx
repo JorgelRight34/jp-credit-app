@@ -3,7 +3,6 @@ import { Controller, useForm } from "react-hook-form";
 import useNewLoan from "../hooks/useNewLoan";
 import ProfilesDataList from "../../Profiles/components/ProfilesDataList";
 import { loanFormFields, schema } from "../lib/constants";
-import useProfiles from "../../Profiles/hooks/useProfiles";
 import { renderFormInputs } from "../../../utils/formUtils";
 import EntityFormLayout from "../../../common/EntityFormLayout";
 
@@ -17,8 +16,6 @@ const LoanForm = () => {
     resolver: zodResolver(schema),
   });
   const [onSubmit] = useNewLoan();
-  useProfiles("user"); // Load clients
-  useProfiles("loanOfficer");
 
   const renderFormInputsSlice = (start: number, end: number) =>
     renderFormInputs(loanFormFields, start, end, register, errors);

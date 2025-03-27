@@ -10,8 +10,12 @@ export const toCurrency = (money: number): string => {
 };
 
 export const toFormattedDate = (date: Date): string => {
-  const formattedDate = new Intl.DateTimeFormat("fr-FR").format(date);
-  return formattedDate;
+  try {
+    const formattedDate = new Intl.DateTimeFormat("fr-FR").format(date);
+    return formattedDate;
+  } catch {
+    return date.toString();
+  }
 };
 
 export const getFullName = (user?: User): string => {

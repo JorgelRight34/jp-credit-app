@@ -1,5 +1,7 @@
+import React from "react";
+
 interface InfoTableProps {
-  data: string[][];
+  data: (string | number)[][];
 }
 
 const InfoTable = ({ data }: InfoTableProps) => {
@@ -7,10 +9,12 @@ const InfoTable = ({ data }: InfoTableProps) => {
     <div className="table-wrapper border rounded-3 shadow-sm">
       <table className="w-100">
         <tbody>
-          {data.map((row) => (
-            <tr>
+          {data.map((row, i) => (
+            <tr key={i}>
               {row.map((col, key) => (
-                <>{key % 2 == 0 ? <th>{col}</th> : <td>{col}</td>}</>
+                <React.Fragment key={key}>
+                  {key % 2 == 0 ? <th>{col}</th> : <td>{col}</td>}
+                </React.Fragment>
               ))}
             </tr>
           ))}

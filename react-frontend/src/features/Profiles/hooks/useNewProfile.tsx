@@ -6,14 +6,14 @@ import {
   addGuarantor,
   addLoanOfficer,
 } from "../profilesSlice.tsx";
-import { ProfileFormValues } from "../lib/constants.tsx";
+import { baseUrl, ProfileFormValues } from "../lib/constants.tsx";
 import { Role } from "../../../models/role.tsx";
 
 const useNewProfile = (role: Role) => {
   const dispatch = useDispatch();
 
   const addNewprofile = async (data: ProfileFormValues) => {
-    const response = await api.post("users/register", {
+    const response = await api.post(`${baseUrl}/register`, {
       ...data,
       roles: [role],
     });

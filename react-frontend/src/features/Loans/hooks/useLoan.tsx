@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Loan } from "../../../models/loan";
 import api from "../../../api";
+import { baseUrl } from "../lib/constants";
 
 const useLoan = (id: string) => {
   const [loan, setLoan] = useState<Loan | undefined>();
@@ -8,7 +9,7 @@ const useLoan = (id: string) => {
 
   const fetchLoan = () => {
     api
-      .get(`loans/${id}`)
+      .get(`${baseUrl}/${id}`)
       .then((res) => setLoan(res.data))
       .catch(() => setError(true));
   };

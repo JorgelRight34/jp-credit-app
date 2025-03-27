@@ -9,13 +9,14 @@ import {
 import { useEffect } from "react";
 import { RootState } from "../../../store";
 import { Role } from "../../../models/role";
+import { baseUrl } from "../lib/constants";
 
 const useProfiles = (role: Role = "user") => {
   const profiles = useSelector((state: RootState) => state.profiles);
   const dispatch = useDispatch();
 
   const fetchClients = async () => {
-    const response = await api.get(`users/role/${role}`);
+    const response = await api.get(`${baseUrl}/role/${role}`);
 
     switch (role) {
       case "client":

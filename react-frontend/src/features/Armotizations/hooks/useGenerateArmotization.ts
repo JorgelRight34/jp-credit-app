@@ -1,6 +1,7 @@
 import { useState } from "react"
 import api from "../../../api";
 import { ArmotizationPayment } from "../../../models/armotizationPayment";
+import { baseUrl } from "../lib/constants";
 
 const useGenerateArmotization = () => {
     const [form, setForm] = useState({
@@ -22,7 +23,7 @@ const useGenerateArmotization = () => {
     const handleOnSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         const query: string = Object.keys(form).map(key => `${key}=${form[key as keyof typeof form]}`).join('&');
-        const response = await api.get(`armotizations/?${query}`);
+        const response = await api.get(`${baseUrl}/?${query}`);
         setArmotization(response.data);
     }
 
