@@ -31,7 +31,11 @@ const LoanDataRow = ({ loan }: LoanDataRowProps) => {
       <td>{toCurrency(loan.disbursedAmount)}</td>
       <td>{toCurrency(loan.principalBalance)}</td>
       <td className="text-success">{toCurrency(loan.accruedInterest)}</td>
-      <td>{loan.numberOfPayments}</td>
+      <td>
+        {loan.lastPayment
+          ? toFormattedDate(new Date(loan.lastPayment.date))
+          : "---"}
+      </td>
       <td>{loan.annualInterestRate * 100 + "%"}</td>
       <td>{toFormattedDate(new Date(loan.createdAt))}</td>
     </tr>

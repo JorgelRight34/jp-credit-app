@@ -390,6 +390,9 @@ namespace api.Migrations
                     b.Property<DateOnly?>("LastPaymentDate")
                         .HasColumnType("TEXT");
 
+                    b.Property<int>("LastPaymentId")
+                        .HasColumnType("INTEGER");
+
                     b.Property<string>("LoanOfficerId")
                         .HasColumnType("TEXT");
 
@@ -489,7 +492,8 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoanId");
+                    b.HasIndex("LoanId")
+                        .IsUnique();
 
                     b.HasIndex("PayerId");
 
@@ -621,8 +625,8 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.Transaction", b =>
                 {
                     b.HasOne("api.Models.Loan", "Loan")
-                        .WithMany()
-                        .HasForeignKey("LoanId")
+                        .WithOne("LastPayment")
+                        .HasForeignKey("api.Models.Transaction", "LoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -645,6 +649,8 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.Loan", b =>
                 {
                     b.Navigation("Collaterals");
+
+                    b.Navigation("LastPayment");
                 });
 #pragma warning restore 612, 618
         }

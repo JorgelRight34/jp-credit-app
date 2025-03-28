@@ -4,6 +4,7 @@ import TransactionDataRow from "./TransactionDataRow";
 
 interface TransactionsDataTableProps {
   transactions: Transaction[];
+  navigateCallback: (page: number) => void;
 }
 
 const TransactionsDataTable = ({

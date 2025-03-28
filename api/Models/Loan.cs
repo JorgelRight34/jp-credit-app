@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using api.DTOs.Validators;
 
 namespace api.Models;
 
@@ -8,6 +9,7 @@ public class Loan
 {
     [Key]
     public int Id { get; set; }
+    public int LastPaymentId { get; set; }
 
     // Loan details
     public string? Description { get; set; }
@@ -32,7 +34,9 @@ public class Loan
     public DateOnly? LastPaymentDate { get; set; }
     public DateOnly NextPaymentDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
-    public string Status { get; set; } = "Pending";
+    [Required]
+    [LoanState]
+    public string Status { get; set; } = "active";
 
     // Relationships
     [Required]
@@ -45,6 +49,7 @@ public class Loan
     [ForeignKey("LoanOfficerId")]
     public AppUser? LoanOfficer { get; set; }
     public List<Collateral>? Collaterals { get; set; }
+    public Transaction? LastPayment { get; set; }
 
     // Audit fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

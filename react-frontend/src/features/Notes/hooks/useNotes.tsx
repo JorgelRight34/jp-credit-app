@@ -4,13 +4,16 @@ import api from "../../../api";
 import { setNotes } from "../notesSlice";
 import { useEffect } from "react";
 import { baseUrl } from "../lib/constants";
+import { Note } from "../../../models/note";
 
-const useNotes = (query: string = "") => {
+const useNotes = (
+  query: string = ""
+): [Note[], (page: number) => Promise<void>] => {
   const { notes } = useSelector((state: RootState) => state.notes);
   const dispatch = useDispatch();
 
-  const fetchNotes = async () => {
-    const response = await api.get(baseUrl + `?${query}`);
+  const fetchNotes = async (page: number = 1) => {
+    const response = await api.get(baseUrl + `?page=${page}&${query}`);
     dispatch(setNotes(response.data || []));
   };
 
@@ -18,7 +21,7 @@ const useNotes = (query: string = "") => {
     fetchNotes();
   }, []);
 
-  return [notes];
+  return [notes, fetchNotes];
 };
 
 export default useNotes;

@@ -8,7 +8,7 @@ import { useState } from "react";
 import NoteSearchInput from "../components/NoteSearchInput";
 
 const NotesPage = () => {
-  const [notes] = useNotes();
+  const [notes, fetchNotes] = useNotes();
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -19,7 +19,10 @@ const NotesPage = () => {
             <div className="row mb-3">
               <NoteSearchInput />
             </div>
-            <NotesDataTable notes={notes} />
+            <NotesDataTable
+              notes={notes}
+              navigateCallback={(page: number) => fetchNotes(page)}
+            />
           </Tab>
         </Tabs>
       </EntityLayout>

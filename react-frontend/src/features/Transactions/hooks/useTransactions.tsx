@@ -3,15 +3,18 @@ import api from "../../../api";
 import { RootState } from "../../../store";
 import { setTransactions } from "../transactionsSlice";
 import { useEffect } from "react";
+import { Transaction } from "../../../models/transaction";
 
-const useTransactions = (query?: string) => {
+const useTransactions = (
+  query?: string
+): [Transaction[], (page: number) => Promise<void>] => {
   const { transactions } = useSelector(
     (state: RootState) => state.transactions
   );
   const dispatch = useDispatch();
 
-  const fetchTransactions = async () => {
-    const response = await api.get(`transactions?${query}`);
+  const fetchTransactions = async (page: number = 1) => {
+    const response = await api.get(`transactions?page=${page}&${query}`);
     dispatch(setTransactions(response.data));
   };
 
@@ -19,7 +22,7 @@ const useTransactions = (query?: string) => {
     fetchTransactions();
   }, []);
 
-  return [transactions];
+  return [transactions, fetchTransactions];
 };
 
 export default useTransactions;

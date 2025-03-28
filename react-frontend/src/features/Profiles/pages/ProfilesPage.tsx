@@ -9,10 +9,10 @@ import ProfilesDataTable from "../components/ProfilesDataTable";
 import ProfileSearchForm from "../components/ProfileSearchForm";
 
 const ProfilesPage = () => {
-  const [clients] = useProfiles("client");
-  const [loanOfficers] = useProfiles("loanOfficer");
-  const [admins] = useProfiles("admin");
-  const [guarantors] = useProfiles("guarantor");
+  const [clients, fetchClients] = useProfiles("client");
+  const [loanOfficers, fetchLoanOfficers] = useProfiles("loanOfficer");
+  const [admins, fetchAdmins] = useProfiles("admin");
+  const [guarantors, fetchGuarantors] = useProfiles("guarantor");
   const [showModal, setShowModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role>("client");
 
@@ -22,19 +22,31 @@ const ProfilesPage = () => {
         <Tabs onSelect={(k) => setSelectedRole(k as Role)}>
           <Tab title="Clients" eventKey="client" className="p-3">
             <ProfileSearchForm role="client" />
-            <ProfilesDataTable profiles={clients} />
+            <ProfilesDataTable
+              navigateCallback={(page: number) => fetchClients(page)}
+              profiles={clients}
+            />
           </Tab>
           <Tab eventKey="loanOfficer" title="Loan Officers" className="p-3">
             <ProfileSearchForm role="loanOfficer" />
-            <ProfilesDataTable profiles={loanOfficers} />
+            <ProfilesDataTable
+              profiles={loanOfficers}
+              navigateCallback={(page: number) => fetchLoanOfficers(page)}
+            />
           </Tab>
           <Tab eventKey="admin" title="Admins" className="p-3">
             <ProfileSearchForm role="admin" />
-            <ProfilesDataTable profiles={admins} />
+            <ProfilesDataTable
+              profiles={admins}
+              navigateCallback={(page: number) => fetchAdmins(page)}
+            />
           </Tab>
           <Tab eventKey="guarantor" title="Guarantors" className="p-3">
             <ProfileSearchForm role="guarantor" />
-            <ProfilesDataTable profiles={guarantors} />
+            <ProfilesDataTable
+              profiles={guarantors}
+              navigateCallback={(page: number) => fetchGuarantors(page)}
+            />
           </Tab>
         </Tabs>
       </EntityLayout>

@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using api.DTOs.Collateral;
+using api.DTOs.Transaction;
 using api.DTOs.User;
 using api.DTOs.Validators;
 using api.Models;
@@ -10,6 +11,8 @@ namespace api.DTOs.Loan;
 public class LoanDto
 {
     public int Id { get; set; }
+    public string? ClientId { get; set; }
+    public int LastPaymentId { get; set; }
 
     // Loan details
     [Required]
@@ -42,6 +45,7 @@ public class LoanDto
     public UserDto? Client { get; set; }
     public UserDto? LoanOfficer { get; set; }
     public List<CollateralDto>? Collateral { get; set; }
+    public TransactionDto? LastPayment { get; set; }
 
     // Audit fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;

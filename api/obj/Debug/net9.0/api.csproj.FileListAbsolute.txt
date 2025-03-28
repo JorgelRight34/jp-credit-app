@@ -168,3 +168,5 @@ C:\Users\Jorge Lorenzo\Desktop\jp-apps\jp-apps\api\obj\Debug\net9.0\refint\api.d
 C:\Users\Jorge Lorenzo\Desktop\jp-apps\jp-apps\api\obj\Debug\net9.0\api.pdb
 C:\Users\Jorge Lorenzo\Desktop\jp-apps\jp-apps\api\obj\Debug\net9.0\api.genruntimeconfig.cache
 C:\Users\Jorge Lorenzo\Desktop\jp-apps\jp-apps\api\obj\Debug\net9.0\ref\api.dll
+C:\Users\Jorge Lorenzo\Desktop\jp-apps\jp-apps\api\bin\Debug\net9.0\appsettings.Development.json
+C:\Users\Jorge Lorenzo\Desktop\jp-apps\jp-apps\api\bin\Debug\net9.0\appsettings.json

@@ -20,9 +20,13 @@ import LoanSearchInput from "../../Loans/components/LoanSearchInput";
 const ProfilePage = () => {
   const { username } = useParams();
   const { profile, error } = useProfile(username || "");
-  const [userLoans] = useLoans(`username=${username}`);
-  const [collaterals] = useCollaterals(`username=${username}`);
-  const [transactions] = useTransactions(`username=${username}`);
+  const [userLoans, fetchLoans] = useLoans(`username=${username}`);
+  const [collaterals, fetchCollaterals] = useCollaterals(
+    `username=${username}`
+  );
+  const [transactions, fetchTransactions] = useTransactions(
+    `username=${username}`
+  );
   const [showModal, setShowModal] = useState(false);
 
   if (error) return <NotFound />;
@@ -41,15 +45,24 @@ const ProfilePage = () => {
           </Tab>
           <Tab eventKey={"loans"} title="Loans" className="p-3">
             <div className="mb-3">
-              <LoanSearchInput placeholder="Search by id" fetchData={false} />
+              <LoanSearchInput fetchData={false} />
             </div>
-            <LoansDataTable loans={userLoans} />
+            <LoansDataTable
+              loans={userLoans}
+              navigateCallback={(page: number) => fetchLoans(page)}
+            />
           </Tab>
           <Tab eventKey={"collaterals"} title="Collaterals" className="p-3">
-            <CollateralsDataTable collaterals={collaterals} />
+            <CollateralsDataTable
+              collaterals={collaterals}
+              navigateCallback={(page: number) => fetchCollaterals(page)}
+            />
           </Tab>
           <Tab eventKey={"transactions"} title="Transactions" className="p-3">
-            <TransactionsDataTable transactions={transactions} />
+            <TransactionsDataTable
+              transactions={transactions}
+              navigateCallback={(page: number) => fetchTransactions(page)}
+            />
           </Tab>
         </Tabs>
       </EntityLayout>

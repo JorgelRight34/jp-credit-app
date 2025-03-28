@@ -17,9 +17,9 @@ import { toast } from "react-toastify";
 const LoanPage = () => {
   const { id } = useParams<{ id: string }>();
   const { loan, error } = useLoan(id || "");
-  const [collaterals] = useCollaterals(`loanId=${id}`);
-  const [transactions] = useTransactions(`loanId=${id}`);
-  const [notes] = useNotes(`loanId=${id}`);
+  const [collaterals, fetchCollaterals] = useCollaterals(`loanId=${id}`);
+  const [transactions, fetchTransactions] = useTransactions(`loanId=${id}`);
+  const [notes, fetchNotes] = useNotes(`loanId=${id}`);
   const [onDelete] = useDeleteLoan();
 
   const handleOnDelete = async () => {
@@ -43,13 +43,22 @@ const LoanPage = () => {
           {loan.client && <ProfileInfo profile={loan.client} />}
         </Tab>
         <Tab className="p-3" eventKey="collaterals" title="Collaterals">
-          <CollateralsDataTable collaterals={collaterals} />
+          <CollateralsDataTable
+            collaterals={collaterals}
+            navigateCallback={(page: number) => fetchCollaterals(page)}
+          />
         </Tab>
         <Tab className="p-3" eventKey="transactions" title="Transactions">
-          <TransactionsDataTable transactions={transactions} />
+          <TransactionsDataTable
+            transactions={transactions}
+            navigateCallback={(page: number) => fetchTransactions(page)}
+          />
         </Tab>
         <Tab className="p-3" eventKey="notes" title="Notes">
-          <NotesDataTable notes={notes} />
+          <NotesDataTable
+            notes={notes}
+            navigateCallback={(page: number) => fetchNotes(page)}
+          />
         </Tab>
       </Tabs>
     </EntityLayout>

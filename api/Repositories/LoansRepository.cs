@@ -42,7 +42,7 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
 
     public async Task<IEnumerable<LoanDto>> GetAllAsync(LoanQuery query)
     {
-        var loans = context.Loans.AsQueryable();
+        var loans = context.Loans.ProjectTo<LoanDto>(mapper.ConfigurationProvider).AsQueryable();
 
         if (query.ClientId != null)
         {
@@ -60,7 +60,7 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
 
         loans = loans.OrderBy(x => x.CreatedAt);
 
-        return await loans.ProjectTo<LoanDto>(mapper.ConfigurationProvider).PaginateAsync(query);
+        return await loans.PaginateAsync(query);
     }
 
     public async Task<LoanDto?> GetByIdAsync(int id)
