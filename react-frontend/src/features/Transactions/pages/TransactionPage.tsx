@@ -4,7 +4,7 @@ import EntityLayout from "../../../common/EntityLayout";
 import { Tab, Tabs } from "react-bootstrap";
 import NotFound from "../../../pages/NotFound";
 import ProfileInfo from "../../Profiles/components/ProfileInfo";
-import LoanInformation from "../../Loans/components/LoanInformation";
+import LoanInfo from "../../Loans/components/LoanInfo";
 import TransactionInfo from "../components/TransactionInfo";
 import useDeleteTransaction from "../hooks/useDeleteTransaction";
 
@@ -33,7 +33,7 @@ const TransactionPage = () => {
           <ProfileInfo profile={transaction.payer} />
         </Tab>
         <Tab eventKey={"loan"} title="Loan" className="p-3">
-          <LoanInformation loan={transaction.loan} />
+          <LoanInfo loan={transaction.loan} />
         </Tab>
       </Tabs>
     </EntityLayout>

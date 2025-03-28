@@ -5,12 +5,12 @@ import { setNotes } from "../notesSlice";
 import { useEffect } from "react";
 import { baseUrl } from "../lib/constants";
 
-const useNotes = () => {
+const useNotes = (query: string = "") => {
   const { notes } = useSelector((state: RootState) => state.notes);
   const dispatch = useDispatch();
 
   const fetchNotes = async () => {
-    const response = await api.get(baseUrl);
+    const response = await api.get(baseUrl + `?${query}`);
     dispatch(setNotes(response.data || []));
   };
 

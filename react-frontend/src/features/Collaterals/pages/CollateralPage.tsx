@@ -6,8 +6,9 @@ import useCollateral from "../hooks/useCollateral";
 import Modal from "../../../common/Modal";
 import { useState } from "react";
 import NotFound from "../../../pages/NotFound";
-import LoanInformation from "../../Loans/components/LoanInformation";
+import LoanInfo from "../../Loans/components/LoanInfo";
 import ProfileInfo from "../../Profiles/components/ProfileInfo";
+import CollateralInfo from "../components/CollateralInfo";
 
 const CollateralPage = () => {
   const { id } = useParams();
@@ -22,9 +23,11 @@ const CollateralPage = () => {
     <>
       <EntityLayout title={`Collateral`} onEdit={() => setShowModal(true)}>
         <Tabs>
-          <Tab eventKey="collateral" title="Collateral" className="p-3"></Tab>
+          <Tab eventKey="collateral" title="Collateral" className="p-3">
+            <CollateralInfo collateral={collateral} />
+          </Tab>
           <Tab eventKey={"loan"} title="Loan" className="p-3">
-            <LoanInformation loan={collateral.loan} />
+            <LoanInfo loan={collateral.loan} />
           </Tab>
           <Tab eventKey="client" title="Client" className="p-3">
             <ProfileInfo profile={collateral.client} />

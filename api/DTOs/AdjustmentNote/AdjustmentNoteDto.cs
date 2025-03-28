@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using api.DTOs.Loan;
 
 namespace api.DTOs.AdjustmentNote;
 
@@ -13,4 +14,5 @@ public class AdjustmentNoteDto
     public DateOnly Date { get; set; }
     [Required]
     public int LoanId { get; set; }
+    public LoanDto? Loan { get; set; }
 }

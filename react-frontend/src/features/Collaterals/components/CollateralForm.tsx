@@ -1,9 +1,11 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import {
+  collateralConditionsOptions,
   collateralFormDefaultValues,
   CollateralFormValues,
   collateralsFormFields,
+  collateralStatusOptions,
   schema,
 } from "../lib/constants";
 import useNewCollateral from "../hooks/useNewCollateral";
@@ -15,6 +17,7 @@ import { useNavigate } from "react-router";
 import useUploadFile from "../../../hooks/useUploadFile";
 import FormInput from "../../../common/FormInput";
 import EntityFormLayout from "../../../common/EntityFormLayout";
+import { toTitleCase } from "../../../utils/utils";
 
 interface CollateralFormProps {
   edit?: number;
@@ -72,8 +75,9 @@ const CollateralForm = ({
             State
           </label>
           <select id="state" className="form-select" {...register("state")}>
-            <option value="good">good</option>
-            <option value="bad">bad</option>
+            {collateralStatusOptions.map((status) => (
+              <option value={status}>{toTitleCase(status)}</option>
+            ))}
           </select>
         </div>
         <div className="mb-3">
@@ -85,8 +89,9 @@ const CollateralForm = ({
             className="form-select"
             {...register("condition")}
           >
-            <option value="good">Good</option>
-            <option value="old">Old</option>
+            {collateralConditionsOptions.map((option) => (
+              <option value={option}>{toTitleCase(option)}</option>
+            ))}
           </select>
         </div>
         {!edit && (

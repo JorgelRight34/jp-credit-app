@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using api.DTOs.Collateral;
 using api.DTOs.User;
+using api.DTOs.Validators;
 using api.Models;
 
 namespace api.DTOs.Loan;
@@ -33,7 +34,9 @@ public class LoanDto
     public DateOnly NextPaymentDate { get; set; }
     public DateOnly? LastPaymentDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
-    public string Status { get; set; } = "Pending";
+    [Required]
+    [LoanState]
+    public string? Status { get; set; }
 
     // Navigation properties
     public UserDto? Client { get; set; }

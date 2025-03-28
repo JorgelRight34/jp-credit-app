@@ -1,5 +1,6 @@
 using System;
 using System.ComponentModel.DataAnnotations;
+using api.DTOs.Validators;
 
 namespace api.DTOs.Loan;
 
@@ -19,5 +20,6 @@ public class UpdateLoanDto
     [Required]
     public DateOnly StartDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
+    [LoanState]
     public string? Status { get; set; }
 }

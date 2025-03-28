@@ -52,3 +52,39 @@ export const collateralsFormFields: FormField[] = [
     label: "Document URL",
   },
 ];
+
+export const collateralStatusOptions = [
+  "pending",
+  "approved",
+  "rejected",
+  "under review",
+  "active",
+  "inactive",
+  "seized",
+  "released",
+  "defaulted",
+  "cleared",
+  "expired",
+  "on hold",
+];
+
+export const collateralConditionsOptions = [
+  "high-quality",
+  "low-quality",
+  "stable",
+  "depreciating",
+  "liquid",
+  "illiquid",
+  "low-risk",
+  "high-risk",
+  "easily recoverable",
+  "difficult to seize",
+  "volatile",
+  "secure",
+  "undervalued",
+  "overvalued",
+  "appreciating",
+  "depreciating rapidly",
+  "diversified",
+  "concentrated",
+];
