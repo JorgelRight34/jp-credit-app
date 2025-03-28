@@ -2,14 +2,14 @@ import InfoTable from "../../../common/InfoTable";
 import { Loan } from "../../../models/loan";
 import { getFullName, toCurrency } from "../../../utils/utils";
 
-interface LoanInformationProps {
+interface LoanInfoProps {
   loan: Loan;
 }
 
-const LoanInformation = ({ loan }: LoanInformationProps) => {
+const LoanInfo = ({ loan }: LoanInfoProps) => {
   return (
     <div className="row mx-0">
-      <div>
+      <div className="mb-3">
         <h4>Description</h4>
         <p>
           {loan.description
@@ -72,4 +72,4 @@ const LoanInformation = ({ loan }: LoanInformationProps) => {
   );
 };
 
-export default LoanInformation;
+export default LoanInfo;

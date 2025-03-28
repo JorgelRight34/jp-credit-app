@@ -1,7 +1,7 @@
-import React from "react";
+import React, { ReactNode } from "react";
 
 interface InfoTableProps {
-  data: (string | number)[][];
+  data: (string | number | ReactNode)[][];
 }
 
 const InfoTable = ({ data }: InfoTableProps) => {

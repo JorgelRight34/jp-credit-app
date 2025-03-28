@@ -1,8 +1,8 @@
 import { Tab, Tabs } from "react-bootstrap";
 import EntityLayout from "../../../common/EntityLayout";
-import LoanInformation from "../components/LoanInformation";
+import LoanInformation from "../components/LoanInfo";
 import useLoan from "../hooks/useLoan";
-import { useNavigate, useParams } from "react-router";
+import { useParams } from "react-router";
 import ProfileInfo from "../../Profiles/components/ProfileInfo";
 import CollateralsDataTable from "../../Collaterals/components/CollateralsDataTable";
 import useCollaterals from "../../Collaterals/hooks/useCollaterals";
@@ -10,6 +10,8 @@ import useTransactions from "../../Transactions/hooks/useTransactions";
 import TransactionsDataTable from "../../Transactions/components/TransactionsDataTable";
 import useDeleteLoan from "../hooks/useDeleteLoan";
 import NotFound from "../../../pages/NotFound";
+import NotesDataTable from "../../Notes/components/NotesDataTable";
+import useNotes from "../../Notes/hooks/useNotes";
 import { toast } from "react-toastify";
 
 const LoanPage = () => {
@@ -17,19 +19,14 @@ const LoanPage = () => {
   const { loan, error } = useLoan(id || "");
   const [collaterals] = useCollaterals(`loanId=${id}`);
   const [transactions] = useTransactions(`loanId=${id}`);
-  const [deleteLoan] = useDeleteLoan();
-  const navigate = useNavigate();
+  const [notes] = useNotes(`loanId=${id}`);
+  const [onDelete] = useDeleteLoan();
 
-  const handleOnDeleteLoan = () => {
-    if (confirm("Are you sure you want to delete this record?")) {
-      const numberId = Number(id);
-      if (!isNaN(numberId)) {
-        deleteLoan(numberId);
-      } else {
-        toast.error("Invalid id for loan");
-      }
-      navigate("/loans");
-    }
+  const handleOnDelete = async () => {
+    const numberId = Number(id);
+    if (isNaN(numberId)) toast.error("Invalid loan id");
+    if (confirm("Are you sure you want to delete this record?"))
+      await onDelete(numberId);
   };
 
   if (error) return <NotFound />;
@@ -37,7 +34,7 @@ const LoanPage = () => {
   if (!loan) return <></>;
 
   return (
-    <EntityLayout title={`Loan #${loan.id}`} onDelete={handleOnDeleteLoan}>
+    <EntityLayout title={`Loan #${loan.id}`} onDelete={handleOnDelete}>
       <Tabs>
         <Tab className="p-3" eventKey="info" title="Information">
           <LoanInformation loan={loan} />
@@ -50,6 +47,9 @@ const LoanPage = () => {
         </Tab>
         <Tab className="p-3" eventKey="transactions" title="Transactions">
           <TransactionsDataTable transactions={transactions} />
+        </Tab>
+        <Tab className="p-3" eventKey="notes" title="Notes">
+          <NotesDataTable notes={notes} />
         </Tab>
       </Tabs>
     </EntityLayout>

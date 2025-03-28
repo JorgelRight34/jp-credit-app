@@ -1,3 +1,6 @@
 api/appsettings.json
 api/appsettings.Development.json
 react-frontend/.env
+api/obj/Debug/
+api/Migrations
+.gitignore

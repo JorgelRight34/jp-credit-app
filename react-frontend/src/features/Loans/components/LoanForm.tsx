@@ -23,7 +23,18 @@ const LoanForm = () => {
   return (
     <EntityFormLayout onSubmit={handleSubmit(onSubmit)}>
       <div className="col-lg-4">{renderFormInputsSlice(0, 3)}</div>
-      <div className="col-lg-4">{renderFormInputsSlice(3, 6)}</div>
+      <div className="col-lg-4">
+        {renderFormInputsSlice(3, 6)}
+        <div className="mb-3">
+          <label className="form-label" htmlFor="state">
+            Status
+          </label>
+          <select id="state" className="form-select" {...register("status")}>
+            <option value="inactive">Inactive</option>
+            <option value="active">Active</option>
+          </select>
+        </div>
+      </div>
       <div className="col-lg-4">
         <div className="mb-3">
           <label className="form-label">Client</label>

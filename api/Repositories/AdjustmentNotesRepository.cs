@@ -6,6 +6,7 @@ using api.Interfaces;
 using api.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories;
 
@@ -67,7 +68,7 @@ public class AdjustmentNotesRepository(
 
     public async Task<AdjustmentNoteDto?> GetByIdAsync(int id)
     {
-        var note = await context.AdjustmentNotes.FindAsync(id);
+        var note = await context.AdjustmentNotes.Include(x => x.Loan).FirstOrDefaultAsync(x => x.Id == id);
         if (note == null) return null;
 
         return mapper.Map<AdjustmentNoteDto>(note);

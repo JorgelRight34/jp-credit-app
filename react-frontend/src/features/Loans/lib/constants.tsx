@@ -35,6 +35,7 @@ export const schema = z.object({
       label: z.string(),
     })
     .transform((val) => val.value),
+  status: z.string(),
 });
 
 export type LoanFormValues = z.infer<typeof schema>;
