@@ -19,7 +19,7 @@ public class CreateLoanDto
     [Required]
     public DateOnly StartDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
-    public string Status { get; set; } = "Pending";
+    public string? Status { get; set; }
 
     // Relationships
     public string? LoanOfficerId { get; set; }
