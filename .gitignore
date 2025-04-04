@@ -1,3 +1,5 @@
 api/appsettings.json
 api/appsettings.Development.json
+api/obj
+api/bin
 react-frontend/.env
