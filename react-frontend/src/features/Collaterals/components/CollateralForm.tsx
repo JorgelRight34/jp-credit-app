@@ -90,7 +90,9 @@ const CollateralForm = ({
             {...register("condition")}
           >
             {collateralConditionsOptions.map((option) => (
-              <option value={option}>{toTitleCase(option)}</option>
+              <option key={option} value={option}>
+                {toTitleCase(option)}
+              </option>
             ))}
           </select>
         </div>

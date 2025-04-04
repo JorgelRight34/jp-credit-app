@@ -58,6 +58,21 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
             }
         }
 
+        if (query.StartDate != null)
+        {
+            loans = loans.Where(x => x.CreatedAt >= query.StartDate);
+        }
+
+        if (query.EndDate != null)
+        {
+            loans = loans.Where(x => x.CreatedAt <= query.EndDate);
+        }
+
+        if (query.Status != null)
+        {
+            loans = loans.Where(x => x.Status == query.Status);
+        }
+
         loans = loans.OrderBy(x => x.CreatedAt);
 
         return await loans.PaginateAsync(query);
