@@ -54,6 +54,9 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         await context.Transactions.AddAsync(transaction);
         await SaveChanges();
 
+        loan.LastPaymentId = transaction.Id;
+        await context.SaveChangesAsync();
+
         return mapper.Map<TransactionDto>(transaction);
     }
 
@@ -70,12 +73,17 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         // Update loan accrued interest and principal balance
         loan.AccruedInterest -= transaction.InterestValue;
         loan.PrincipalBalance += transaction.CapitalValue;
+
         // Update next payment date
         var days = (int)(loan.PaymentFrequency / 12) * 30;
         loan.NextPaymentDate = loan.NextPaymentDate.AddDays(-days);
 
         loan.NumberOfPayments += 1;
         loan.CalculatePaymentValue(loan.PrincipalBalance);
+
+        // Get payment before this
+        var newLastPayment = context.Transactions.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.Date <= transaction.Date);
+        loan.LastPaymentId = newLastPayment.Id;
 
         // Remove transaction
         context.Transactions.Remove(transaction);

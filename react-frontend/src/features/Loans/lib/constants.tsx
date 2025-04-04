@@ -17,7 +17,7 @@ export const schema = z.object({
     .string()
     .transform((val) => Number(val))
     .refine((val) => val > 0, { message: "Must be greater than 0" }),
-  paymentFrecuency: z
+  paymentFrequency: z
     .string()
     .transform((val) => Number(val))
     .refine((val) => val > 0, { message: "Must be greater than 0" }),
@@ -35,6 +35,7 @@ export const schema = z.object({
       label: z.string(),
     })
     .transform((val) => val.value),
+  status: z.string(),
 });
 
 export type LoanFormValues = z.infer<typeof schema>;
@@ -65,7 +66,7 @@ export const loanFormFields: FormField[] = [
     step: 0.001,
   },
   {
-    name: "paymentFrecuency",
+    name: "paymentFrequency",
     label: "Payment Frequency",
     type: "number",
     step: 0.001,

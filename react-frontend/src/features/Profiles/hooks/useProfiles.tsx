@@ -10,13 +10,16 @@ import { useEffect } from "react";
 import { RootState } from "../../../store";
 import { Role } from "../../../models/role";
 import { baseUrl } from "../lib/constants";
+import { User } from "../../../models/user";
 
-const useProfiles = (role: Role = "user") => {
+const useProfiles = (
+  role: Role = "user"
+): [User[], (page: number) => Promise<void>] => {
   const profiles = useSelector((state: RootState) => state.profiles);
   const dispatch = useDispatch();
 
-  const fetchClients = async () => {
-    const response = await api.get(`${baseUrl}/role/${role}`);
+  const fetchClients = async (page: number = 1) => {
+    const response = await api.get(`${baseUrl}/role/${role}/?page=${page}`);
 
     switch (role) {
       case "client":
@@ -40,7 +43,7 @@ const useProfiles = (role: Role = "user") => {
     fetchClients();
   }, []);
 
-  return [profiles[`${role}s` as keyof typeof profiles]];
+  return [profiles[`${role}s` as keyof typeof profiles], fetchClients];
 };
 
 export default useProfiles;

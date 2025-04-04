@@ -9,7 +9,7 @@ import useLoans from "../hooks/useLoans";
 import LoanSearchInput from "../components/LoanSearchInput";
 
 const LoansPage = () => {
-  const [loans] = useLoans();
+  const [loans, fetchLoans] = useLoans();
   const [isModalShowing, setIsModalShowing] = useState(false);
 
   const hideModal = () => setIsModalShowing(false);
@@ -22,7 +22,10 @@ const LoansPage = () => {
             <div className="mb-3">
               <LoanSearchInput />
             </div>
-            <LoansDataTable loans={loans} />
+            <LoansDataTable
+              loans={loans}
+              navigateCallback={(page: number) => fetchLoans(page)}
+            />
           </Tab>
           <Tab eventKey={"pending"} title="Pending" className="p-3"></Tab>
         </Tabs>

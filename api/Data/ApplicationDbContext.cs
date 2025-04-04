@@ -26,12 +26,12 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
             .HasIndex(x => x.DNI)
             .IsUnique();
 
-        /*
-        builder.Entity<AppUser>()
-            .HasIndex(x => x.Email)
-            .IsUnique();
-        */
-
+        builder.Entity<Loan>()
+            .HasOne(loan => loan.LastPayment)
+            .WithOne(t => t.Loan)
+            .HasForeignKey<Transaction>(t => t.LoanId)
+            .OnDelete(DeleteBehavior.Cascade);
+            
         var roles = new List<IdentityRole>
         {
             new IdentityRole { Id = "Client", Name= "Client", NormalizedName = "CLIENT"},

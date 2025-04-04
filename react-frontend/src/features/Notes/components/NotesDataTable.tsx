@@ -4,6 +4,7 @@ import NoteDataRow from "./NoteDataRow";
 
 interface NotesDataTableProps {
   notes: Note[];
+  navigateCallback: (page: number) => void;
 }
 
 const NotesDataTable = ({ notes }: NotesDataTableProps) => {

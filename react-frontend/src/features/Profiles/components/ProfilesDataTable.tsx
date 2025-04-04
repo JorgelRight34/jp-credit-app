@@ -4,6 +4,7 @@ import ProfileDataRow from "./ProfilesDataRow";
 
 interface ProfilesDataTableProps {
   profiles: User[];
+  navigateCallback: (page: number) => void;
 }
 
 const ProfilesDataTable = ({ profiles }: ProfilesDataTableProps) => {

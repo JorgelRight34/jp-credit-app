@@ -1,3 +1,4 @@
+import { Transaction } from "./transaction";
 import { User } from "./user";
 
 export interface Loan {
@@ -19,11 +20,19 @@ export interface Loan {
   nextPaymentDate: string;
   lastPaymentDate: string;
   deliveryDate: string; // Entrega
-  status: string; // Default to 'Pending'
+  status:
+    | "active"
+    | "inactive"
+    | "notified"
+    | "punished"
+    | "legal"
+    | "judicial"
+    | "agreement";
 
   // Navigation properties
   client?: User; // Optional UserDto type
   loanOfficer?: User; // Optional UserDto type
+  lastPayment?: Transaction;
 
   // Audit fields
   createdAt: Date | string; // DateTime in C# is replaced by string (ISO format) in TypeScript
