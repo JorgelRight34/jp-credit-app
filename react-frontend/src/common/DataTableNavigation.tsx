@@ -1,5 +1,6 @@
 interface DataTableNavigationProps {
   setPage: (...args: any[]) => void;
+  totalPages?: number;
   page: number;
 }
 

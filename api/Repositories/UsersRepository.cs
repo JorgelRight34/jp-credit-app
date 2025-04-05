@@ -172,17 +172,19 @@ public class UsersRepository(
             );
         }
 
-        if (!String.IsNullOrEmpty(query.FirstName))
+        if (!string.IsNullOrEmpty(query.FirstName))
         {
-            users = users.Where(x => x.FirstName != null && x.FirstName.ToLower().Contains(query.FirstName.ToLower()));
+            var nameQuery = query.FirstName.ToLower();
+            users = users.Where(x =>
+                ((x.FirstName ?? "") + " " + (x.LastName ?? "")).ToLower().Contains(nameQuery));
         }
 
-
-        if (!String.IsNullOrEmpty(query.LastName))
+        if (!string.IsNullOrEmpty(query.LastName))
         {
-            users = users.Where(x => x.LastName != null && x.LastName.ToLower().Contains(query.LastName.ToLower()));
+            var nameQuery = query.LastName.ToLower();
+            users = users.Where(x =>
+                ((x.FirstName ?? "") + " " + (x.LastName ?? "")).ToLower().Contains(nameQuery));
         }
-
 
         if (!String.IsNullOrEmpty(query.DNI))
         {

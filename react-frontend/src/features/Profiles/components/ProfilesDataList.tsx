@@ -24,29 +24,38 @@ const ProfilesDataList = ({
   const [query, setQuery] = useState<Option | null>(null);
 
   const loadOptions = async (inputValue: string): Promise<Option[]> => {
+    console.log(inputValue);
     const response = await api.get(
-      `users/role/${role}/?firstname=${inputValue}`
+      `users/role/${role}/?firstname=${inputValue}&lastname=${inputValue}`
     );
 
     return response.data.map((item: User) => ({
       value: item.id,
-      label: getFullName(item),
+      label: `${item.firstName} | ${item.lastName}`,
     }));
   };
 
   return (
     <>
       <AsyncSelect
-        cacheOptions={true}
         defaultOptions
-        onChange={(selectedOption: SingleValue<Option> | null) =>
-          setQuery(selectedOption)
-        }
+        onChange={(selectedOption: SingleValue<Option> | null) => {
+          console.log("changing");
+          setQuery(selectedOption);
+        }}
         loadOptions={loadOptions}
         value={query}
         {...props}
+        styles={{
+          menu: (provided) => ({
+            ...provided,
+            width: "300px",
+            zIndex: 10,
+          }),
+        }}
         required
       />
+      {query}
       {error && <p className="text-danger">{error}</p>}
     </>
   );

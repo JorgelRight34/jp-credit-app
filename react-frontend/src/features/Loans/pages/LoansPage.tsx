@@ -30,7 +30,7 @@ const LoansPage = () => {
           <Tab eventKey={"pending"} title="Pending" className="p-3"></Tab>
         </Tabs>
       </EntityLayout>
-      <Modal show={isModalShowing} onHide={hideModal} title="Add new loan">
+      <Modal show={isModalShowing} onHide={hideModal} title="Add New Loan">
         <LoanForm />
       </Modal>
     </>

@@ -17,7 +17,7 @@ const DataTable = ({ children, headers, callback }: DataTableProps) => {
 
   return (
     <>
-      <div className="table-wrapper border rounded-3 shadow-sm">
+      <div className="table-wrapper border rounded-3 shadow-sm mb-5">
         <table className="w-100">
           <thead className="rounded-3">
             <tr>

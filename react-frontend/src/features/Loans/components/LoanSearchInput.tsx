@@ -40,35 +40,46 @@ const LoanSearchInput = ({ fetchData = true }: LoanSearchInput) => {
   return (
     <div className="row mx-0">
       <div className="col">
-        <input
-          name="id"
-          type="number"
-          min="1"
-          className="form-control"
-          onChange={(e) => handleOnChange("id", e.target.value)}
-          onKeyDown={handleOnKeyDown}
-          placeholder={"Search by loan id"}
-        />
+        <div className="form-floating">
+          <input
+            id="id"
+            name="id"
+            type="number"
+            min="1"
+            className="form-control"
+            onChange={(e) => handleOnChange("id", e.target.value)}
+            onKeyDown={handleOnKeyDown}
+            placeholder={"Search by loan id"}
+          />
+          <label htmlFor="id">Id</label>
+        </div>
       </div>
       <div className="col">
-        <input
-          type="date"
-          name="startDate"
-          className="form-control"
-          onBlur={handleOnDateInputBlur}
-        />
+        <div className="form-floating">
+          <input
+            id="startDate"
+            type="date"
+            name="startDate"
+            className="form-control"
+            onBlur={handleOnDateInputBlur}
+          />
+          <label htmlFor="startDate">Start date</label>
+        </div>
       </div>
       <div className="col">
-        <input
-          type="date"
-          name="endDate"
-          className="form-control"
-          onBlur={handleOnDateInputBlur}
-        />
+        <div className="form-floating">
+          <input
+            type="date"
+            name="endDate"
+            className="form-control"
+            onBlur={handleOnDateInputBlur}
+          />
+          <label htmlFor="endDate">End date</label>
+        </div>
       </div>
-      <div className="col">
+      <div className="col d-flex align-items-center">
         <button
-          className="btn btn-accent px-3"
+          className="btn btn-accent px-3 w-100"
           onClick={() => search(fetchData)}
         >
           Search
