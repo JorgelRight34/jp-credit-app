@@ -6,7 +6,7 @@ import { useState } from "react";
 import LoanForm from "../components/LoanForm";
 import LoansDataTable from "../components/LoansDataTable";
 import useLoans from "../hooks/useLoans";
-import LoanSearchInput from "../components/LoanSearchInput";
+import LoanSearchInput from "../components/LoanSearch";
 
 const LoansPage = () => {
   const [loans, fetchLoans] = useLoans();
@@ -16,18 +16,15 @@ const LoansPage = () => {
 
   return (
     <>
-      <EntityLayout title="Loans" onAddNew={() => setIsModalShowing(true)}>
+      <EntityLayout title="Préstamos" onAddNew={() => setIsModalShowing(true)}>
         <Tabs>
-          <Tab eventKey={"active"} title="Active" className="p-3">
+          <Tab eventKey={"active"} title="Activos" className="p-3">
             <div className="mb-3">
               <LoanSearchInput />
             </div>
-            <LoansDataTable
-              loans={loans}
-              navigateCallback={(page: number) => fetchLoans(page)}
-            />
+            <LoansDataTable loans={loans} navigateCallback={fetchLoans} />
           </Tab>
-          <Tab eventKey={"pending"} title="Pending" className="p-3"></Tab>
+          <Tab eventKey={"pending"} title="Pendientes" className="p-3"></Tab>
         </Tabs>
       </EntityLayout>
       <Modal show={isModalShowing} onHide={hideModal} title="Add New Loan">

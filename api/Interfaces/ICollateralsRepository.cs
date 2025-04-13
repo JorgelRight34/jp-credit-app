@@ -9,11 +9,11 @@ namespace api.Interfaces;
 public interface ICollateralsRepository
 {
 
-    Task<CollateralDto> AddCollateralPhotoAsync(IFormFile file, Collateral collateral);
-    Task<CollateralDto> CreateAsync(CreateCollateralDto createCollateralDto);
-    Task<CollateralDto?> DeleteAsync(int id);
+    Task<Collateral> AddCollateralPhotoAsync(IFormFile file, Collateral collateral);
+    Task<Collateral> CreateAsync(CreateCollateralDto createCollateralDto);
+    Task<Collateral?> DeleteAsync(int id);
     Task DeleteCollateralPhotoAsync(string publicId);
-    Task<IEnumerable<CollateralDto>> GetAllAsync(CollateralQuery collateralQuery);
-    Task<CollateralDto?> GetByIdAsync(int id);
-    Task<CollateralDto?> UpdateAsync(UpdateCollateralDto updateCollateralDto, int id);
+    Task<IEnumerable<Collateral>> GetAllAsync(CollateralQuery collateralQuery);
+    Task<Collateral?> GetByIdAsync(int id);
+    Task<Collateral?> UpdateAsync(UpdateCollateralDto updateCollateralDto, int id);
 }

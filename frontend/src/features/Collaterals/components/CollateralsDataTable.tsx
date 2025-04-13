@@ -1,32 +1,56 @@
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../../common/DataTable";
 import { Collateral } from "../../../models/collateral";
-import { useNavigate } from "react-router";
+import { NavLink, useNavigate } from "react-router";
+import { toCurrency } from "../../../utils/utils";
 
 interface CollateralsDataTableProps {
   collaterals: Collateral[];
-  navigateCallback?: (page: number) => void;
+  navigateCallback?: (page: number) => void | Promise<void>;
 }
 
-const CollateralsDataTable = ({ collaterals }: CollateralsDataTableProps) => {
-  const columns: ColumnDef<Collateral>[] = [
-    { accessorKey: "id", header: "Id" },
-    { accessorKey: "title", header: "Title" },
-    {
-      header: "Value",
-      cell: ({ row }) => row.original.value.toLocaleString("en-US"),
-    },
-    { accessorKey: "clientId", header: "Client Id" },
-  ];
+const columns: ColumnDef<Collateral>[] = [
+  { accessorKey: "id", header: "Id", enableSorting: true },
+  { accessorKey: "title", header: "Título", enableSorting: true },
+  {
+    header: "Valor",
+    accessorKey: "value",
+    enableSorting: true,
+    cell: ({ row }) => toCurrency(row.original.value),
+  },
+  {
+    accessorKey: "clientId",
+    header: "Cliente",
+    enableSorting: true,
+    cell: ({ row }) => (
+      <NavLink to={`/profiles/${row.original.clientId}`}>
+        {row.original.clientId}
+      </NavLink>
+    ),
+  },
+];
+
+/**
+ * CollateralsDataTable component displays a table of collaterals.
+ * It uses the DataTable component to render the data in a tabular format.
+ *
+ * @param {CollateralsDataTableProps} props - The props for the component.
+ * @returns {JSX.Element} The rendered component.
+ */
+const CollateralsDataTable = ({
+  collaterals,
+  navigateCallback,
+}: CollateralsDataTableProps) => {
   const navigate = useNavigate();
 
   return (
-    <DataTable
+    <DataTable<Collateral>
       columns={columns}
       data={collaterals}
       onRowClick={(collateral: Collateral) =>
         navigate(`/collaterals/${collateral.id}`)
       }
+      navigateCallback={navigateCallback || (() => {})}
     />
   );
 };

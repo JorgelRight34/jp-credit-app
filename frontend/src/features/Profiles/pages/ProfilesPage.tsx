@@ -18,30 +18,30 @@ const ProfilesPage = () => {
 
   return (
     <>
-      <EntityLayout title="Profiles" onAddNew={() => setShowModal(true)}>
+      <EntityLayout title="Pérfiles" onAddNew={() => setShowModal(true)}>
         <Tabs onSelect={(k) => setSelectedRole(k as Role)}>
-          <Tab title="Clients" eventKey="client" className="p-3">
+          <Tab title="Clientes" eventKey="client" className="p-3">
             <ProfileSearchForm role="client" />
             <ProfilesDataTable
               navigateCallback={(page: number) => fetchClients(page)}
               profiles={clients}
             />
           </Tab>
-          <Tab eventKey="loanOfficer" title="Loan Officers" className="p-3">
+          <Tab eventKey="loanOfficer" title="Agentes" className="p-3">
             <ProfileSearchForm role="loanOfficer" />
             <ProfilesDataTable
               profiles={loanOfficers}
               navigateCallback={(page: number) => fetchLoanOfficers(page)}
             />
           </Tab>
-          <Tab eventKey="admin" title="Admins" className="p-3">
+          <Tab eventKey="admin" title="Administradores" className="p-3">
             <ProfileSearchForm role="admin" />
             <ProfilesDataTable
               profiles={admins}
               navigateCallback={(page: number) => fetchAdmins(page)}
             />
           </Tab>
-          <Tab eventKey="guarantor" title="Guarantors" className="p-3">
+          <Tab eventKey="guarantor" title="Garantes" className="p-3">
             <ProfileSearchForm role="guarantor" />
             <ProfilesDataTable
               profiles={guarantors}
@@ -51,7 +51,7 @@ const ProfilesPage = () => {
         </Tabs>
       </EntityLayout>
       <Modal
-        title={`Add New ${selectedRole}`}
+        title={`Añadir nuevo ${selectedRole}`}
         show={showModal}
         onHide={() => setShowModal(false)}
       >

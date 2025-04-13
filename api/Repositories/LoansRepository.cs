@@ -13,7 +13,7 @@ namespace api.Repositories;
 
 public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILoansRepository
 {
-    public async Task<LoanDto> CreateAsync(CreateLoanDto createLoanDto)
+    public async Task<Loan> CreateAsync(CreateLoanDto createLoanDto)
     {
         // Create loan
         var loan = mapper.Map<Loan>(createLoanDto);
@@ -26,10 +26,10 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
         await context.Loans.AddAsync(loan);
         await context.SaveChangesAsync();
 
-        return mapper.Map<LoanDto>(loan);
+        return loan;
     }
 
-    public async Task<LoanDto?> DeleteAsync(int id)
+    public async Task<Loan?> DeleteAsync(int id)
     {
         var loan = await context.Loans.FindAsync(id);
         if (loan == null) return null;
@@ -37,12 +37,12 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
         context.Loans.Remove(loan);
         await context.SaveChangesAsync();
 
-        return mapper.Map<LoanDto>(loan);
+        return loan;
     }
 
-    public async Task<IEnumerable<LoanDto>> GetAllAsync(LoanQuery query)
+    public async Task<IEnumerable<Loan>> GetAllAsync(LoanQuery query)
     {
-        var loans = context.Loans.ProjectTo<LoanDto>(mapper.ConfigurationProvider).AsQueryable();
+        var loans = context.Loans.AsQueryable();
 
         if (query.ClientId != null)
         {
@@ -78,15 +78,15 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
         return await loans.PaginateAsync(query);
     }
 
-    public async Task<LoanDto?> GetByIdAsync(int id)
+    public async Task<Loan?> GetByIdAsync(int id)
     {
         var loan = await context.Loans.Include(x => x.Client).FirstOrDefaultAsync(x => x.Id == id);
         if (loan == null) return null;
 
-        return mapper.Map<LoanDto>(loan);
+        return loan;
     }
 
-    public async Task<LoanDto?> UpdateAsync(UpdateLoanDto updateLoanDto, int id)
+    public async Task<Loan?> UpdateAsync(UpdateLoanDto updateLoanDto, int id)
     {
         var loan = await context.Loans.FindAsync(id);
         if (loan == null) return null;
@@ -94,6 +94,6 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
         mapper.Map(updateLoanDto, loan);
         await context.SaveChangesAsync();
 
-        return mapper.Map<LoanDto>(loan);
+        return loan;
     }
 }

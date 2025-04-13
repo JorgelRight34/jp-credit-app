@@ -24,6 +24,14 @@ export const getFullName = (user?: User): string => {
   return `${user?.firstName} ${user?.lastName}`;
 };
 
+export const getFirstAndLastName = (user?: User): string => {
+  if (!user) return "";
+  const firstName = user.firstName.split(" ")[0];
+  const lastName = user.lastName.split(" ")[0];
+
+  return `${firstName} ${lastName}`;
+};
+
 export const toTitleCase = (str: string) => {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
 };

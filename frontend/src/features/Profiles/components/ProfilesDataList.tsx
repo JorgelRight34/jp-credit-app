@@ -38,7 +38,6 @@ const ProfilesDataList = ({
       <AsyncSelect
         defaultOptions
         onChange={(selectedOption: SingleValue<Option> | null) => {
-          console.log("changing");
           setQuery(selectedOption);
         }}
         loadOptions={loadOptions}

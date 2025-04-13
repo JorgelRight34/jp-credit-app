@@ -7,7 +7,7 @@ import { useState } from "react";
 import TransactionForm from "../components/TransactionForm";
 
 const TransactionsPage = () => {
-  const [transactions] = useTransactions();
+  const [transactions, fetchTransactions] = useTransactions();
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -15,7 +15,10 @@ const TransactionsPage = () => {
       <EntityLayout title="Transactions" onAddNew={() => setShowModal(true)}>
         <Tabs>
           <Tab eventKey="transactions" title="Transactions" className="p-3">
-            <TransactionsDataTable transactions={transactions} />
+            <TransactionsDataTable
+              transactions={transactions}
+              navigateCallback={fetchTransactions}
+            />
           </Tab>
         </Tabs>
       </EntityLayout>

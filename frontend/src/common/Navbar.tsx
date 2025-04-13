@@ -3,38 +3,44 @@ import { NavLink } from "react-router";
 import { RootState } from "../store";
 import useLogout from "../features/Auth/hooks/useLogout";
 
+/**
+ * A navbar component that displays a list of navigation options and a logout button.
+ * It uses React Router for navigation and Redux for state management.
+ * @component
+ * @returns {JSX.Element} The rendered navbar component.
+ */
 const Navbar = () => {
   const user = useSelector((state: RootState) => state.auth.user);
   const [logout] = useLogout();
 
   const options = [
     {
-      name: "Profiles",
+      name: "Personas",
       icon: "fa-user",
       route: "profiles",
     },
     {
-      name: "Collaterals",
+      name: "Garantías",
       icon: "fa-folder-open",
       route: "collaterals",
     },
     {
-      name: "Transactions",
+      name: "Transacciones",
       icon: "fa-credit-card",
       route: "transactions",
     },
     {
-      name: "Loans",
+      name: "Préstamos",
       icon: "fa-envelope",
       route: "loans",
     },
     {
-      name: "Adjustment Notes",
+      name: "Notas de Crédito",
       icon: "fa-clipboard",
       route: "notes",
     },
     {
-      name: "Armotizations",
+      name: "Armotizaciones",
       icon: "fa-rectangle-list",
       route: "armotizations",
     },
@@ -72,7 +78,7 @@ const Navbar = () => {
           to={"/login"}
         >
           <i className="fa-solid fa-right-from-bracket me-2"></i>
-          Logout
+          Cerrar Sesión
         </NavLink>
       </div>
     </div>

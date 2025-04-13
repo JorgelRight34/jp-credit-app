@@ -13,8 +13,6 @@ const ArmotizationsPage = () => {
   const [query, setQuery] = useState("");
 
   const handleDownload = async () => {
-    console.log(query);
-    console.log(selectedTab);
     if (selectedTab === "armotization") {
       if (!query) return;
       await downloadCustomArmotization(query);
@@ -26,12 +24,16 @@ const ArmotizationsPage = () => {
   };
 
   return (
-    <EntityLayout title="Armotizations" onDownload={handleDownload}>
+    <EntityLayout title="Armotizaciones" onDownload={handleDownload}>
       <Tabs onSelect={(k) => setSelectedTab(k as string)}>
-        <Tab eventKey="armotization" title="Armotization" className="p-3">
+        <Tab eventKey="armotization" title="Armotización" className="p-3">
           <CustomArmotization setQuery={setQuery} />
         </Tab>
-        <Tab eventKey="loan" title="Loan Armotization" className="p-3">
+        <Tab
+          eventKey="loan"
+          title="Armotización de un Préstamo"
+          className="p-3"
+        >
           <ArmotizationLoan setLoanId={setLoanId} />
         </Tab>
       </Tabs>

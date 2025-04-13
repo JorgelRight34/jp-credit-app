@@ -15,16 +15,16 @@ public class AdjustmentNotesRepository(
     IMapper mapper
 ) : IAdjustmentNotesRepository
 {
-    public async Task<AdjustmentNoteDto> CreateAsync(CreateAdjustmentNoteDto createAdjustmentNoteDto)
+    public async Task<AdjustmentNote> CreateAsync(CreateAdjustmentNoteDto createAdjustmentNoteDto)
     {
         var note = mapper.Map<AdjustmentNote>(createAdjustmentNoteDto);
         await context.AdjustmentNotes.AddAsync(note);
         await context.SaveChangesAsync();
 
-        return mapper.Map<AdjustmentNoteDto>(note);
+        return note;
     }
 
-    public async Task<AdjustmentNoteDto?> DeleteAsync(int id)
+    public async Task<AdjustmentNote?> DeleteAsync(int id)
     {
         var note = await context.AdjustmentNotes.FindAsync(id);
         if (note == null) return null;
@@ -32,14 +32,12 @@ public class AdjustmentNotesRepository(
         context.AdjustmentNotes.Remove(note);
         await context.SaveChangesAsync();
 
-        return mapper.Map<AdjustmentNoteDto>(note);
+        return note;
     }
 
-    public async Task<IEnumerable<AdjustmentNoteDto>> GetAllAsync(AdjustmentNoteQuery query)
+    public async Task<IEnumerable<AdjustmentNote>> GetAllAsync(AdjustmentNoteQuery query)
     {
-        var notes = context.AdjustmentNotes
-        .ProjectTo<AdjustmentNoteDto>(mapper.ConfigurationProvider)
-        .AsQueryable();
+        var notes = context.AdjustmentNotes.AsQueryable();
 
         if (query.MinValue > query.MaxValue) throw new Exception(
             "Min value can't be greater than max value"
@@ -66,15 +64,15 @@ public class AdjustmentNotesRepository(
         return await notes.PaginateAsync(query);
     }
 
-    public async Task<AdjustmentNoteDto?> GetByIdAsync(int id)
+    public async Task<AdjustmentNote?> GetByIdAsync(int id)
     {
         var note = await context.AdjustmentNotes.Include(x => x.Loan).FirstOrDefaultAsync(x => x.Id == id);
         if (note == null) return null;
 
-        return mapper.Map<AdjustmentNoteDto>(note);
+        return note;
     }
 
-    public async Task<AdjustmentNoteDto?> UpdateAsync(
+    public async Task<AdjustmentNote?> UpdateAsync(
         UpdateAdjustmentNoteDto updateAdjustmentNoteDto, int id
     )
     {
@@ -84,6 +82,6 @@ public class AdjustmentNotesRepository(
         mapper.Map(updateAdjustmentNoteDto, note);
 
         await context.SaveChangesAsync();
-        return mapper.Map<AdjustmentNoteDto>(note);
+        return note;
     }
 }

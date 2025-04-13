@@ -2,7 +2,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import useNewLoan from "../hooks/useNewLoan";
 import ProfilesDataList from "../../Profiles/components/ProfilesDataList";
-import { loanFormFields, schema } from "../lib/constants";
+import { loanFormFields, LoanFormValues, schema } from "../lib/constants";
 import { renderFormInputs } from "../../../utils/formUtils";
 import EntityFormLayout from "../../../common/EntityFormLayout";
 
@@ -11,6 +11,7 @@ const LoanForm = () => {
     control,
     register,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -20,8 +21,13 @@ const LoanForm = () => {
   const renderFormInputsSlice = (start: number, end: number) =>
     renderFormInputs(loanFormFields, start, end, register, errors);
 
+  const handleOnSubmit = async (data: LoanFormValues) => {
+    reset();
+    await onSubmit(data);
+  };
+
   return (
-    <EntityFormLayout onSubmit={handleSubmit(onSubmit)}>
+    <EntityFormLayout onSubmit={handleSubmit(handleOnSubmit)}>
       <div className="col-lg-3">{renderFormInputsSlice(0, 3)}</div>
       <div className="col-lg-3">{renderFormInputsSlice(3, 6)}</div>
       <div className="col-lg-3">

@@ -2,9 +2,18 @@ import { useCallback } from "react";
 import api from "../../../api";
 import { baseUrl } from "../lib/constants";
 
-const useDownloadArmotization = () => {
+type UseDownloadArmotizationReturn = [
+    (body: string) => Promise<void>,
+    (id: number) => Promise<void>
+];
+
+/**
+ * Custom hook to download armotization files.
+ * @returns {Function} downloadCustomArmotization - Function to download custom armotization file.
+ * @returns {Function} downloadLoanArmotization - Function to download loan armotization file.
+*/
+const useDownloadArmotization = (): UseDownloadArmotizationReturn => {
     const downloadCustomArmotization = useCallback(async (body: string) => {
-        console.log("using");
         const response = await api.get(`${baseUrl}/csv/?${body}`, { responseType: 'blob' });
         downloadFile(response.data);
     }, []);

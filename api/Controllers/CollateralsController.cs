@@ -2,6 +2,7 @@ using api.Data;
 using api.DTOs.Collateral;
 using api.Interfaces;
 using api.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -10,14 +11,14 @@ namespace api.Controllers
 {
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public class CollateralsController(
-        ICollateralsRepository collateralsRepository, ApplicationDbContext context
+        ICollateralsRepository collateralsRepository, ApplicationDbContext context, IMapper mapper
     ) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<CollateralDto>>> GetAll([FromQuery] CollateralQuery query)
         {
             var collaterals = await collateralsRepository.GetAllAsync(query);
-            return Ok(collaterals);
+            return Ok(collaterals.Select(mapper.Map<CollateralDto>));
         }
 
         [HttpGet("{id:int}")]
@@ -25,7 +26,8 @@ namespace api.Controllers
         {
             var collateral = await collateralsRepository.GetByIdAsync(id);
             if (collateral == null) return NotFound();
-            return Ok(collateral);
+
+            return Ok(mapper.Map<CollateralDto>(collateral));
         }
 
         [HttpPost]
@@ -38,7 +40,10 @@ namespace api.Controllers
             if (loan == null) return BadRequest("Loan doesn't exist");
 
             var collateral = await collateralsRepository.CreateAsync(createCollateralDto);
-            return CreatedAtAction(nameof(GetById), new { id = collateral.Id }, collateral);
+            var collateralDto = mapper.Map<CollateralDto>(collateral);
+
+
+            return CreatedAtAction(nameof(GetById), new { id = collateral.Id }, collateralDto);
         }
 
         [HttpPut("{id:int}")]
@@ -47,7 +52,8 @@ namespace api.Controllers
         )
         {
             var collateral = await collateralsRepository.UpdateAsync(updateCollateralDto, id);
-            return Ok(collateral);
+
+            return Ok(mapper.Map<CollateralDto>(collateral));
         }
 
         [HttpDelete("{id:int}")]
@@ -67,8 +73,9 @@ namespace api.Controllers
             if (collateral == null) return BadRequest("Collateral doesn't exist");
 
             var collateralWithPhoto = await collateralsRepository.AddCollateralPhotoAsync(file, collateral);
+            var collateralDto = mapper.Map<CollateralDto>(collateralWithPhoto);
 
-            return CreatedAtAction(nameof(GetById), new { id = collateralWithPhoto.Id }, collateralWithPhoto);
+            return CreatedAtAction(nameof(GetById), new { id = collateralDto.Id }, collateralDto);
         }
 
         [HttpDelete("{collateralId:int}/photo/{photoId}")]

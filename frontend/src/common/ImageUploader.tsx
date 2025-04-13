@@ -5,6 +5,11 @@ interface ImageUploaderProps {
   uploadUrl: string;
 }
 
+/**
+ * ImageUploader component allows users to upload an image.
+ * @param {ImageUploaderProps} props - Props containing the default image source and upload URL.
+ * @returns {JSX.Element} - A JSX element representing the ImageUploader.
+ */
 const ImageUploader = ({ defaultImageSrc }: ImageUploaderProps) => {
   const [file, setFile] = useState<File | null>(null);
 

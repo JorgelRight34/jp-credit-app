@@ -3,6 +3,37 @@ import api from "../../../api";
 import { ArmotizationPayment } from "../../../models/armotizationPayment";
 import { baseUrl } from "../lib/constants";
 
+/**
+ * `useGenerateArmotization` is a custom React hook for managing a loan amortization form.
+ * 
+ * It handles:
+ * - Form state (`form`): Includes fields like principal balance, interest rate, frequency, and number of payments.
+ * - Input changes (`handleOnChange`): Updates the form state when the user modifies an input field.
+ * - Form submission (`handleOnSubmit`): Sends a GET request to fetch the amortization schedule
+ *   based on the form parameters, and stores the result in state.
+ * 
+ * The hook returns the form state, a list of amortization payments, and handlers for input changes and form submission.
+ * 
+ * @returns {{
+*   handleOnChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+*   handleOnSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
+*   armotization: ArmotizationPayment[] | undefined;
+*   form: {
+*     principalBalance: number;
+*     annualInterestRate: number;
+*     paymentFrequency: number;
+*     numberOfPayments: number;
+*   };
+* }}
+* 
+* @example
+* const {
+*   handleOnChange,
+*   handleOnSubmit,
+*   armotization,
+*   form
+* } = useGenerateArmotization();
+*/
 const useGenerateArmotization = () => {
     const [form, setForm] = useState({
         principalBalance: 0,

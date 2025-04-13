@@ -4,6 +4,11 @@ interface InfoTableProps {
   data: (string | number | ReactNode)[][];
 }
 
+/**
+ * InfoTable component displays a table with alternating header and data cells.
+ * @param {InfoTableProps} props - Props containing the data to be displayed in the table.
+ * @returns {JSX.Element} - A JSX element representing the InfoTable.
+ */
 const InfoTable = ({ data }: InfoTableProps) => {
   return (
     <div className="table-wrapper border rounded-3 shadow-sm">

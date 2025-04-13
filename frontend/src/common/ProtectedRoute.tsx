@@ -2,11 +2,19 @@ import { jwtDecode } from "jwt-decode";
 import { ReactNode, useEffect, useState } from "react";
 import { Navigate } from "react-router";
 
-interface ProtectedRouteProsp {
+interface ProtectedRouteProps {
   children: ReactNode;
 }
 
-const ProtectedRoute = ({ children }: ProtectedRouteProsp) => {
+/**
+ * A protected route component that guards access to its children based on authentication status.
+ * If the user is authenticated, it renders the children; otherwise, it redirects to the login page.
+ * @component
+ * @param {ProtectedRouteProps} props - The props for the protected route component.
+ * @param {ReactNode} props.children - The content to be displayed if the user is authenticated.
+ * @returns {JSX.Element} The rendered navbar component.
+ */
+const ProtectedRoute = ({ children }: ProtectedRouteProps) => {
   const [isAuthenticated, setIsAuthenticated] = useState<boolean | undefined>(
     undefined
   );

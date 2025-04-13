@@ -1,24 +1,40 @@
 import { useRef } from "react";
 import TopLoadingBar from "react-top-loading-bar";
 
-export const loadingBarRef = { current: null as TopLoadingBar | null };
+export const loadingBarRef = { current: null as typeof TopLoadingBar | null };
 
+/**
+ * Starts filling the loading bar.
+ *
+ */
 export const startLoadingBar = () => {
-  loadingBarRef.current?.continuousStart();
+  (loadingBarRef.current as any)?.continuousStart();
 };
 
+/**
+ * Completes filling the loading bar and then it unfills it.
+ *
+ */
 export const completeLoadingBar = () => {
-  loadingBarRef.current?.complete();
+  (loadingBarRef.current as any)?.complete();
 };
 
+/**
+ * Loading bar component for representing a progress.
+ * This loading bar is used to mark the progress of the HTTP requests (via interceptors) made by the
+ * api global object of api.tsx, which is an instance of an axios.
+ *
+ * @component
+ * @returns {JSX.Element} The rendered favorite loading bar component.
+ */
 const LoadingBar = () => {
   // prettier-ignore
-  loadingBarRef.current = useRef<TopLoadingBar>(null).current;
+  loadingBarRef.current = useRef<typeof TopLoadingBar>(null).current;
 
   return (
     <TopLoadingBar
       color="#d09d0c"
-      ref={(ref) => (loadingBarRef.current = ref)}
+      ref={(ref) => (loadingBarRef.current = ref as any)}
     />
   );
 };

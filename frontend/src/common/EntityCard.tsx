@@ -6,6 +6,11 @@ interface EntityCardProps {
   footer: string | ReactNode;
 }
 
+/**
+ * EntityCard component displays a card with a header, photo, and footer.
+ * @param {EntityCardProps} props - Props containing the header, photo URL, and footer to be displayed in the card.
+ * @returns {JSX.Element} - A JSX element representing the EntityCard.
+ */
 const EntityCard = ({
   header,
   photoUrl = "/default-profile-pic.webp",

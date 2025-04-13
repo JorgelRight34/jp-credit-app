@@ -19,10 +19,7 @@ const NotesPage = () => {
             <div className="row mb-3">
               <NoteSearchInput />
             </div>
-            <NotesDataTable
-              notes={notes}
-              navigateCallback={(page: number) => fetchNotes(page)}
-            />
+            <NotesDataTable notes={notes} navigateCallback={fetchNotes} />
           </Tab>
         </Tabs>
       </EntityLayout>

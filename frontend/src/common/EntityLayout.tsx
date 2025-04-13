@@ -1,5 +1,4 @@
 import { ReactNode, useEffect } from "react";
-import { Helmet } from "react-helmet-async";
 
 interface EntityLayoutProps {
   children: ReactNode;
@@ -10,6 +9,19 @@ interface EntityLayoutProps {
   onDownload?: () => void;
 }
 
+/**
+ * A layout component that wraps its children with a title and action buttons.
+ * It is used to provide a consistent layout structure for different entities.
+ * @component
+ * @param {EntityLayoutProps} props - The props for the entity layout component.
+ * @param {ReactNode} props.children - The content to be displayed inside the layout.
+ * @param {string} props.title - The title of the entity layout.
+ * @param {function} [props.onAddNew] - A function to be called when the "Add new" button is clicked.
+ * @param {function} [props.onEdit] - A function to be called when the "Edit" button is clicked.
+ * @param {function} [props.onDelete] - A function to be called when the "Delete" button is clicked.
+ * @param {function} [props.onDownload] - A function to be called when the "Download" button is clicked.
+ * @returns {JSX.Element} The rendered entity layout component.
+ */
 const EntityLayout = ({
   children,
   title,
@@ -33,7 +45,7 @@ const EntityLayout = ({
                 className="btn btn-accent shadow-sm ms-auto"
                 onClick={onAddNew}
               >
-                Add new +
+                Añadir nuevo +
               </button>
             )}
             {onEdit && (
@@ -41,7 +53,7 @@ const EntityLayout = ({
                 className="btn btn-accent shadow-sm ms-auto"
                 onClick={onEdit}
               >
-                Edit
+                Editar
               </button>
             )}
             {onDelete && (
@@ -49,7 +61,7 @@ const EntityLayout = ({
                 className="btn btn-accent shadow-sm ms-auto"
                 onClick={onDelete}
               >
-                Delete
+                Eliminar
               </button>
             )}
             {onDownload && (
@@ -57,7 +69,7 @@ const EntityLayout = ({
                 className="btn btn-accent shadow-sm ms-auto"
                 onClick={onDownload}
               >
-                Download
+                Descargar
               </button>
             )}
           </div>

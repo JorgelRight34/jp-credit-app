@@ -7,6 +7,13 @@ interface ArmotizationDataTableProps {
   armotization: ArmotizationPayment[];
 }
 
+/**
+ * ArmotizationDataTable component displays a table of armotization payments.
+ * It uses the DataTable component to render the data in a tabular format.
+ *
+ * @param {ArmotizationDataTableProps} props - The props for the component.
+ * @returns {JSX.Element} The rendered component.
+ */
 const ArmotizationDataTable = ({
   armotization,
 }: ArmotizationDataTableProps) => {

@@ -5,6 +5,31 @@ interface ArmotizationFormProps {
   onSubmit: (event: React.FormEvent<HTMLFormElement>) => void;
 }
 
+/**
+ * `ArmotizationForm` is a reusable form component for collecting amortization details.
+ *
+ * It includes input fields for:
+ * - Principal balance
+ * - Annual interest rate
+ * - Payment frequency (monthly or annually)
+ * - Number of payments
+ *
+ * The form calls `onSubmit` when submitted and `handleOnChange` for every input or select change.
+ *
+ * @param {Object} props - Component props.
+ * @param {(event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void} props.handleOnChange -
+ *        Callback fired when an input/select value changes.
+ * @param {(event: React.FormEvent<HTMLFormElement>) => void} props.onSubmit -
+ *        Callback fired when the form is submitted.
+ *
+ * @returns {JSX.Element} The rendered amortization form.
+ *
+ * @example
+ * <ArmotizationForm
+ *   handleOnChange={handleChange}
+ *   onSubmit={handleFormSubmit}
+ * />
+ */
 const ArmotizationForm = ({
   handleOnChange,
   onSubmit,

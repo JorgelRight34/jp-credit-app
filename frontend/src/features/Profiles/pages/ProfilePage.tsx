@@ -15,7 +15,7 @@ import NotFound from "../../../pages/NotFound";
 import ProfileForm from "../components/ProfileForm";
 import { Role } from "../../../models/role";
 import { getFullName } from "../../../utils/utils";
-import LoanSearchInput from "../../Loans/components/LoanSearchInput";
+import LoanSearchInput from "../../Loans/components/LoanSearch";
 
 const ProfilePage = () => {
   const { username } = useParams();

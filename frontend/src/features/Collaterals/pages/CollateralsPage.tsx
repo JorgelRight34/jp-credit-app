@@ -8,24 +8,27 @@ import CollateralsDataTable from "../components/CollateralsDataTable";
 import CollateralSearchInput from "../components/CollateralSearchInput";
 
 const CollateralsPage = () => {
-  const [collaterals] = useCollaterals();
+  const [collaterals, fetchCollaterals] = useCollaterals();
   const [showModal, setShowModal] = useState(false);
 
   return (
     <>
-      <EntityLayout title="Collaterals" onAddNew={() => setShowModal(true)}>
+      <EntityLayout title="Garantías" onAddNew={() => setShowModal(true)}>
         <Tabs>
-          <Tab eventKey="active" title="Active" className="p-3">
+          <Tab eventKey="active" title="Activos" className="p-3">
             <div className="mb-3">
               <CollateralSearchInput placeholder="Search by title" />
             </div>
-            <CollateralsDataTable collaterals={collaterals} />
+            <CollateralsDataTable
+              collaterals={collaterals}
+              navigateCallback={fetchCollaterals}
+            />
           </Tab>
-          <Tab eventKey="inactive" title="Inactive" className="p-3"></Tab>
+          <Tab eventKey="inactive" title="Inactivos" className="p-3"></Tab>
         </Tabs>
       </EntityLayout>
       <Modal
-        title="Add Collateral"
+        title="Añadir Garantía"
         show={showModal}
         onHide={() => setShowModal(false)}
       >
