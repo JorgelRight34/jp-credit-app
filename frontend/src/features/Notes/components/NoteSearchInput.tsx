@@ -1,11 +1,13 @@
+import SearchBtn from "../../../common/SearchBtn";
 import useSearchNote from "../hooks/useSearchNote";
 
 const NoteSearchInput = () => {
-  const [onSubmit, handleLoanIdChange, handleNoteIdChange] = useSearchNote();
+  const { searchNote, handleOnLoanIdChange, handleOnNoteIdChange } =
+    useSearchNote();
 
   const handleOnSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
-    await onSubmit();
+    await searchNote();
   };
 
   return (
@@ -16,7 +18,7 @@ const NoteSearchInput = () => {
           className="form-control"
           placeholder={"Search by loan id"}
           name="loanId"
-          onChange={handleLoanIdChange}
+          onChange={handleOnLoanIdChange}
         />
       </div>
       <div className="col-lg-5">
@@ -25,13 +27,11 @@ const NoteSearchInput = () => {
           className="form-control"
           placeholder={"Search by note id"}
           name="noteId"
-          onChange={handleNoteIdChange}
+          onChange={handleOnNoteIdChange}
         />
       </div>
       <div className="col-lg-2">
-        <button type="submit" className="btn btn-accent w-100">
-          Submit
-        </button>
+        <SearchBtn type="submit" />
       </div>
     </form>
   );

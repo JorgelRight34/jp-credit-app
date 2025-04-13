@@ -20,7 +20,7 @@ const ArmotizationDataTable = ({
   const columns: ColumnDef<ArmotizationPayment>[] = [
     { accessorKey: "id", header: "#" },
     {
-      header: "Interest",
+      header: "Intereses",
       cell: ({ row }) => toCurrency(row.original.interestValue),
     },
     {
@@ -28,7 +28,7 @@ const ArmotizationDataTable = ({
       cell: ({ row }) => toCurrency(row.original.capitalValue),
     },
     {
-      header: "Principal",
+      header: "Balance",
       cell: ({ row }) => toCurrency(row.original.principalBalance),
     },
   ];

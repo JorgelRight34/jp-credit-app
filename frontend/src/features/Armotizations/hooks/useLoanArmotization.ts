@@ -1,10 +1,31 @@
-import { useState } from "react"
+import { Dispatch, SetStateAction, useState } from "react"
 import { ArmotizationPayment } from "../../../models/armotizationPayment"
 import api from "../../../api";
 import { baseUrl } from "../lib/constants";
 
-const useLoanArmotization = () => {
-    const [armotization, setArmotization] = useState<ArmotizationPayment[]>();
+interface UseLoanArmotizationReturn {
+    armotization: ArmotizationPayment[];
+    setArmotizationId: Dispatch<SetStateAction<number | undefined>>;
+    fetchArmotization: () => void;
+    handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+}
+
+/**
+ * Hook to manage loan amortization by loan ID.
+ *
+ * @returns {
+*   armotization: fetched data,
+*   setArmotizationId: set loan ID manually,
+*   fetchArmotization: fetch data from API,
+*   handleOnChange: input handler for loan ID
+* }
+*
+* @example
+* const { armotization, fetchArmotization, handleOnChange } = useLoanArmotization();
+*/
+
+const useLoanArmotization = (): UseLoanArmotizationReturn => {
+    const [armotization, setArmotization] = useState<ArmotizationPayment[]>([]);
     const [armotizationId, setArmotizationId] = useState<number | undefined>();
 
     const fetchArmotization = async () => {

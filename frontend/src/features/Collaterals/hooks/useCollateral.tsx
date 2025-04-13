@@ -4,7 +4,19 @@ import { Collateral } from "../../../models/collateral";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
 
-const useCollateral = (id?: string) => {
+interface UseCollateralReturn {
+  collateral: Collateral | null;
+  error: boolean;
+}
+
+/**
+ * Fetches collateral data by ID, first checking in-memory cache
+ * @param {string} [id] - The collateral ID to fetch
+ * @returns {Object} Contains collateral data and error state
+ * @property {Collateral|null} collateral - The fetched collateral data
+ * @property {boolean} error - True if fetch failed
+ */
+const useCollateral = (id?: string): UseCollateralReturn => {
   const [collateral, setCollateral] = useState<Collateral | null>(null);
   const [error, setError] = useState(false);
   const { collaterals } = useSelector((state: RootState) => state.collaterals);

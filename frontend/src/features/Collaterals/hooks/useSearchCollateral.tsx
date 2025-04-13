@@ -4,8 +4,33 @@ import { useDispatch, useSelector } from "react-redux";
 import { setCollaterals } from "../collateralsSlice";
 import { RootState } from "../../../store";
 
-const useSearchCollateral = () => {
-  const [query, setQuery] = useState<number | null>();
+type UseSearchCollateralReturn = {
+  query: number | undefined;
+  handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  search: () => Promise<void>;
+};
+
+/**
+ * Provides search functionality for collaterals by ID
+ * @returns {UseSearchCollateralReturn} Object containing:
+ *   - query: Current search query (number or null)
+ *   - handleOnChange: Input change handler for search field
+ *   - search: Async function to execute the search
+ *
+ * @example
+ * const { query, handleOnChange, search } = useSearchCollateral();
+ *
+ * // In your component
+ * <input
+ *   type="text"
+ *   value={query || ''}
+ *   onChange={handleOnChange}
+ *   onBlur={search}
+ * />
+ */
+
+const useSearchCollateral = (): UseSearchCollateralReturn => {
+  const [query, setQuery] = useState<number | undefined>();
   const { collaterals } = useSelector((state: RootState) => state.collaterals);
   const dispatch = useDispatch();
 

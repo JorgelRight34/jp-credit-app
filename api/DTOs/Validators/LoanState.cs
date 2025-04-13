@@ -23,7 +23,7 @@ public class LoanState : ValidationAttribute
 
                 // The loan is in default or delinquent, and penalties or fees may have been imposed on the borrower. 
                 // It indicates that the borrower has violated the terms of the loan agreement.
-                "punished", 
+                "punished",  
 
                 // The loan has entered a legal process, potentially meaning that the lender is taking legal action, such as initiating a lawsuit, to recover the debt.
                 "legal", 

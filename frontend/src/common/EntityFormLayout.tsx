@@ -29,7 +29,7 @@ const EntityFormLayout = ({
       <div className="row mx-0 pt-3">{children}</div>
       <div className="d-flex">
         <button type="submit" className="btn btn-accent w-100">
-          Submit
+          Ok
         </button>
         {allowDelete && (
           <button
@@ -37,7 +37,7 @@ const EntityFormLayout = ({
             className="btn btn-accent-secondary w-100 ms-3"
             onClick={onDelete}
           >
-            Delete
+            Eliminar
           </button>
         )}
       </div>

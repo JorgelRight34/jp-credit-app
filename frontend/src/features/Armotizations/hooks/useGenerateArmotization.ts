@@ -3,6 +3,18 @@ import api from "../../../api";
 import { ArmotizationPayment } from "../../../models/armotizationPayment";
 import { baseUrl } from "../lib/constants";
 
+interface UseGenerateArmotizationReturn {
+    handleOnChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => void;
+    handleOnSubmit: (event: React.FormEvent<HTMLFormElement>) => Promise<void>;
+    armotization: ArmotizationPayment[] | undefined;
+    form: {
+        principalBalance: number;
+        annualInterestRate: number;
+        paymentFrequency: number;
+        numberOfPayments: number;
+    }
+}
+
 /**
  * `useGenerateArmotization` is a custom React hook for managing a loan amortization form.
  * 
@@ -34,7 +46,7 @@ import { baseUrl } from "../lib/constants";
 *   form
 * } = useGenerateArmotization();
 */
-const useGenerateArmotization = () => {
+const useGenerateArmotization = (): UseGenerateArmotizationReturn => {
     const [form, setForm] = useState({
         principalBalance: 0,
         annualInterestRate: 0,

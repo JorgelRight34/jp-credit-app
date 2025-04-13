@@ -32,7 +32,7 @@ const LoanForm = () => {
       <div className="col-lg-3">{renderFormInputsSlice(3, 6)}</div>
       <div className="col-lg-3">
         <div className="mb-3">
-          <label className="form-label">Client</label>
+          <label className="form-label">Cliente</label>
           <Controller
             name="clientId"
             control={control}
@@ -47,7 +47,7 @@ const LoanForm = () => {
           />
         </div>
         <div className="mb-3">
-          <label className="form-label">Loan Officer</label>
+          <label className="form-label">Agente</label>
           <Controller
             name="loanOfficerId"
             control={control}
@@ -66,15 +66,15 @@ const LoanForm = () => {
       <div className="col-lg-3">
         <div className="mb-3">
           <label className="form-label" htmlFor="state">
-            Status
+            Estado
           </label>
           <select id="state" className="form-select" {...register("status")}>
-            <option value="inactive">Inactive</option>
-            <option value="notified">Notified</option>
-            <option value="punished">Punished</option>
+            <option value="inactive">Inactivo</option>
+            <option value="notified">Notificado</option>
+            <option value="punished">Castigado</option>
             <option value="legal">Legal</option>
             <option value="judicial">Judicial</option>
-            <option value="agreement">Agreement</option>
+            <option value="agreement">Acuerdo</option>
           </select>
         </div>
       </div>

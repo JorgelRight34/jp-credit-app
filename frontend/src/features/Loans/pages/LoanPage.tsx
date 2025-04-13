@@ -34,27 +34,27 @@ const LoanPage = () => {
   if (!loan) return <></>;
 
   return (
-    <EntityLayout title={`Loan #${loan.id}`} onDelete={handleOnDelete}>
+    <EntityLayout title={`Préstamo #${loan.id}`} onDelete={handleOnDelete}>
       <Tabs>
-        <Tab className="p-3" eventKey="info" title="Information">
+        <Tab className="p-3" eventKey="info" title="Información">
           <LoanInformation loan={loan} />
         </Tab>
-        <Tab className="p-3" eventKey="client" title="Client">
+        <Tab className="p-3" eventKey="client" title="Cliente">
           {loan.client && <ProfileInfo profile={loan.client} />}
         </Tab>
-        <Tab className="p-3" eventKey="collaterals" title="Collaterals">
+        <Tab className="p-3" eventKey="collaterals" title="Garantías">
           <CollateralsDataTable
             collaterals={collaterals}
             navigateCallback={(page: number) => fetchCollaterals(page)}
           />
         </Tab>
-        <Tab className="p-3" eventKey="transactions" title="Transactions">
+        <Tab className="p-3" eventKey="transactions" title="Transacciones">
           <TransactionsDataTable
             transactions={transactions}
             navigateCallback={(page: number) => fetchTransactions(page)}
           />
         </Tab>
-        <Tab className="p-3" eventKey="notes" title="Notes">
+        <Tab className="p-3" eventKey="notes" title="Notas">
           <NotesDataTable
             notes={notes}
             navigateCallback={(page: number) => fetchNotes(page)}

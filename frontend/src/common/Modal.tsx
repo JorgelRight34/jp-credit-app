@@ -26,7 +26,7 @@ const Modal = ({ children, title, show, onHide }: ModalProps) => {
         <div className="d-flex align-items-center border-bottom p-3">
           <h3 className="mb-0">{title}</h3>
           <button className="btn btn-accent ms-auto" onClick={onHide}>
-            Close
+            Cerrar
           </button>
         </div>
         <div className="my-modal-content">{children}</div>

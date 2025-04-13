@@ -12,9 +12,9 @@ const TransactionsPage = () => {
 
   return (
     <>
-      <EntityLayout title="Transactions" onAddNew={() => setShowModal(true)}>
+      <EntityLayout title="Transacciones" onAddNew={() => setShowModal(true)}>
         <Tabs>
-          <Tab eventKey="transactions" title="Transactions" className="p-3">
+          <Tab eventKey="transactions" title="Transacciones" className="p-3">
             <TransactionsDataTable
               transactions={transactions}
               navigateCallback={fetchTransactions}
@@ -23,7 +23,7 @@ const TransactionsPage = () => {
         </Tabs>
       </EntityLayout>
       <Modal
-        title="Add Transaction"
+        title="Añadir Transacción"
         show={showModal}
         onHide={() => setShowModal(false)}
       >

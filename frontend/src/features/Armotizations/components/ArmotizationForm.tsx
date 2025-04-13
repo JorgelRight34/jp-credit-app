@@ -1,3 +1,5 @@
+import SearchBtn from "../../../common/SearchBtn";
+
 interface ArmotizationFormProps {
   handleOnChange: (
     event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -36,39 +38,39 @@ const ArmotizationForm = ({
 }: ArmotizationFormProps) => {
   return (
     <form className="row mx-0 pb-3" onSubmit={onSubmit}>
-      <div className="col-lg-3 ps-0">
+      <div className="col-lg-2 ps-0">
         <input
           className="form-control"
           name="principalBalance"
           id="principalBalance"
-          placeholder="Principal"
-          onChange={handleOnChange}
-        />
-      </div>
-      <div className="col-lg-3">
-        <input
-          className="form-control"
-          name="annualInterestRate"
-          id="annualInterestRate"
-          placeholder="Annual interest rate"
+          placeholder="Balance"
           onChange={handleOnChange}
         />
       </div>
       <div className="col-lg-2">
+        <input
+          className="form-control"
+          name="annualInterestRate"
+          id="annualInterestRate"
+          placeholder="Tasa de Interés"
+          onChange={handleOnChange}
+        />
+      </div>
+      <div className="col-lg-3">
         <select
           className="form-select"
           name="paymentFrequency"
           id="paymentFrequency"
           onChange={handleOnChange}
         >
-          <option>Frequency</option>
-          <option value="12">Monthly</option>
-          <option value="1">Annual</option>
+          <option>Frecuencia de Pago</option>
+          <option value="12">Mensual</option>
+          <option value="1">Anual</option>
         </select>
       </div>
       <div className="col-lg-3">
         <input
-          placeholder="No. Payments"
+          placeholder="No. Pagos"
           className="form-control"
           name="numberOfPayments"
           id="numberOfPayments"
@@ -76,10 +78,8 @@ const ArmotizationForm = ({
           onChange={handleOnChange}
         />
       </div>
-      <div className="col-lg-1 pe-0">
-        <button type="submit" className="btn btn-accent">
-          Submit
-        </button>
+      <div className="col-lg-2 pe-0">
+        <SearchBtn type="submit" />
       </div>
     </form>
   );

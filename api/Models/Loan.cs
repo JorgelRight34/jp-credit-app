@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using api.DTOs.Validators;
+using api.Enums;
 
 namespace api.Models;
 
@@ -36,7 +37,7 @@ public class Loan
     public DateOnly DeliveryDate { get; set; }  // Entrega
     [Required]
     [LoanState]
-    public string Status { get; set; } = "active";
+    public LoanStatus Status { get; set; } = LoanStatus.Active;
 
     // Relationships
     [Required]

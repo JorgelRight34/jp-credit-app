@@ -5,9 +5,23 @@ import { RootState } from "../../../store";
 import { setCollaterals } from "../collateralsSlice";
 import { Collateral } from "../../../models/collateral";
 
-const useCollaterals = (
-  query: string = ""
-): [Collateral[], (page: number) => Promise<void>] => {
+type UseCollateralsReturn = [Collateral[], (page?: number) => Promise<void>];
+
+/**
+ * Fetches and manages a list of collaterals with pagination support
+ * @param {string} [query=""] - Query string parameters for filtering
+ * @returns {UseCollateralsReturn} Tuple containing:
+ *   - collaterals: Array of collateral items
+ *   - fetchCollaterals: Function to fetch a specific page (returns Promise)
+ *
+ * @example
+ * const [collaterals, fetchPage] = useCollaterals("type=real-estate");
+ *
+ * // Fetch next page
+ * fetchPage(2).then(() => console.log('Page loaded'));
+ */
+
+const useCollaterals = (query: string = ""): UseCollateralsReturn => {
   const { collaterals } = useSelector((state: RootState) => state.collaterals);
   const dispatch = useDispatch();
 

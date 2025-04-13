@@ -1,6 +1,11 @@
+import { NavLink } from "react-router";
 import InfoTable from "../../../common/InfoTable";
 import { Loan } from "../../../models/loan";
-import { getFullName, toCurrency } from "../../../utils/utils";
+import {
+  getFirstAndLastName,
+  getFullName,
+  toCurrency,
+} from "../../../utils/utils";
 
 interface LoanInfoProps {
   loan: Loan;
@@ -10,7 +15,7 @@ const LoanInfo = ({ loan }: LoanInfoProps) => {
   return (
     <div className="row mx-0">
       <div className="mb-3">
-        <h4>Description</h4>
+        <h4>Descripción</h4>
         <p>
           {loan.description
             ? loan.description
@@ -20,49 +25,58 @@ const LoanInfo = ({ loan }: LoanInfoProps) => {
       <div>
         <InfoTable
           data={[
-            ["Id", loan.id?.toString(), "Client", getFullName(loan.client)],
             [
-              "Approved Amount",
+              "Id",
+              loan.id?.toString(),
+              "Cliente",
+              <NavLink to={`/profiles/${loan.client?.username}`}>
+                {getFirstAndLastName(loan.client)}
+              </NavLink>,
+            ],
+            [
+              "Monto Aprobado",
               toCurrency(loan.approvedAmount),
-              "Disbursed Amount",
+              "Desembolsado",
               toCurrency(loan.disbursedAmount),
             ],
             [
-              "Interest Rate",
+              "Tasa de Interés",
               (loan.annualInterestRate * 100)?.toString() + "%",
-              "Payment Frequency",
+              "Frecuencia de Pago",
               loan.paymentFrequency?.toString(),
             ],
             [
-              "Principal",
+              "Balance",
               toCurrency(loan.principalBalance),
-              "Interests",
+              "Intereses",
               toCurrency(loan.accruedInterest),
             ],
             [
-              "Loan Officer",
-              getFullName(loan.loanOfficer),
-              "Status",
+              "Agente",
+              <NavLink to={`/profiles/${loan.loanOfficer?.username}`}>
+                {getFullName(loan.loanOfficer)}
+              </NavLink>,
+              "Estado",
               loan.status,
             ],
             [
-              "# Payments",
+              "N. Pagos",
               loan.numberOfPayments?.toString(),
-              "Payment Value",
+              "Cuota",
               toCurrency(loan.paymentValue),
             ],
             [
-              "Start Date",
+              "Fecha de Inicio",
               loan.startDate?.toString(),
-              "Delivery",
+              "Entrega",
               loan.deliveryDate?.toString(),
             ],
             [
-              "Last Payment",
+              "Último Pago",
               loan.lastPaymentDate === "0001-01-01"
                 ? "---"
                 : loan.lastPaymentDate,
-              "Next Payment",
+              "Siguiente Pago",
               loan.nextPaymentDate,
             ],
           ]}

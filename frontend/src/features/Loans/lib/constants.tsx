@@ -43,42 +43,42 @@ export type LoanFormValues = z.infer<typeof schema>;
 export const loanFormFields: FormField[] = [
   {
     name: "approvedAmount",
-    label: "Approved Amount",
+    label: "Monto Aprobado",
     type: "number",
     step: 0.001,
   },
   {
     name: "disbursedAmount",
-    label: "Disbursed Amount",
+    label: "Desembolsado",
     type: "number",
     step: 0.001,
   },
   {
     name: "annualInterest",
-    label: "Annual Interest Rate (%)",
+    label: "Tasa Interés Anual",
     type: "number",
     step: 0.001,
   },
   {
     name: "numberOfPayments",
-    label: "Number of Payments",
+    label: "Número de Pagos",
     type: "number",
     step: 0.001,
   },
   {
     name: "paymentFrequency",
-    label: "Payment Frequency",
+    label: "Frecuencia de Pago",
     type: "number",
     step: 0.001,
   },
   {
     name: "startDate",
-    label: "Start Date",
+    label: "Fecha de Inicio",
     type: "date",
   },
   {
     name: "deliveryDate",
-    label: "Delivery Date",
+    label: "Fecha Final",
     type: "date",
   },
 ];

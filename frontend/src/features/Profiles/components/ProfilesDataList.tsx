@@ -44,6 +44,10 @@ const ProfilesDataList = ({
         value={query}
         {...props}
         styles={{
+          control: (provided) => ({
+            ...provided,
+            width: "200px",
+          }),
           menu: (provided) => ({
             ...provided,
             width: "300px",

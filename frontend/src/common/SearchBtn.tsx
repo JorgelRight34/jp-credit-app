@@ -1,10 +1,10 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
+import React from "react";
 
-interface SearchBtnProps {
-  onClick: () => void;
+type SearchBtnProps = {
   className?: string;
-}
+} & React.ButtonHTMLAttributes<HTMLButtonElement>;
 
 /**
  * SearchBtn component renders a styled search button with a magnifying glass icon and "Buscar" label.
@@ -13,7 +13,6 @@ interface SearchBtnProps {
  * It supports additional custom styling through the `className` prop.
  *
  * @param {Object} props - Component props.
- * @param {() => void} props.onClick - Function to execute when the button is clicked.
  * @param {string} [props.className] - Optional additional CSS classes to apply to the button.
  *
  * @returns {JSX.Element} A styled search button with an icon.
@@ -21,9 +20,9 @@ interface SearchBtnProps {
  * @example
  * <SearchBtn onClick={handleSearch} className="my-custom-class" />
  */
-const SearchBtn = ({ onClick, className = "" }: SearchBtnProps) => {
+const SearchBtn = ({ className = "", ...props }: SearchBtnProps) => {
   return (
-    <button className={`btn btn-accent px-3 ${className}`} onClick={onClick}>
+    <button className={`btn btn-accent px-3 ${className}`} {...props}>
       <div className="d-flex align-items-center">
         <FontAwesomeIcon className="me-2" icon={faMagnifyingGlass} />
         Buscar

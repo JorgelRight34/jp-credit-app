@@ -17,7 +17,7 @@ const CollateralsPage = () => {
         <Tabs>
           <Tab eventKey="active" title="Activos" className="p-3">
             <div className="mb-3">
-              <CollateralSearchInput placeholder="Search by title" />
+              <CollateralSearchInput placeholder="Buscar por título" />
             </div>
             <CollateralsDataTable
               collaterals={collaterals}

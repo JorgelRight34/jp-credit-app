@@ -31,7 +31,11 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
             .WithOne(t => t.Loan)
             .HasForeignKey<Transaction>(t => t.LoanId)
             .OnDelete(DeleteBehavior.Cascade);
-            
+
+        builder.Entity<Loan>()
+            .Property(l => l.Status)
+            .HasConversion<string>();
+
         var roles = new List<IdentityRole>
         {
             new IdentityRole { Id = "Client", Name= "Client", NormalizedName = "CLIENT"},

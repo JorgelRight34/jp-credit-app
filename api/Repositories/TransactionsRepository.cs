@@ -1,6 +1,7 @@
 using System;
 using api.Data;
 using api.DTOs.Transaction;
+using api.Enums;
 using api.Extensions;
 using api.Interfaces;
 using api.Models;
@@ -42,6 +43,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         loan.PrincipalBalance -= capital;
         transaction.InterestValue = interests;
         transaction.CapitalValue = capital;
+        if (loan.PrincipalBalance == 0) loan.Status = LoanStatus.PaidOff;   // If loan is completed then set to paid off
 
         // Update next payment date
         var days = (int)(loan.PaymentFrequency / 12) * 30;

@@ -13,9 +13,9 @@ const NotesPage = () => {
 
   return (
     <>
-      <EntityLayout title="Notes" onAddNew={() => setShowModal(true)}>
+      <EntityLayout title="Notas" onAddNew={() => setShowModal(true)}>
         <Tabs>
-          <Tab eventKey="notes" title="All" className="p-3">
+          <Tab eventKey="notes" title="Todos" className="p-3">
             <div className="row mb-3">
               <NoteSearchInput />
             </div>
@@ -24,7 +24,7 @@ const NotesPage = () => {
         </Tabs>
       </EntityLayout>
       <Modal
-        title="New note"
+        title="Nueva Nota"
         show={showModal}
         onHide={() => setShowModal(false)}
       >
