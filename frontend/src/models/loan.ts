@@ -1,3 +1,4 @@
+import { LoanStatus } from "./loanStatus";
 import { Transaction } from "./transaction";
 import { User } from "./user";
 
@@ -20,17 +21,9 @@ export interface Loan {
   nextPaymentDate: string;
   lastPaymentDate: string;
   deliveryDate: string; // Entrega
-  status:
-    | "active"
-    | "inactive"
-    | "notified"
-    | "punished"
-    | "legal"
-    | "judicial"
-    | "agreement";
+  status: LoanStatus;
 
-  // Navigation properties
-  client?: User; // Optional UserDto type
+  client: User; // Optional UserDto type
   loanOfficer?: User; // Optional UserDto type
   lastPayment?: Transaction;
 

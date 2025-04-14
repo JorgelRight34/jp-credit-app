@@ -21,7 +21,6 @@ public class CreateLoanDto
     [Required]
     public DateOnly StartDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
-    [LoanState]
     public LoanStatus Status { get; set; }
     // Relationships
     public string? LoanOfficerId { get; set; }

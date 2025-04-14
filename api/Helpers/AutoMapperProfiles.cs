@@ -39,6 +39,7 @@ public class AutoMapperProfiles : Profile
         CreateMap<CreateLoanDto, Loan>();
         CreateMap<Loan, LoanDto>()
         .ForMember(d => d.Client, o => o.MapFrom(s => s.Client));
+        CreateMap<UpdateLoanDto, Loan>();
 
         // Adjusment notes
         CreateMap<CreateAdjustmentNoteDto, AdjustmentNote>();

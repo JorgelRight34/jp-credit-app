@@ -2,7 +2,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import {
   collateralConditionsOptions,
-  collateralFormDefaultValues,
   CollateralFormValues,
   collateralsFormFields,
   collateralStatusOptions,
@@ -17,17 +16,15 @@ import { useNavigate } from "react-router";
 import useUploadFile from "../../../hooks/useUploadFile";
 import FormInput from "../../../common/FormInput";
 import EntityFormLayout from "../../../common/EntityFormLayout";
-import { toTitleCase } from "../../../utils/utils";
+import { getFirstAndLastName } from "../../../utils/utils";
+import { Collateral } from "../../../models/collateral";
 
 interface CollateralFormProps {
-  edit?: number;
+  edit?: Collateral;
   defaultValues?: CollateralFormValues;
 }
 
-const CollateralForm = ({
-  defaultValues = collateralFormDefaultValues,
-  edit,
-}: CollateralFormProps) => {
+const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
   const {
     control,
     register,
@@ -49,7 +46,8 @@ const CollateralForm = ({
 
   const handleOnSubmit = async (data: CollateralFormValues) => {
     if (edit) {
-      await onEdit(data, edit);
+      await onEdit(data, edit.id);
+      navigate(0);
     } else {
       const response = await onSubmit(data);
       uploadFile(`collaterals/${response.id}/photo`);
@@ -58,7 +56,8 @@ const CollateralForm = ({
   };
 
   const handleOnDelete = async () => {
-    await onDelete(edit);
+    if (!edit) return;
+    await onDelete(edit.id);
     navigate("/collaterals");
   };
 
@@ -72,61 +71,73 @@ const CollateralForm = ({
       <div className="col-lg-4">
         <div className="mb-3">
           <label className="form-label" htmlFor="state">
-            State
+            Estado
           </label>
-          <select id="state" className="form-select" {...register("state")}>
-            {collateralStatusOptions.map((status) => (
-              <option value={status}>{toTitleCase(status)}</option>
+          <select
+            id="state"
+            className="form-select"
+            defaultValue={defaultValues?.status}
+            {...register("status")}
+          >
+            {collateralStatusOptions.map((option) => (
+              <option key={option[0]} value={option[0]}>
+                {option[1]}
+              </option>
             ))}
           </select>
         </div>
         <div className="mb-3">
           <label className="form-label" htmlFor="condition">
-            Condition
+            Condición
           </label>
           <select
             id="condition"
             className="form-select"
+            defaultValue={defaultValues?.condition}
             {...register("condition")}
           >
             {collateralConditionsOptions.map((option) => (
-              <option key={option} value={option}>
-                {toTitleCase(option)}
+              <option key={option[0]} value={option[0]}>
+                {option[1]}
               </option>
             ))}
           </select>
         </div>
-        {!edit && (
-          <>
-            <div className="mb-3">
-              <label className="form-label">Client</label>
-              <Controller
-                name="clientId"
-                control={control}
-                render={({ field }) => (
-                  <ProfilesDataList
-                    error={errors.clientId?.message}
-                    role="client"
-                    {...field}
-                  />
-                )}
-              />
-            </div>
-            <div className="mb-3">
-              <FormInput
-                label="Loan Id"
-                type="number"
-                error={errors.loanId?.message}
-                {...register("loanId")}
-              />
-            </div>
-          </>
-        )}
+
+        <div className="mb-3">
+          <label className="form-label">Cliente</label>
+          {edit ? (
+            <p className="text-muted mb-0">
+              {getFirstAndLastName(edit.client)}
+            </p>
+          ) : (
+            <Controller
+              name="clientId"
+              control={control}
+              render={({ field }) => (
+                <ProfilesDataList
+                  error={errors.clientId?.message}
+                  role="client"
+                  {...field}
+                />
+              )}
+            />
+          )}
+        </div>
+        <div className="mb-3">
+          <FormInput
+            label="Id Préstamo"
+            type="number"
+            disabled={edit ? true : false}
+            error={errors.loanId?.message}
+            {...register("loanId")}
+          />
+        </div>
       </div>
       <div className="col-lg-4">
         <div className="mb-3">
           <FormInput
-            label="Photo"
+            label="Foto"
             name="photo"
             type="file"
             onChange={handleOnFileChange}

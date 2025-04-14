@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../../common/DataTable";
 import { Collateral } from "../../../models/collateral";
 import { NavLink, useNavigate } from "react-router";
-import { toCurrency } from "../../../utils/utils";
+import { getFirstAndLastName, toCurrency } from "../../../utils/utils";
 
 interface CollateralsDataTableProps {
   collaterals: Collateral[];
@@ -24,7 +24,7 @@ const columns: ColumnDef<Collateral>[] = [
     enableSorting: true,
     cell: ({ row }) => (
       <NavLink to={`/profiles/${row.original.clientId}`}>
-        {row.original.clientId}
+        {getFirstAndLastName(row.original.client)}
       </NavLink>
     ),
   },

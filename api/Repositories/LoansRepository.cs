@@ -80,7 +80,10 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
 
     public async Task<Loan?> GetByIdAsync(int id)
     {
-        var loan = await context.Loans.Include(x => x.Client).FirstOrDefaultAsync(x => x.Id == id);
+        var loan = await context.Loans
+            .Include(x => x.Client)
+            .Include(x => x.LoanOfficer)
+            .FirstOrDefaultAsync(x => x.Id == id);
         if (loan == null) return null;
 
         return loan;

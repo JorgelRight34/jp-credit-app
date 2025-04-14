@@ -21,6 +21,5 @@ public class UpdateLoanDto
     [Required]
     public DateOnly StartDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
-    [LoanState]
     public LoanStatus Status { get; set; }
 }

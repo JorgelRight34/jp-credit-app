@@ -11,7 +11,7 @@ export interface Collateral {
   documentUrl: string;
   clientId: string;
   condition: string;
-  state: string;
+  status: string;
   client: User;
   loanId: number;
   loan: Loan;

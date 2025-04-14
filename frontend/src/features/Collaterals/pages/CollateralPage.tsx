@@ -21,28 +21,30 @@ const CollateralPage = () => {
 
   return (
     <>
-      <EntityLayout title={`Collateral`} onEdit={() => setShowModal(true)}>
+      <EntityLayout title={`Garantía`} onEdit={() => setShowModal(true)}>
         <Tabs>
-          <Tab eventKey="collateral" title="Collateral" className="p-3">
+          <Tab eventKey="collateral" title="Garantía" className="p-3">
             <CollateralInfo collateral={collateral} />
           </Tab>
-          <Tab eventKey={"loan"} title="Loan" className="p-3">
+          <Tab eventKey={"loan"} title="Préstamo" className="p-3">
             <LoanInfo loan={collateral.loan} />
           </Tab>
-          <Tab eventKey="client" title="Client" className="p-3">
+          <Tab eventKey="client" title="Cliente" className="p-3">
             <ProfileInfo profile={collateral.client} />
           </Tab>
         </Tabs>
       </EntityLayout>
       <Modal
-        title="Edit Collateral"
+        title="Editar Garantía"
         show={showModal}
         onHide={() => setShowModal(false)}
       >
         <CollateralForm
-          edit={collateral.id}
+          edit={collateral}
           defaultValues={{
             ...collateral,
+            status: collateral.status.toLowerCase(),
+            condition: collateral.condition.toLowerCase(),
           }}
         />
       </Modal>

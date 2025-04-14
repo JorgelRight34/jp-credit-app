@@ -39,28 +39,28 @@ api.interceptors.response.use(
       switch (error.code) {
         case "ERR_NETWORK":
           toast.error(
-            "Connection refused. Make sure to have a stable connection."
+            "Conexión rechazada. Asegurese de tener una buena conexión."
           );
           break;
         case "ERR_BAD_RESPONSE":
-          toast.error("Oops!, internal server error.");
+          toast.error("Oops!, error interno.");
           break;
         case "ERR_BAD_REQUEST":
           switch (error.response?.status) {
             case 404:
-              toast.error("Not found.");
+              toast.error("No encontrado.");
               break;
             case 400:
-              toast.error("Bad request");
+              toast.error("Mala solicitud.");
               break;
           }
           break;
         default:
-          toast.error("An error has ocurred.");
+          toast.error("Ha ocurrido un error.");
           break;
       }
     } else {
-      toast.error("An error has ocurred");
+      toast.error("Ha ocurrido un error.");
     }
 
     completeLoadingBar();

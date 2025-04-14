@@ -17,6 +17,14 @@ const loans = createSlice({
     addLoan: (state, action) => {
       state.loans = [...state.loans, action.payload];
     },
+    updateLoan: (state, action) => {
+      state.loans = [
+        ...state.loans.map((loan) => {
+          if (loan.id === action.payload.id) return action.payload;
+          return loan;
+        }),
+      ];
+    },
     removeLoan: (state, action) => {
       state.loans = [
         ...state.loans.filter((loan) => loan.id !== action.payload.id),
@@ -25,5 +33,5 @@ const loans = createSlice({
   },
 });
 
-export const { addLoan, removeLoan, setLoans } = loans.actions;
+export const { addLoan, removeLoan, updateLoan, setLoans } = loans.actions;
 export default loans.reducer;

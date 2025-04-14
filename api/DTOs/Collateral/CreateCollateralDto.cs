@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using api.DTOs.Validators;
+using api.Enums;
 
 namespace api.DTOs.Collateral;
 
@@ -13,11 +14,9 @@ public class CreateCollateralDto
     public string? AgreementType { get; set; }
     public decimal Value { get; set; }
     [Required]
-    [CollateralCondition]
-    public string? Condition { get; set; }
+    public CollateralCondition Condition { get; set; } = CollateralCondition.Stable;
     [Required]
-    [CollateralState]
-    public string? State { get; set; }
+    public CollateralStatus Status { get; set; } = CollateralStatus.Active;
     public string? DocumentUrl { get; set; }
     [Required]
     public string? ClientId { get; set; }

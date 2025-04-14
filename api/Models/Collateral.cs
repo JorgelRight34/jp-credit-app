@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using api.Enums;
 
 namespace api.Models;
 
@@ -15,9 +16,9 @@ public class Collateral
     public string? AgreementType { get; set; }
     public decimal Value { get; set; }
     [Required]
-    public string? Condition { get; set; }
+    public CollateralCondition Condition { get; set; } = CollateralCondition.Stable;
     [Required]
-    public string? State { get; set; }
+    public CollateralStatus Status { get; set; } = CollateralStatus.Active;
     public string? DocumentUrl { get; set; }
     [Required]
     public string? AppUserId { get; set; }

@@ -35,6 +35,9 @@ namespace api.Controllers
             var client = await userManager.FindByIdAsync(createLoanDto.ClientId!);
             if (client == null) return BadRequest("Client doesn't exist");
 
+            var loanOfficer = await userManager.FindByIdAsync(createLoanDto.LoanOfficerId!);
+            if (loanOfficer == null) return BadRequest("Loan Officer doesn't exist");
+
             var loan = await loansRepository.CreateAsync(createLoanDto);
             var loanDto = mapper.Map<LoanDto>(loan);
 

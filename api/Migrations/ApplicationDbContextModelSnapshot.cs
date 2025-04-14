@@ -320,9 +320,8 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Condition")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Condition")
+                        .HasColumnType("INTEGER");
 
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("TEXT");
@@ -336,9 +335,8 @@ namespace api.Migrations
                     b.Property<int>("LoanId")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("State")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("Status")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("Title")
                         .IsRequired()

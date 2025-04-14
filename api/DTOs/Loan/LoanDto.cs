@@ -4,6 +4,7 @@ using api.DTOs.Collateral;
 using api.DTOs.Transaction;
 using api.DTOs.User;
 using api.DTOs.Validators;
+using api.Enums;
 using api.Models;
 
 namespace api.DTOs.Loan;
@@ -39,7 +40,7 @@ public class LoanDto
     public DateOnly DeliveryDate { get; set; }  // Entrega
     [Required]
     [LoanState]
-    public string? Status { get; set; }
+    public LoanStatus Status { get; set; }
 
     // Navigation properties
     public UserDto? Client { get; set; }

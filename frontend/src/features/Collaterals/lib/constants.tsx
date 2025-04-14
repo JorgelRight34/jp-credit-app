@@ -7,7 +7,7 @@ export const schema = z.object({
   // This union is for when editing, the collateral may initially have value as a number
   value: z.union([z.string().transform((val) => Number(val)), z.number()]),
   condition: z.string(),
-  state: z.string(),
+  status: z.string(),
   // This union is for when editing, the collateral may initially have documentUrl as null
   documentUrl: z.union([z.string(), z.null()]),
   clientId: z
@@ -21,70 +21,59 @@ export const schema = z.object({
 
 export type CollateralFormValues = z.infer<typeof schema>;
 
-export const collateralFormDefaultValues: CollateralFormValues = {
-  title: "",
-  description: "",
-  value: 0,
-  condition: "",
-  state: "",
-  documentUrl: "",
-  clientId: "",
-  loanId: 0,
-};
-
 export const collateralsFormFields: FormField[] = [
   {
     name: "title",
-    label: "Title",
+    label: "Título",
   },
   {
     name: "description",
-    label: "Description",
+    label: "Descripción",
   },
   {
     name: "value",
-    label: "Value",
+    label: "Costo",
     type: "number",
     step: 0.001,
   },
   {
     name: "documentUrl",
-    label: "Document URL",
+    label: "Documento",
   },
 ];
 
 export const collateralStatusOptions = [
-  "pending",
-  "approved",
-  "rejected",
-  "under review",
-  "active",
-  "inactive",
-  "seized",
-  "released",
-  "defaulted",
-  "cleared",
-  "expired",
-  "on hold",
+  ["pending", "Pendiente"],
+  ["approved", "Aprobado"],
+  ["rejected", "Rechazado"],
+  ["under review", "En revisión"],
+  ["active", "Activo"],
+  ["inactive", "Inactivo"],
+  ["seized", "Incautado"],
+  ["released", "Liberado"],
+  ["defaulted", "Incumplido"],
+  ["cleared", "Liquidado"],
+  ["expired", "Vencido"],
+  ["on hold", "En espera"],
 ];
 
 export const collateralConditionsOptions = [
-  "high-quality",
-  "low-quality",
-  "stable",
-  "depreciating",
-  "liquid",
-  "illiquid",
-  "low-risk",
-  "high-risk",
-  "easily recoverable",
-  "difficult to seize",
-  "volatile",
-  "secure",
-  "undervalued",
-  "overvalued",
-  "appreciating",
-  "depreciating rapidly",
-  "diversified",
-  "concentrated",
+  ["high-quality", "Alta calidad"],
+  ["low-quality", "Baja calidad"],
+  ["stable", "Estable"],
+  ["depreciating", "Devaluándose"],
+  ["liquid", "Líquido"],
+  ["illiquid", "Ilíquido"],
+  ["low-risk", "Bajo riesgo"],
+  ["high-risk", "Alto riesgo"],
+  ["easily recoverable", "Fácil de recuperar"],
+  ["difficult to seize", "Difícil de incautar"],
+  ["volatile", "Volátil"],
+  ["secure", "Seguro"],
+  ["undervalued", "Subvalorado"],
+  ["overvalued", "Sobrevalorado"],
+  ["appreciating", "Apreciándose"],
+  ["depreciating rapidly", "Devaluándose rápidamente"],
+  ["diversified", "Diversificado"],
+  ["concentrated", "Concentrado"],
 ];
