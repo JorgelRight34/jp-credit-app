@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using api.DTOs.Validators;
+using api.Enums;
 
 namespace api.DTOs.Loan;
 
@@ -20,8 +21,7 @@ public class CreateLoanDto
     [Required]
     public DateOnly StartDate { get; set; }
     public DateOnly DeliveryDate { get; set; }  // Entrega
-    [LoanState]
-    public string? Status { get; set; }
+    public LoanStatus Status { get; set; }
     // Relationships
     public string? LoanOfficerId { get; set; }
     [Required]

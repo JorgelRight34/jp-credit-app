@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using api.DTOs.Validators;
+using api.Enums;
 
 namespace api.Models;
 
@@ -9,7 +10,7 @@ public class Loan
 {
     [Key]
     public int Id { get; set; }
-    public int LastPaymentId { get; set; }
+    public int? LastPaymentId { get; set; }
 
     // Loan details
     public string? Description { get; set; }
@@ -36,7 +37,7 @@ public class Loan
     public DateOnly DeliveryDate { get; set; }  // Entrega
     [Required]
     [LoanState]
-    public string Status { get; set; } = "active";
+    public LoanStatus Status { get; set; } = LoanStatus.Active;
 
     // Relationships
     [Required]
@@ -49,10 +50,12 @@ public class Loan
     [ForeignKey("LoanOfficerId")]
     public AppUser? LoanOfficer { get; set; }
     public List<Collateral>? Collaterals { get; set; }
-    public Transaction? LastPayment { get; set; }
+    [ForeignKey("LastPaymentId")]
+    public virtual Transaction? LastPayment { get; set; }
 
     // Audit fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     [ConcurrencyCheck]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public List<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

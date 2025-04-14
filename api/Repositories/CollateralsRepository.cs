@@ -16,36 +16,30 @@ public class CollateralsRepository(
     IPhotoService photoService
 ) : ICollateralsRepository
 {
-    public async Task<CollateralDto> CreateAsync(CreateCollateralDto createCollateralDto)
+    public async Task<Collateral> CreateAsync(CreateCollateralDto createCollateralDto)
     {
         var collateral = mapper.Map<Collateral>(createCollateralDto);
 
         await context.Collaterals.AddAsync(collateral);
         await context.SaveChangesAsync();
 
-        var collateralDto = mapper.Map<CollateralDto>(collateral);
-
-        return collateralDto;
+        return collateral;
     }
 
-    public async Task<CollateralDto?> DeleteAsync(int id)
+    public async Task<Collateral?> DeleteAsync(int id)
     {
         var collateral = await context.Collaterals.FirstOrDefaultAsync(x => x.Id == id);
-        Console.WriteLine($"checking collateral with id {id}..............");
         if (collateral == null) return null;
-        Console.WriteLine("Exists..............");
 
         context.Collaterals.Remove(collateral);
         await context.SaveChangesAsync();
 
-        return mapper.Map<CollateralDto>(collateral);
+        return collateral;
     }
 
-    public async Task<IEnumerable<CollateralDto>> GetAllAsync(CollateralQuery query)
+    public async Task<IEnumerable<Collateral>> GetAllAsync(CollateralQuery query)
     {
-        var collaterals = context.Collaterals
-        .ProjectTo<CollateralDto>(mapper.ConfigurationProvider)
-        .AsQueryable();
+        var collaterals = context.Collaterals.AsQueryable();
 
         if (query.MinValue > 0)
         {
@@ -79,7 +73,7 @@ public class CollateralsRepository(
         if (!String.IsNullOrEmpty(query.Username))
         {
             var clientId = await context.Users.Where(x => x.UserName == query.Username).Select(x => x.Id).FirstOrDefaultAsync();
-            collaterals = collaterals.Where(x => x.ClientId == clientId);
+            collaterals = collaterals.Where(x => x.AppUserId == clientId);
         }
 
         if (query.LoanId != null && query.LoanId != 0)
@@ -90,7 +84,7 @@ public class CollateralsRepository(
         return await collaterals.PaginateAsync(query);
     }
 
-    public async Task<CollateralDto?> GetByIdAsync(int id)
+    public async Task<Collateral?> GetByIdAsync(int id)
     {
         var collateral = await context.Collaterals
         .Include(x => x.AppUser)
@@ -98,10 +92,10 @@ public class CollateralsRepository(
         .FirstOrDefaultAsync(x => x.Id == id);
         if (collateral == null) return null;
 
-        return mapper.Map<CollateralDto>(collateral);
+        return collateral;
     }
 
-    public async Task<CollateralDto?> UpdateAsync(UpdateCollateralDto updateCollateralDto, int id)
+    public async Task<Collateral?> UpdateAsync(UpdateCollateralDto updateCollateralDto, int id)
     {
         var collateral = await context.Collaterals.FindAsync(id);
         if (collateral == null) return null;
@@ -110,10 +104,10 @@ public class CollateralsRepository(
 
         await context.SaveChangesAsync();
 
-        return mapper.Map<CollateralDto>(collateral);
+        return collateral;
     }
 
-    public async Task<CollateralDto> AddCollateralPhotoAsync(IFormFile file, Collateral collateral)
+    public async Task<Collateral> AddCollateralPhotoAsync(IFormFile file, Collateral collateral)
     {
         var result = await photoService.AddPhotoAsync(file);
 
@@ -126,7 +120,7 @@ public class CollateralsRepository(
         collateral.Photos.Add(photo);
         await context.SaveChangesAsync();
 
-        return mapper.Map<CollateralDto>(collateral);
+        return collateral;
     }
 
     public async Task DeleteCollateralPhotoAsync(string publicId)

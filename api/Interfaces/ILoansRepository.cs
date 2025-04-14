@@ -1,13 +1,14 @@
 using System;
 using api.DTOs.Loan;
+using api.Models;
 
 namespace api.Interfaces;
 
 public interface ILoansRepository
 {
-    Task<LoanDto> CreateAsync(CreateLoanDto createLoanDto);
-    Task<LoanDto?> DeleteAsync(int id);
-    Task<IEnumerable<LoanDto>> GetAllAsync(LoanQuery query);
-    Task<LoanDto?> GetByIdAsync(int id);
-    Task<LoanDto?> UpdateAsync(UpdateLoanDto updateLoanDto, int id);
+    Task<Loan> CreateAsync(CreateLoanDto createLoanDto);
+    Task<Loan?> DeleteAsync(int id);
+    Task<IEnumerable<Loan>> GetAllAsync(LoanQuery query);
+    Task<Loan?> GetByIdAsync(int id);
+    Task<Loan?> UpdateAsync(UpdateLoanDto updateLoanDto, int id);
 }

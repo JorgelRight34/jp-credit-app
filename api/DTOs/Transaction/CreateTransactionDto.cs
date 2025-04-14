@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel.DataAnnotations;
 using api.DTOs.Validators;
+using api.Enums;
 
 namespace api.DTOs.Transaction;
 
@@ -8,8 +9,7 @@ public class CreateTransactionDto
 {
     [Required]
     public decimal Value { get; set; }
-    [TransactionType]
-    public string? Type { get; set; }
+    public TransactionType? Type { get; set; }
     [Required]
     public decimal PenaltyRate { get; set; } = 0.05M;
     [Required]

@@ -26,12 +26,24 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
             .HasIndex(x => x.DNI)
             .IsUnique();
 
+         // Configure the optional last payment relationship
         builder.Entity<Loan>()
-            .HasOne(loan => loan.LastPayment)
+            .HasOne(l => l.LastPayment)
+            .WithOne() // No inverse navigation if Transaction doesn't reference back
+            .HasForeignKey<Loan>(l => l.LastPaymentId)
+            .IsRequired(false) // Makes the relationship optional
+            .OnDelete(DeleteBehavior.NoAction); // Or your preferred delete behavior
+
+        builder.Entity<Loan>()
+            .HasMany(loan => loan.Transactions)
             .WithOne(t => t.Loan)
-            .HasForeignKey<Transaction>(t => t.LoanId)
+            .HasForeignKey(t => t.LoanId)
             .OnDelete(DeleteBehavior.Cascade);
-            
+        
+        builder.Entity<Loan>()
+            .Property(l => l.Status)
+            .HasConversion<string>();
+
         var roles = new List<IdentityRole>
         {
             new IdentityRole { Id = "Client", Name= "Client", NormalizedName = "CLIENT"},

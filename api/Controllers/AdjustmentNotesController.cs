@@ -1,6 +1,7 @@
 using api.Data;
 using api.DTOs.AdjustmentNote;
 using api.Interfaces;
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -9,7 +10,8 @@ namespace api.Controllers
     [Authorize(AuthenticationSchemes = "Bearer", Roles = "Admin")]
     public class AdjustmentNotesController(
         IAdjustmentNotesRepository adjustmentNotesRepository,
-        ApplicationDbContext context
+        ApplicationDbContext context,
+        IMapper mapper
     ) : BaseApiController
     {
         [HttpGet]
@@ -18,7 +20,7 @@ namespace api.Controllers
       )
         {
             var notes = await adjustmentNotesRepository.GetAllAsync(query);
-            return Ok(notes);
+            return Ok(notes.Select(mapper.Map<AdjustmentNoteDto>));
         }
 
         [HttpGet("{id:int}")]
@@ -27,7 +29,7 @@ namespace api.Controllers
             var note = await adjustmentNotesRepository.GetByIdAsync(id);
             if (note == null) return NotFound();
 
-            return Ok(note);
+            return Ok(mapper.Map<AdjustmentNoteDto>(note));
         }
 
         [HttpPost]
@@ -39,7 +41,9 @@ namespace api.Controllers
             if (loan == null) return BadRequest("Loan doesn't exist");
 
             var note = await adjustmentNotesRepository.CreateAsync(createAdjustmentNoteDto);
-            return CreatedAtAction(nameof(GetById), new { id = note.Id }, note);
+            var noteDto = mapper.Map<AdjustmentNoteDto>(note);
+
+            return CreatedAtAction(nameof(GetById), new { id = note.Id }, noteDto);
         }
 
         [HttpPut("{id:int}")]
@@ -50,7 +54,7 @@ namespace api.Controllers
             var note = await adjustmentNotesRepository.UpdateAsync(updateAdjustmentNoteDto, id);
             if (note == null) return NotFound();
 
-            return Ok(note);
+            return Ok(mapper.Map<AdjustmentNoteDto>(note));
         }
 
         [HttpDelete("{id:int}")]

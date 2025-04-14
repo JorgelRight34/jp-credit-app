@@ -3,6 +3,7 @@ using api.DTOs;
 using api.DTOs.Loan;
 using api.Interfaces;
 using api.Models;
+using AutoMapper;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,21 +11,22 @@ namespace api.Controllers
 {
     public class LoansController(
         ILoansRepository loansRepository,
-        UserManager<AppUser> userManager
+        UserManager<AppUser> userManager,
+        IMapper mapper
     ) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<LoanDto>>> GetAll([FromQuery] LoanQuery query)
         {
             var loans = await loansRepository.GetAllAsync(query);
-            return Ok(loans);
+            return Ok(loans.Select(mapper.Map<LoanDto>));
         }
 
         [HttpGet("{id:int}")]
         public async Task<ActionResult<LoanDto>> GetById([FromRoute] int id)
         {
             var loan = await loansRepository.GetByIdAsync(id);
-            return Ok(loan);
+            return Ok(mapper.Map<LoanDto>(loan));
         }
 
         [HttpPost]
@@ -33,9 +35,13 @@ namespace api.Controllers
             var client = await userManager.FindByIdAsync(createLoanDto.ClientId!);
             if (client == null) return BadRequest("Client doesn't exist");
 
-            var loan = await loansRepository.CreateAsync(createLoanDto);
+            var loanOfficer = await userManager.FindByIdAsync(createLoanDto.LoanOfficerId!);
+            if (loanOfficer == null) return BadRequest("Loan Officer doesn't exist");
 
-            return CreatedAtAction(nameof(GetById), new { id = loan.Id }, loan);
+            var loan = await loansRepository.CreateAsync(createLoanDto);
+            var loanDto = mapper.Map<LoanDto>(loan);
+
+            return CreatedAtAction(nameof(GetById), new { id = loan.Id }, loanDto);
         }
 
         [HttpPut("{id:int}")]
@@ -44,7 +50,7 @@ namespace api.Controllers
             var loan = await loansRepository.UpdateAsync(updateLoanDto, id);
             if (loan == null) return NotFound();
 
-            return Ok(loan);
+            return Ok(mapper.Map<LoanDto>(loan));
         }
 
         [HttpDelete("{id:int}")]
