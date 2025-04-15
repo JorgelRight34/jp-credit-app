@@ -80,6 +80,7 @@ const EntityFormLayout = <TData,>({
         <div className={className} key={key}>
           {formField.type === "file" && (
             <FormInput
+              {...{ multiple: true }}
               label={formField.label}
               name={formField.name}
               type="file"
