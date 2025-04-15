@@ -1,7 +1,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../../common/DataTable";
 import { Note } from "../../../models/note";
-import { toCurrency, toFormattedDate } from "../../../utils/utils";
+import {
+  sortDateRows,
+  toCurrency,
+  toFormattedDate,
+} from "../../../utils/utils";
 import { useNavigate } from "react-router";
 
 interface NotesDataTableProps {
@@ -11,10 +15,18 @@ interface NotesDataTableProps {
 
 const columns: ColumnDef<Note>[] = [
   { accessorKey: "id", header: "Id" },
-  { header: "Amount", cell: ({ row }) => toCurrency(row.original.amount) },
-  { accessorKey: "loanId", header: "Loan Id" },
   {
-    header: "Date",
+    accessorKey: "amount",
+    header: "Monto",
+    enableSorting: true,
+    cell: ({ row }) => toCurrency(row.original.amount),
+  },
+  { accessorKey: "loanId", enableSorting: true, header: "Préstamo" },
+  {
+    accessorKey: "date",
+    header: "Fecha",
+    enableSorting: true,
+    sortingFn: sortDateRows,
     cell: ({ row }) => toFormattedDate(new Date(row.original.date)),
   },
 ];

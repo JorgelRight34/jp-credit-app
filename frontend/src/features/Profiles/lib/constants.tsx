@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { FormField } from "../../../models/formField";
+import { User } from "../../../models/user";
 
 export const baseUrl = "users";
 
@@ -35,18 +36,19 @@ export const profileFormDefaultValues: ProfileFormValues = {
 
 export type ProfileFormValues = z.infer<typeof schema>;
 
-export const profileFormFields: FormField[] = [
+export const profileFormFields: FormField<User>[] = [
   {
     name: "username",
     label: "Username",
+    showOnEdit: false,
   },
   {
     name: "firstName",
-    label: "First Name",
+    label: "Nombres",
   },
   {
     name: "lastName",
-    label: "Last Name",
+    label: "Apellidos",
   },
   {
     name: "email",
@@ -55,7 +57,7 @@ export const profileFormFields: FormField[] = [
   },
   {
     name: "dateOfBirth",
-    label: "Date of Birth",
+    label: "Nacimiento",
     type: "date",
     required: true,
   },
@@ -65,14 +67,39 @@ export const profileFormFields: FormField[] = [
   },
   {
     name: "address",
-    label: "Address",
+    label: "Dirección",
   },
   {
     name: "landline",
-    label: "Landline",
+    label: "Teléfono Fijo",
   },
   {
     name: "officePhone",
-    label: "Office Phone",
+    label: "Teléfono Oficina",
+  },
+  {
+    name: "gender",
+    label: "Género",
+    type: "select",
+    options: [
+      ["M", "Masculino"],
+      ["F", "Femenino"],
+    ],
+  },
+  {
+    name: "maritalStatus",
+    label: "Estado Civil",
+    type: "select",
+    options: [
+      ["single", "Soltero"],
+      ["married", "Casado"],
+      ["divorced", "Divorciado"],
+      ["widow", "Viud@"],
+    ],
+  },
+  {
+    name: "photo",
+    label: "Foto",
+    type: "file",
   },
 ];

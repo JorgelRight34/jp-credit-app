@@ -10,7 +10,7 @@ public class Loan
 {
     [Key]
     public int Id { get; set; }
-    public int LastPaymentId { get; set; }
+    public int? LastPaymentId { get; set; }
 
     // Loan details
     public string? Description { get; set; }
@@ -43,17 +43,22 @@ public class Loan
     [Required]
     public string? ClientId { get; set; }
     public string? LoanOfficerId { get; set; }
+    public string? GuarantorId { get; set; }
 
     // Navigation properties
     [ForeignKey("ClientId")]
     public AppUser? Client { get; set; }
     [ForeignKey("LoanOfficerId")]
     public AppUser? LoanOfficer { get; set; }
+    [ForeignKey("GuarantorId")]
+    public AppUser? Guarantor { get; set; }
     public List<Collateral>? Collaterals { get; set; }
-    public Transaction? LastPayment { get; set; }
+    [ForeignKey("LastPaymentId")]
+    public virtual Transaction? LastPayment { get; set; }
 
     // Audit fields
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     [ConcurrencyCheck]
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
+    public List<Transaction> Transactions { get; set; } = new List<Transaction>();
 }

@@ -1,5 +1,3 @@
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
 import {
   ProfileFormValues,
   profileFormFields,
@@ -10,113 +8,66 @@ import useNewProfile from "../hooks/useNewProfile";
 import useEditProfile from "../hooks/useEditProfile";
 import useDeleteProfile from "../hooks/useDeleteProfile";
 import { Role } from "../../../models/role";
-import { renderFormInputs } from "../../../utils/formUtils";
-import FormInput from "../../../common/FormInput";
-import useUploadFile from "../../../hooks/useUploadFile";
 import EntityFormLayout from "../../../common/EntityFormLayout";
+import { User } from "../../../models/user";
+import { useState } from "react";
+import useUploadFile from "../../../hooks/useUploadFile";
 
 interface ProfileFormProps {
   role: Role;
-  edit?: string;
+  edit?: User;
   defaultValues?: ProfileFormValues;
 }
 
 const ProfileForm = ({
   role,
   defaultValues = profileFormDefaultValues,
-  edit = "",
+  edit,
 }: ProfileFormProps) => {
-  const {
-    register,
-    reset,
-    handleSubmit,
-    formState: { errors },
-  } = useForm({
-    resolver: zodResolver(schema),
-    defaultValues: defaultValues,
-  });
   const [onSubmit] = useNewProfile(role);
   const [onEdit] = useEditProfile(role);
   const [deleteProfile] = useDeleteProfile(role);
-  const { handleOnFileChange, uploadFile } = useUploadFile();
-
-  const renderFormInputsSlice = (start: number, end: number) =>
-    renderFormInputs(profileFormFields, start, end, register, errors);
+  const [files, setFiles] = useState<File[]>([]);
+  const { uploadFile } = useUploadFile();
 
   const handleOnSubmit = async (data: ProfileFormValues) => {
+    let response;
     if (edit) {
-      await onEdit(data, edit);
+      response = await onEdit(data, edit.id);
     } else {
-      const response = await onSubmit(data);
-      await uploadFile(`users/${response.username}/photo`);
-      reset();
+      response = await onSubmit(data);
+    }
+    if (files.length > 0) {
+      await uploadFile(`users/${response.data.username}/photo`, files);
     }
   };
 
   return (
-    <EntityFormLayout
-      onSubmit={handleSubmit(handleOnSubmit)}
+    <EntityFormLayout<User, ProfileFormValues>
+      onSubmit={handleOnSubmit}
+      filesMaxLength={1}
+      files={files}
+      setFiles={setFiles}
+      columns={3}
+      rows={4}
       allowDelete={edit ? true : false}
-      onDelete={() => deleteProfile(edit)}
-    >
-      <div className="col-lg-4">
-        {edit ? (
-          <div className="mb-3">
-            <FormInput
-              name="username"
-              value={defaultValues.username}
-              label="Username"
-              disabled={true}
-            />
-          </div>
-        ) : (
-          ""
-        )}
-        {renderFormInputsSlice(edit ? 1 : 0, 4)}
-      </div>
-      <div className="col-lg-4">{renderFormInputsSlice(4, 8)}</div>
-      <div className="col-lg-4">
-        {renderFormInputsSlice(8, 12)}
-        <div className="mb-3">
-          <label className="form-label" htmlFor="gender">
-            Gender
-          </label>
-          <select className="form-select" id="gender" {...register("gender")}>
-            <option value="M">Masculino</option>
-            <option value="F">Femenino</option>
-          </select>
-        </div>
-        <div className="mb-3">
-          <label className="form-label" htmlFor="maritalStatus">
-            Marital Status
-          </label>
-          <select
-            className="form-select"
-            id="maritalStatus"
-            {...register("maritalStatus")}
-          >
-            <option value="single">Soltero</option>
-            <option value="married">Casado</option>
-            <option value="divorced">Divorciado</option>
-            <option value="widow">Viudo</option>
-          </select>
-        </div>
-        <FormInput
-          label="Photo"
-          name="photo"
-          type="file"
-          onChange={handleOnFileChange}
-        />
-        {role === "admin" && (
-          <FormInput
-            label="Password"
-            required={true}
-            {...register("password")}
-            type="password"
-          />
-        )}
-      </div>
-    </EntityFormLayout>
+      onDelete={edit ? () => deleteProfile(edit.username) : () => {}}
+      defaultValues={defaultValues}
+      formFields={
+        role === "admin"
+          ? [
+              ...profileFormFields,
+              {
+                name: "password",
+                label: "Password",
+                type: "password",
+              },
+            ]
+          : profileFormFields
+      }
+      resetValues={edit ? true : false}
+      schema={schema}
+    />
   );
 };
 

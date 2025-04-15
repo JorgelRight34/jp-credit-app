@@ -1,9 +1,18 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 
-const MultipleFilesInput = () => {
+interface MultipleFilesInputProps {
+  setFiles: (files: File[] | ((prev: File[]) => File[])) => void;
+  files: File[];
+  maxLength: number;
+}
+
+const MultipleFilesInput = ({
+  maxLength,
+  files,
+  setFiles,
+}: MultipleFilesInputProps) => {
   const [showModal, setShowModal] = useState(false);
-  const [files, setFiles] = useState<File[]>([]);
 
   const handleOnFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -11,6 +20,11 @@ const MultipleFilesInput = () => {
   ) => {
     const uploadedFile = event.target?.files?.[0];
     if (!uploadedFile) return;
+
+    if (files.length === maxLength) {
+      setFiles((prev) => prev.splice(-1, 0, uploadedFile));
+      return;
+    }
 
     if (index) {
       setFiles((prev) => [...prev].splice(index, 0, uploadedFile));
@@ -25,14 +39,19 @@ const MultipleFilesInput = () => {
 
   return (
     <>
-      <input
-        type="file"
-        className="form-control"
-        onChange={handleOnFileChange}
-        multiple
-      />
-      <button onClick={() => setShowModal(true)}>Archivos</button>
+      <button
+        type="button"
+        className="btn btn-accent w-100"
+        onClick={() => setShowModal(true)}
+      >
+        Anadir
+      </button>
+
       <Modal title="Fotos" show={showModal} onHide={() => setShowModal(false)}>
+        <label>
+          <input type="file" className="d-none" onChange={handleOnFileChange} />
+          <button>Anadir</button>
+        </label>
         <div className="space-y-3">
           {files.map((file, index) => (
             <label key={file.name} className="relative block">

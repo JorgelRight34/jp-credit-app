@@ -1,7 +1,8 @@
 api/appsettings.json
 api/appsettings.Development.json
-react-frontend/.env
-api/obj/
+frontend/node_modules
+frontend/.env
+api/obj
 api/Migrations
 api/bin
 .gitignore

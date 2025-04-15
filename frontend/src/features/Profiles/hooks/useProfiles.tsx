@@ -5,6 +5,7 @@ import {
   setLoanOfficers,
   setAdmins,
   setGuarantors,
+  setProfiles,
 } from "../profilesSlice";
 import { useEffect } from "react";
 import { RootState } from "../../../store";
@@ -30,6 +31,9 @@ const useProfiles = (
         break;
       case "admin":
         dispatch(setAdmins(response.data));
+        break;
+      case "user":
+        dispatch(setProfiles(response.data));
         break;
       case "guarantor":
         dispatch(setGuarantors(response.data));

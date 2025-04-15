@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { ReactEventHandler, useEffect, useState } from "react";
 import "./dataTable.css";
 import DataTableNavigation from "./DataTableNavigation";
 import {
@@ -96,7 +96,13 @@ const DataTable = <TData,>({
               <tr
                 key={row.id}
                 onClick={
-                  onRowClick ? () => onRowClick(row.original) : undefined
+                  onRowClick
+                    ? (event: React.MouseEvent) => {
+                        console.log("hey");
+                        event.stopPropagation();
+                        onRowClick(row.original);
+                      }
+                    : undefined
                 }
               >
                 {row.getVisibleCells().map((cell) => (

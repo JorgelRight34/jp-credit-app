@@ -252,9 +252,8 @@ namespace api.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MaritalStatus")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("MaritalStatus")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -385,10 +384,13 @@ namespace api.Migrations
                     b.Property<decimal>("DisbursedAmount")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("GuarantorId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateOnly?>("LastPaymentDate")
                         .HasColumnType("TEXT");
 
-                    b.Property<int>("LastPaymentId")
+                    b.Property<int?>("LastPaymentId")
                         .HasColumnType("INTEGER");
 
                     b.Property<string>("LoanOfficerId")
@@ -423,6 +425,11 @@ namespace api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("GuarantorId");
+
+                    b.HasIndex("LastPaymentId")
+                        .IsUnique();
 
                     b.HasIndex("LoanOfficerId");
 
@@ -483,15 +490,13 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("Type")
-                        .IsRequired()
+                    b.Property<int>("Type")
                         .HasMaxLength(10)
-                        .HasColumnType("TEXT");
+                        .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("LoanId")
-                        .IsUnique();
+                    b.HasIndex("LoanId");
 
                     b.HasIndex("PayerId");
 
@@ -596,11 +601,24 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("api.Models.AppUser", "Guarantor")
+                        .WithMany()
+                        .HasForeignKey("GuarantorId");
+
+                    b.HasOne("api.Models.Transaction", "LastPayment")
+                        .WithOne()
+                        .HasForeignKey("api.Models.Loan", "LastPaymentId")
+                        .OnDelete(DeleteBehavior.NoAction);
+
                     b.HasOne("api.Models.AppUser", "LoanOfficer")
                         .WithMany()
                         .HasForeignKey("LoanOfficerId");
 
                     b.Navigation("Client");
+
+                    b.Navigation("Guarantor");
+
+                    b.Navigation("LastPayment");
 
                     b.Navigation("LoanOfficer");
                 });
@@ -623,8 +641,8 @@ namespace api.Migrations
             modelBuilder.Entity("api.Models.Transaction", b =>
                 {
                     b.HasOne("api.Models.Loan", "Loan")
-                        .WithOne("LastPayment")
-                        .HasForeignKey("api.Models.Transaction", "LoanId")
+                        .WithMany("Transactions")
+                        .HasForeignKey("LoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -648,7 +666,7 @@ namespace api.Migrations
                 {
                     b.Navigation("Collaterals");
 
-                    b.Navigation("LastPayment");
+                    b.Navigation("Transactions");
                 });
 #pragma warning restore 612, 618
         }

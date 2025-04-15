@@ -34,14 +34,14 @@ const DataTableNavigation = <TData,>({
       </span>
       <div className="ms-auto">
         <button
-          className="btn btn-accent me-5"
+          className="btn btn-accent shadow-sm me-5"
           onClick={table.previousPage}
           disabled={!table.getCanPreviousPage()}
         >
           Anterior
         </button>
         <button
-          className="btn btn-accent"
+          className="btn btn-accent shadow-sm"
           onClick={table.nextPage}
           disabled={!table.getCanNextPage()}
         >

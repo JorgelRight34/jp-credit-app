@@ -1,0 +1,18 @@
+export enum CollateralCondition {
+  HIGH_QUALITY = "highQuality",
+  LOW_QUALITY = "lowQuality",
+  STABLE = "stable",
+  DEPRECIATING = "depreciating",
+  LIQUID = "liquid",
+  ILLIQUID = "illiquid",
+  LOW_RISK = "lowRisk",
+  HIGH_RISK = "highRisk",
+  EASILY_RECOVERABLE = "easily recoverable",
+  VOLATILE = "volatile",
+  SECURE = "secure",
+  UNDERVALUED = "undervalued",
+  OVERVALUED = "overvalued",
+  APPRECIATING = "appreciating",
+  DIVERSIFIED = "diversified",
+  CONCENTRATED = "concentrated",
+}

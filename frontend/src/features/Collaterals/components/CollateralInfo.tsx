@@ -12,7 +12,7 @@ const CollateralInfo = ({ collateral }: CollateralInfoProps) => {
   return (
     <div className="row mx-0">
       <div className="mb-3">
-        <h4>Description</h4>
+        <h4>Descripción</h4>
         <p>
           {collateral.description
             ? collateral.description
@@ -32,15 +32,15 @@ const CollateralInfo = ({ collateral }: CollateralInfoProps) => {
             data={[
               ["Id", collateral.id, "Title", collateral.title],
               [
-                "Client",
+                "Cliente",
                 <NavLink to={`/profiles/${collateral.client.username}`}>
                   {getFullName(collateral.client)}
                 </NavLink>,
-                "Client Id",
+                "Id Cliente",
                 collateral.clientId,
               ],
               [
-                "Loan Id",
+                "Préstamo",
                 <NavLink to={`/loans/${collateral.loanId}`}>
                   {collateral.loanId}
                 </NavLink>,
@@ -48,9 +48,9 @@ const CollateralInfo = ({ collateral }: CollateralInfoProps) => {
                 "",
               ],
               [
-                "State",
+                "Estado",
                 toTitleCase(collateral.condition),
-                "Condition",
+                "Condición",
                 toTitleCase(collateral.condition),
               ],
             ]}

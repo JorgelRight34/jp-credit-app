@@ -13,6 +13,7 @@ public class LoanDto
 {
     public int Id { get; set; }
     public string? ClientId { get; set; }
+    public  string? GuarantorId { get; set; }
     public int LastPaymentId { get; set; }
 
     // Loan details
@@ -45,6 +46,7 @@ public class LoanDto
     // Navigation properties
     public UserDto? Client { get; set; }
     public UserDto? LoanOfficer { get; set; }
+    public UserDto? Guarantor { get; set; }
     public List<CollateralDto>? Collateral { get; set; }
     public TransactionDto? LastPayment { get; set; }
 

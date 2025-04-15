@@ -1,3 +1,4 @@
+import { Row } from "@tanstack/react-table";
 import { User } from "../models/user";
 
 export const toCurrency = (money: number): string => {
@@ -34,4 +35,23 @@ export const getFirstAndLastName = (user?: User): string => {
 
 export const toTitleCase = (str: string) => {
   return `${str[0].toUpperCase()}${str.slice(1)}`;
+};
+
+export const getTodayFormattedDate = () => {
+  const today = new Date();
+  const yyyy = today.getFullYear();
+  const mm = String(today.getMonth() + 1).padStart(2, "0"); // Months are 0-based
+  const dd = String(today.getDate()).padStart(2, "0");
+
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+export const sortDateRows = <TData,>(
+  rowA: Row<TData>,
+  rowB: Row<TData>,
+  columnId: string
+) => {
+  const dateA = new Date(rowA.getValue(columnId));
+  const dateB = new Date(rowB.getValue(columnId));
+  return dateA.getTime() - dateB.getTime();
 };

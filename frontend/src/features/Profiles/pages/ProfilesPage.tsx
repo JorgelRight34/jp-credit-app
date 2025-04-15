@@ -7,18 +7,34 @@ import { Tab, Tabs } from "react-bootstrap";
 import { Role } from "../../../models/role";
 import ProfilesDataTable from "../components/ProfilesDataTable";
 import ProfileSearchForm from "../components/ProfileSearchForm";
+import AccentBtn from "../../../common/AccentBtn";
+import AddProfileToRoleForm from "../components/AddProfileToRoleForm";
+import { toTitleCase } from "../../../utils/utils";
+import { roleSpanishTranslations } from "../../../utils/constants";
 
 const ProfilesPage = () => {
   const [clients, fetchClients] = useProfiles("client");
   const [loanOfficers, fetchLoanOfficers] = useProfiles("loanOfficer");
   const [admins, fetchAdmins] = useProfiles("admin");
   const [guarantors, fetchGuarantors] = useProfiles("guarantor");
-  const [showModal, setShowModal] = useState(false);
+  const [showCreateFormModal, setShowCreateFormModal] = useState(false);
+  const [showAddToRoleFormModal, setShowAddToRoleFormModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role>("client");
 
   return (
     <>
-      <EntityLayout title="Pérfiles" onAddNew={() => setShowModal(true)}>
+      <EntityLayout
+        title="Perfiles"
+        onAddNew={() => setShowCreateFormModal(true)}
+        extraOption={
+          <AccentBtn
+            className="mx-3"
+            onClick={() => setShowAddToRoleFormModal(true)}
+          >
+            Anadir existente a rol
+          </AccentBtn>
+        }
+      >
         <Tabs onSelect={(k) => setSelectedRole(k as Role)}>
           <Tab title="Clientes" eventKey="client" className="p-3">
             <ProfileSearchForm role="client" />
@@ -51,11 +67,20 @@ const ProfilesPage = () => {
         </Tabs>
       </EntityLayout>
       <Modal
-        title={`Añadir nuevo ${selectedRole}`}
-        show={showModal}
-        onHide={() => setShowModal(false)}
+        title={`Añadir a ${toTitleCase(selectedRole)}`}
+        show={showCreateFormModal}
+        onHide={() => setShowCreateFormModal(false)}
       >
         <ProfileForm role={selectedRole} />
+      </Modal>
+      <Modal
+        title={`Añadir Existente a ${toTitleCase(
+          roleSpanishTranslations[selectedRole]
+        )}s`}
+        show={showAddToRoleFormModal}
+        onHide={() => setShowAddToRoleFormModal(false)}
+      >
+        <AddProfileToRoleForm role={selectedRole} />
       </Modal>
     </>
   );

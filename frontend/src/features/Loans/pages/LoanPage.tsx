@@ -51,8 +51,11 @@ const LoanPage = () => {
           <Tab className="p-3" eventKey="client" title="Cliente">
             {loan.client && <ProfileInfo profile={loan.client} />}
           </Tab>
-          <Tab className="p-3" eventKey="client" title="Agente">
+          <Tab className="p-3" eventKey="loanOfficer" title="Agente">
             {loan.loanOfficer && <ProfileInfo profile={loan.loanOfficer} />}
+          </Tab>
+          <Tab className="p-3" eventKey="guarantor" title="Garante">
+            {loan.guarantor && <ProfileInfo profile={loan.guarantor} />}
           </Tab>
           <Tab className="p-3" eventKey="collaterals" title="Garantías">
             <CollateralsDataTable
@@ -83,9 +86,9 @@ const LoanPage = () => {
           edit={loan}
           defaultValues={{
             ...loan,
-            annualInterest: loan.annualInterestRate,
             loanOfficerId: loan.loanOfficer?.id || "",
             clientId: loan.client.id,
+            guarantorId: loan.guarantorId || "",
             status: loan.status.toLowerCase(),
           }}
         />

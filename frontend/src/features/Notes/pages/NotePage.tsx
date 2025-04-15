@@ -39,7 +39,7 @@ const NotePage = () => {
         show={showModal}
         onHide={() => setShowModal(false)}
       >
-        <NoteForm defaultValues={note} />
+        <NoteForm edit={note} defaultValues={note} />
       </Modal>
     </>
   );

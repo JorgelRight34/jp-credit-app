@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using api.Dtos.Validators;
 using api.DTOs.Validators;
+using api.Enums;
 using Microsoft.AspNetCore.Identity;
 
 namespace api.DTOs.User;
@@ -31,7 +32,7 @@ public class UserDto
     [Required]
     public DateOnly DateOfBirth { get; set; }
     [Required]
-    public string? MaritalStatus { get; set; }
+    public MaritalStatus MaritalStatus { get; set; }
     [Required]
     [DNI]
     public string? DNI { get; set; }

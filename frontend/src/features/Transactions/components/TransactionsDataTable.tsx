@@ -1,7 +1,12 @@
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../../common/DataTable";
 import { Transaction } from "../../../models/transaction";
-import { getFirstAndLastName, toCurrency } from "../../../utils/utils";
+import {
+  getFirstAndLastName,
+  sortDateRows,
+  toCurrency,
+  toFormattedDate,
+} from "../../../utils/utils";
 import { NavLink, useNavigate } from "react-router";
 
 interface TransactionsDataTableProps {
@@ -42,10 +47,20 @@ const columns: ColumnDef<Transaction>[] = [
     accessorKey: "payerId",
     header: "Cliente",
     cell: ({ row }) => (
-      <NavLink to={`/profiles/${row.original.payerId}`}>
+      <NavLink
+        to={`/profiles/${row.original.payer.username}`}
+        onClick={(event: React.MouseEvent) => event.stopPropagation()}
+      >
         {getFirstAndLastName(row.original.payer)}
       </NavLink>
     ),
+  },
+  {
+    accessorKey: "date",
+    header: "Fecha",
+    enableSorting: true,
+    sortingFn: sortDateRows,
+    cell: ({ row }) => toFormattedDate(new Date(row.original.date)),
   },
 ];
 
@@ -59,9 +74,10 @@ const TransactionsDataTable = ({
     <DataTable
       columns={columns}
       data={transactions}
-      onRowClick={(transaction: Transaction) =>
-        navigate(`/transactions/${transaction.id}`)
-      }
+      onRowClick={(transaction: Transaction) => {
+        console.log("ta");
+        navigate(`/transactions/${transaction.id}`);
+      }}
       navigateCallback={navigateCallback}
     />
   );

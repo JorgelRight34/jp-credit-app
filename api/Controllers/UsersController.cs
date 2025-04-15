@@ -15,14 +15,15 @@ namespace api.Controllers
         IUsersRepository usersRepository,
         UserManager<AppUser> userManager,
         IMapper mapper,
-        ITokenService tokenService
+        ITokenService tokenService,
+        RoleManager<IdentityRole> roleManager
     ) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<UserDto>>> GetAll([FromQuery] UserQuery query)
         {
             var users = await usersRepository.GetAllAsync(query);
-            return Ok(users);
+            return Ok(users.Select(mapper.Map<UserDto>));
         }
 
         [HttpGet("role/{role}")]
@@ -31,7 +32,28 @@ namespace api.Controllers
         )
         {
             var users = await usersRepository.GetUsersInRoleAsync(role, query);
-            return Ok(users);
+            return Ok(users.Select(mapper.Map<UserDto>));
+        }
+
+        [HttpPut("{username}/roles/{role}")]
+        public async Task<ActionResult<UserDto>> AddUserToRole(
+            [FromRoute] string username, [FromRoute] string role
+        )
+        {
+            var roleExists = await roleManager.RoleExistsAsync(role);
+            if (!roleExists) return BadRequest("Role doesn't exist");
+
+            var user = await userManager.FindByNameAsync(username);
+
+            var result = await userManager.AddToRoleAsync(user, role);
+            if (!result.Succeeded) return BadRequest("User doesn't exist");
+
+            var userDto = mapper.Map<UserDto>(user);
+            var roles = await userManager.GetRolesAsync(user);
+            userDto.Roles = roles.ToList();
+            
+
+            return Ok(userDto);
         }
 
         [HttpGet("{username}")]
@@ -40,7 +62,11 @@ namespace api.Controllers
             var user = await usersRepository.GetByUsernameAsync(username);
             if (user == null) return NotFound();
 
-            return Ok(user);
+            var userDto = mapper.Map<UserDto>(user);
+            var roles = await userManager.GetRolesAsync(user);
+            userDto.Roles = roles.ToList();
+
+            return Ok(userDto);
         }
 
         [HttpPost("register")]
@@ -52,16 +78,16 @@ namespace api.Controllers
 
             if (createdUser == null) return StatusCode(500, "Failed to create user");
 
-            return CreatedAtAction(nameof(GetByUsername), new { username = createdUser.Username }, mapper.Map<UserDto>(createdUser));
+            return CreatedAtAction(nameof(GetByUsername), new { username = createdUser.UserName }, mapper.Map<UserDto>(createdUser));
         }
 
         [HttpPut("{id}")]
-        public async Task<ActionResult<AppUser?>> UpdateUser([FromBody] UpdateUserDto updateUserDto, [FromRoute] string id)
+        public async Task<ActionResult<UserDto?>> UpdateUser([FromBody] UpdateUserDto updateUserDto, [FromRoute] string id)
         {
             var user = await usersRepository.UpdateAsync(updateUserDto, id);
             if (user == null) return NotFound();
 
-            return Ok(user);
+            return Ok(mapper.Map<UserDto>(user));
         }
 
         [HttpDelete("{id}")]
@@ -112,7 +138,11 @@ namespace api.Controllers
 
             var userWithPhoto = await usersRepository.AddUserPhotoAsync(file, user);
 
-            return CreatedAtAction(nameof(GetByUsername), new { username = userWithPhoto.Username }, userWithPhoto);
+            return CreatedAtAction(
+                nameof(GetByUsername), 
+                new { username = userWithPhoto.UserName }, 
+                mapper.Map<UserDto>(userWithPhoto)
+            );
         }
 
         [HttpDelete("{username}/photo/{photoId}")]

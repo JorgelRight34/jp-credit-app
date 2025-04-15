@@ -1,4 +1,5 @@
 import React from "react";
+import { getTodayFormattedDate } from "../utils/utils";
 
 interface FormInputProps {
   label: string;
@@ -8,7 +9,9 @@ interface FormInputProps {
   error?: string;
   required?: boolean;
   disabled?: boolean;
+  defaultToToday?: boolean;
   value?: string;
+  showOnEdit?: boolean;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -35,7 +38,9 @@ const FormInput = ({
   onChange,
   error,
   value,
+  defaultToToday = false,
   required,
+  showOnEdit,
   ...props
 }: FormInputProps) => {
   return (
@@ -49,7 +54,7 @@ const FormInput = ({
         onChange={onChange}
         required={required}
         disabled={disabled}
-        value={value}
+        value={defaultToToday ? getTodayFormattedDate() : value}
       />
       {error && <p className="text-danger">{error}</p>}
     </>

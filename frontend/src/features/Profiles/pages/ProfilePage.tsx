@@ -40,10 +40,10 @@ const ProfilePage = () => {
         onEdit={() => setShowModal(true)}
       >
         <Tabs>
-          <Tab eventKey={"info"} title="Information" className="p-3">
+          <Tab eventKey={"info"} title="Información" className="p-3">
             {profile && <ProfileInfo profile={profile} />}
           </Tab>
-          <Tab eventKey={"loans"} title="Loans" className="p-3">
+          <Tab eventKey={"loans"} title="Préstamos" className="p-3">
             <div className="mb-3">
               <LoanSearchInput fetchData={false} />
             </div>
@@ -52,13 +52,13 @@ const ProfilePage = () => {
               navigateCallback={(page: number) => fetchLoans(page)}
             />
           </Tab>
-          <Tab eventKey={"collaterals"} title="Collaterals" className="p-3">
+          <Tab eventKey={"collaterals"} title="Garantía" className="p-3">
             <CollateralsDataTable
               collaterals={collaterals}
               navigateCallback={(page: number) => fetchCollaterals(page)}
             />
           </Tab>
-          <Tab eventKey={"transactions"} title="Transactions" className="p-3">
+          <Tab eventKey={"transactions"} title="Transacciones" className="p-3">
             <TransactionsDataTable
               transactions={transactions}
               navigateCallback={(page: number) => fetchTransactions(page)}
@@ -67,7 +67,7 @@ const ProfilePage = () => {
         </Tabs>
       </EntityLayout>
       <Modal
-        title="Edit profile"
+        title="Editar Pérfil"
         show={showModal}
         onHide={() => setShowModal(false)}
       >
@@ -75,7 +75,7 @@ const ProfilePage = () => {
           role={
             (profile?.roles?.[0]?.toLowerCase() as Role) || ("user" as Role)
           }
-          edit={profile.id}
+          edit={profile}
           defaultValues={{
             ...profile,
             dateOfBirth: profile.dateOfBirth.toString(),

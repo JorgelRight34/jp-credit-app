@@ -35,8 +35,21 @@ namespace api.Controllers
             var client = await userManager.FindByIdAsync(createLoanDto.ClientId!);
             if (client == null) return BadRequest("Client doesn't exist");
 
-            var loanOfficer = await userManager.FindByIdAsync(createLoanDto.LoanOfficerId!);
-            if (loanOfficer == null) return BadRequest("Loan Officer doesn't exist");
+            if (createLoanDto.LoanOfficerId != null) {
+                var loanOfficer = await userManager.FindByIdAsync(createLoanDto.LoanOfficerId);
+                if (loanOfficer == null) return BadRequest("Loan Officer doesn't exist");
+
+                bool isInRole = await userManager.IsInRoleAsync(loanOfficer, "loanOfficer");
+                if (!isInRole) return BadRequest("Loan officer is not a loan officer");
+            }
+
+            if (createLoanDto.GuarantorId != null) {
+                var guarantor = await userManager.FindByIdAsync(createLoanDto.GuarantorId);
+                if (guarantor == null) return BadRequest("Loan Officer doesn't exist");
+
+                bool isInRole = await userManager.IsInRoleAsync(guarantor, "guarantor");
+                if (!isInRole) return BadRequest("Guarantor is not a guarantor");
+            }
 
             var loan = await loansRepository.CreateAsync(createLoanDto);
             var loanDto = mapper.Map<LoanDto>(loan);

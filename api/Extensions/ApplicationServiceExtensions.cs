@@ -17,6 +17,8 @@ public static class ApplicationServiceExtensions
         services.AddControllers()
             .AddJsonOptions(options =>
             {
+                options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+                options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
                 options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
             });
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi

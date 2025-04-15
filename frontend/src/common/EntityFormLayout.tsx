@@ -1,10 +1,27 @@
-import { ReactNode } from "react";
+import AccentBtn from "./AccentBtn";
+import { FormField } from "../models/formField";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { ZodType } from "zod";
+import { Controller, FieldValues, useForm } from "react-hook-form";
+import FormInput from "./FormInput";
+import ProfilesDataList from "../features/Profiles/components/ProfilesDataList";
+import { useMemo } from "react";
+import MultipleFilesInput from "./MultipleFilesInput";
 
-interface EntityFormLayoutProps {
-  children: ReactNode;
+interface EntityFormLayoutProps<TData, T> {
   allowDelete?: boolean;
   onDelete?: () => void;
-  onSubmit: () => void;
+  edit?: TData;
+  formFields: FormField<TData>[];
+  filesMaxLength?: number;
+  onSubmit: (data: T) => Promise<void>;
+  schema: ZodType<FieldValues, any, any>;
+  defaultValues?: Record<string, string | number | undefined | null>;
+  rows: number;
+  columns: number;
+  resetValues?: boolean;
+  files?: File[];
+  setFiles?: (files: File[] | ((prev: File[]) => File[])) => void;
 }
 
 /**
@@ -18,27 +35,166 @@ interface EntityFormLayoutProps {
  * @param {function} props.onSubmit - A function to be called when the form is submitted.
  * @returns {JSX.Element} The rendered entity form layout component.
  */
-const EntityFormLayout = ({
-  children,
+const EntityFormLayout = <TData, T>({
   allowDelete,
+  columns,
+  rows,
+  schema,
+  formFields,
+  defaultValues,
+  edit,
+  resetValues = true,
+  files,
+  filesMaxLength = 1,
+  setFiles,
   onDelete,
   onSubmit,
-}: EntityFormLayoutProps) => {
+}: EntityFormLayoutProps<TData, T>) => {
+  const {
+    control,
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm({
+    resolver: zodResolver(schema),
+    defaultValues,
+  });
+  const renderFormInputsSlice = (
+    start: number,
+    end: number,
+    direction: "col" | "row" = "col"
+  ) => {
+    return formFields.slice(start, end).map((formField: FormField<TData>) => {
+      if (edit && formField.showOnEdit === false) return;
+      if (formField.showOnNewRow && direction === "col") return;
+      if (!formField.showOnNewRow && direction === "row") return;
+
+      return renderFormInput(formField);
+    });
+  };
+
+  const renderFormInput = (formField: FormField<TData>) => {
+    const key = formField.name;
+    const className = "mb-3";
+    if (formField.type === "file" && setFiles && files) {
+      return (
+        <div className={className} key={key}>
+          <label className="form-label">Archivos ({files.length})</label>
+          <div>
+            <MultipleFilesInput
+              files={files}
+              setFiles={setFiles}
+              maxLength={filesMaxLength}
+            />
+          </div>
+        </div>
+      );
+    }
+
+    if (formField.type === "select") {
+      return (
+        <div className={className} key={key}>
+          {formField.type === "select" && (
+            <>
+              <label className="form-label" htmlFor={formField.name}>
+                {formField.label}
+              </label>
+              <select
+                className="form-select"
+                {...register(formField.name as keyof typeof register)}
+              >
+                {formField.options?.map((option) => (
+                  <option key={option[0]} value={option[0]}>
+                    {option[1]}
+                  </option>
+                ))}
+              </select>
+              {errors[formField.name as keyof typeof errors]?.message}
+            </>
+          )}
+        </div>
+      );
+    }
+
+    if (formField.profileDataList) {
+      return (
+        <div className={className} key={key}>
+          {edit ? (
+            <>
+              <label className="form-label" htmlFor={formField.name}>
+                {formField.label}
+              </label>
+              <p className="text-muted mb-0">
+                {formField?.showOnEditFn?.(edit)}
+              </p>
+            </>
+          ) : (
+            <>
+              <label className="form-label">{formField.label}</label>
+              <Controller
+                control={control}
+                {...register(formField.name as keyof typeof register)}
+                render={({ field }) => (
+                  <ProfilesDataList
+                    role={formField.profileRole || "client"}
+                    error={errors?.clientId?.message as string}
+                    {...field} // This binds react-select to React Hook Form
+                  />
+                )}
+              />
+            </>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className={className} key={key}>
+        <FormInput
+          defaultToToday={formField.defaultToToday}
+          {...formField}
+          {...register(formField.name as keyof typeof register)}
+          error={errors[formField.name as keyof FieldValues]?.message as string}
+        />
+      </div>
+    );
+  };
+
+  const handleOnSubmit = async (data: FieldValues) => {
+    await onSubmit(data as T);
+    if (resetValues) reset();
+  };
+
+  const rowFormFields = useMemo(
+    () => formFields.filter((field) => field.showOnNewRow),
+    [formFields]
+  );
+
   return (
-    <form onSubmit={onSubmit}>
-      <div className="row mx-0 pt-3">{children}</div>
+    <form onSubmit={handleSubmit(handleOnSubmit)}>
+      <div className="row mx-0 pt-3">
+        {Array(columns)
+          .fill(null)
+          .map((_, index) => (
+            <div className="col" key={`col-${index}`}>
+              {renderFormInputsSlice(rows * index, rows * index + rows, "col")}
+            </div>
+          ))}
+      </div>
+      {rowFormFields.map((field, index) => (
+        <div className="row mx-0" key={index}>
+          {renderFormInput(field)}
+        </div>
+      ))}
       <div className="d-flex">
-        <button type="submit" className="btn btn-accent w-100">
+        <AccentBtn type="submit" className="w-100">
           Ok
-        </button>
+        </AccentBtn>
         {allowDelete && (
-          <button
-            type="button"
-            className="btn btn-accent-secondary w-100 ms-3"
-            onClick={onDelete}
-          >
+          <AccentBtn type="button" className="w-100 ms-3" onClick={onDelete}>
             Eliminar
-          </button>
+          </AccentBtn>
         )}
       </div>
     </form>

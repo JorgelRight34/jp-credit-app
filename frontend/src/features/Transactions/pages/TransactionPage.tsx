@@ -15,7 +15,7 @@ const TransactionPage = () => {
   const navigate = useNavigate();
 
   const handleOnDelete = () => {
-    if (confirm("Are you sure you want to delete this record?") && id) {
+    if (confirm("¿Seguro deseas borrar este registro?") && id) {
       onDelete(id).then(() => navigate("/transactions"));
     }
   };
@@ -24,15 +24,15 @@ const TransactionPage = () => {
   if (!transaction) return <></>;
 
   return (
-    <EntityLayout title={`Transaction #${id}`} onDelete={handleOnDelete}>
+    <EntityLayout title={`Transacción #${id}`} onDelete={handleOnDelete}>
       <Tabs>
-        <Tab eventKey={"transaction"} title="Transaction" className="p-3">
+        <Tab eventKey={"transaction"} title="Transacción" className="p-3">
           <TransactionInfo transaction={transaction} />
         </Tab>
-        <Tab eventKey={"client"} title="Client" className="p-3">
+        <Tab eventKey={"client"} title="Cliente" className="p-3">
           <ProfileInfo profile={transaction.payer} />
         </Tab>
-        <Tab eventKey={"loan"} title="Loan" className="p-3">
+        <Tab eventKey={"loan"} title="Préstamo" className="p-3">
           <LoanInfo loan={transaction.loan} />
         </Tab>
       </Tabs>

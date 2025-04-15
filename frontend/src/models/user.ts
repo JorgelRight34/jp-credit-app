@@ -1,4 +1,5 @@
 import { Photo } from "./photo";
+import { Role } from "./role";
 
 export interface User {
   id: string;
@@ -14,6 +15,6 @@ export interface User {
   dni: string;
   landline: string;
   officePhone: string;
-  roles?: string[];
+  roles?: Role[];
   photo?: Photo;
 }

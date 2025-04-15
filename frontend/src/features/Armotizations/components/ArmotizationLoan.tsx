@@ -38,7 +38,7 @@ const ArmotizationLoan = ({ setLoanId }: ArmotizationLoanProps) => {
         <div className="col-lg-10">
           <input
             type="number"
-            placeholder="Loan Id"
+            placeholder="Id préstamo"
             className="form-control"
             onChange={handleChange}
           />
@@ -48,7 +48,7 @@ const ArmotizationLoan = ({ setLoanId }: ArmotizationLoanProps) => {
             className="btn btn-accent w-100 ms-3"
             onClick={fetchArmotization}
           >
-            Submit
+            Ok
           </button>
         </div>
       </div>

@@ -4,6 +4,7 @@ import { User } from "./user";
 
 export interface Loan {
   id: number; // Corresponds to int in C#
+  guarantorId?: string;
 
   // Loan details
   approvedAmount: number; // Monto aprobado
@@ -26,6 +27,7 @@ export interface Loan {
   client: User; // Optional UserDto type
   loanOfficer?: User; // Optional UserDto type
   lastPayment?: Transaction;
+  guarantor?: User;
 
   // Audit fields
   createdAt: Date | string; // DateTime in C# is replaced by string (ISO format) in TypeScript
