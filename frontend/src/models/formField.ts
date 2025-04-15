@@ -4,4 +4,5 @@ export interface FormField {
   type?: string;
   required?: true;
   step?: number;
+  multiple?: boolean;
 }
