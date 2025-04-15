@@ -22,6 +22,7 @@ export const schema = z
         .refine((val) => val > 0, { message: "Must be greater than 0" }),
       z.number(),
     ]),
+    description: z.string(),
     annualInterestRate: z.union([
       z.string().transform((val) => Number(val)),
       z.number(),
@@ -40,12 +41,21 @@ export const schema = z
         .refine((val) => val > 0, { message: "Must be greater than 0" }),
       z.number(),
     ]),
-    startDate: z.string(),
+    startDate: z.string().default(new Date().toISOString()),
     deliveryDate: z.string(),
     loanOfficerId: z.union([
       z
         .object({
           value: z.string().min(1),
+          label: z.string(),
+        })
+        .transform((val) => val.value),
+      z.string(),
+    ]),
+    guarantorId: z.union([
+      z
+        .object({
+          value: z.string(),
           label: z.string(),
         })
         .transform((val) => val.value),
@@ -109,6 +119,7 @@ export const loanFormFields: FormField<Loan>[] = [
     name: "startDate",
     label: "Fecha de Inicio",
     type: "date",
+    defaultToToday: true,
   },
   {
     name: "deliveryDate",
@@ -131,6 +142,14 @@ export const loanFormFields: FormField<Loan>[] = [
       getFirstAndLastName(loan.loanOfficer) as ReactNode,
   },
   {
+    name: "guarantorId",
+    label: "Garante",
+    profileDataList: true,
+    profileRole: "guarantor",
+    showOnEditFn: (loan: Loan) =>
+      getFirstAndLastName(loan.guarantor) as ReactNode,
+  },
+  {
     name: "status",
     label: "Estado",
     type: "select",
@@ -143,5 +162,11 @@ export const loanFormFields: FormField<Loan>[] = [
       ["judicial", "Judicial"],
       ["agreement", "Acuerdo"],
     ],
+  },
+  {
+    name: "description",
+    label: "Descripción",
+    type: "textarea",
+    showOnNewRow: true,
   },
 ];

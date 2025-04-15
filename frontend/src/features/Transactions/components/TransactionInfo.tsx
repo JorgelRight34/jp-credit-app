@@ -11,18 +11,18 @@ const TransactionInfo = ({ transaction }: TransactionInfoProps) => {
     <>
       <InfoTable
         data={[
-          ["Id", transaction.id, "Loan", transaction.loanId],
-          ["Client", getFullName(transaction.payer), "", ""],
+          ["Id", transaction.id, "Préstamo", transaction.loanId],
+          ["Cliente", getFullName(transaction.payer), "", ""],
           [
             "Capital",
             toCurrency(transaction.capitalValue),
-            "Interests",
+            "Intereses",
             toCurrency(transaction.interestValue),
           ],
           [
-            "Delinquency",
+            "Mora",
             toCurrency(transaction.delinquency),
-            "Date",
+            "Fecha",
             toFormattedDate(new Date(transaction.date)),
           ],
         ]}

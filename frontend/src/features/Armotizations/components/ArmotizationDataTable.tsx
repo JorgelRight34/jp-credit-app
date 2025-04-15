@@ -18,7 +18,7 @@ const ArmotizationDataTable = ({
   armotization,
 }: ArmotizationDataTableProps) => {
   const columns: ColumnDef<ArmotizationPayment>[] = [
-    { accessorKey: "id", header: "#" },
+    { accessorKey: "number", header: "#" },
     {
       header: "Intereses",
       cell: ({ row }) => toCurrency(row.original.interestValue),

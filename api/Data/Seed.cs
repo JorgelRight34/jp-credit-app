@@ -1,4 +1,5 @@
 using System;
+using api.Enums;
 using api.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ public class Seed
                 LastName = "Doe",
                 Gender = 'M',
                 DateOfBirth = new DateOnly(1985, 7, 15),
-                MaritalStatus = "Single",
+                MaritalStatus = MaritalStatus.Single,
                 DNI = "1234567890",
                 Address = "123 Admin Street, City, Country",
                 Landline = "555-1234",

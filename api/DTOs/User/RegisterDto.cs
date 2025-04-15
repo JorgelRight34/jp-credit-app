@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using api.Dtos.Validators;
 using api.DTOs.Validators;
+using api.Enums;
 
 namespace api.DTOs.User;
 
@@ -28,7 +29,7 @@ public class RegisterDto
     [Required]
     public DateOnly DateOfBirth { get; set; }
     [Required]
-    public string? MaritalStatus { get; set; }
+    public MaritalStatus MaritalStatus { get; set; }
     [Required]
     [DNI]
     public string? DNI { get; set; }

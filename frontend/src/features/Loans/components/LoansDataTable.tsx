@@ -3,6 +3,7 @@ import DataTable from "../../../common/DataTable";
 import { Loan } from "../../../models/loan";
 import {
   getFirstAndLastName,
+  sortDateRows,
   toCurrency,
   toFormattedDate,
 } from "../../../utils/utils";
@@ -24,7 +25,7 @@ const columns: ColumnDef<Loan>[] = [
       return client ? (
         <NavLink
           to={`/profiles/${client.username}`}
-          onClick={(event) => event.stopPropagation()}
+          onClick={(event: React.MouseEvent) => event.stopPropagation()}
         >
           {getFirstAndLastName(client)}
         </NavLink>
@@ -61,6 +62,7 @@ const columns: ColumnDef<Loan>[] = [
     accessorKey: "lastPayment",
     header: "Último Pago",
     enableSorting: true,
+    sortingFn: sortDateRows,
     cell: ({ row }) => {
       const lastPayment = row.original.lastPayment;
       return lastPayment ? toFormattedDate(new Date(lastPayment.date)) : "---";

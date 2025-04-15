@@ -11,12 +11,11 @@ interface ImageUploaderProps {
  * @returns {JSX.Element} - A JSX element representing the ImageUploader.
  */
 const ImageUploader = ({ defaultImageSrc }: ImageUploaderProps) => {
-  const [file, setFile] = useState<File | null>(null);
+  const [, setFile] = useState<File | null>(null);
 
   const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target?.files?.[0];
     if (uploadedFile) setFile(uploadedFile);
-    console.log(file);
   };
 
   return (

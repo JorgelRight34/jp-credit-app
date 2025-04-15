@@ -12,14 +12,14 @@ const ProfileSearchForm = ({ role }: ProfileSearchForm) => {
         <ProfileSearchInput
           role={role}
           field="firstname"
-          placeholder="Search by first name"
+          placeholder="Buscar por nombres"
         />
       </div>
       <div className="col-lg-6 pe-0">
         <ProfileSearchInput
           role={role}
           field="lastname"
-          placeholder="Search by last name"
+          placeholder="Buscar por apellidos"
         />
       </div>
     </div>

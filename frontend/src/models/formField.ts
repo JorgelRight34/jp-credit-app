@@ -12,5 +12,7 @@ export interface FormField<TData> {
   profileDataList?: boolean;
   profileRole?: Role;
   showOnEdit?: boolean;
+  defaultToToday?: boolean;
+  showOnNewRow?: boolean;
   showOnEditFn?: (entity: TData) => ReactNode;
 }

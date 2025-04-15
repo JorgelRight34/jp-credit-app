@@ -7,6 +7,7 @@ import { toFormattedDate } from "../../../utils/utils";
 interface ProfilesDataTableProps {
   profiles: User[];
   navigateCallback?: (page: number) => void | Promise<void>;
+  onRowClick?: (profile: User) => void;
 }
 
 const columns: ColumnDef<User>[] = [
@@ -31,6 +32,7 @@ const columns: ColumnDef<User>[] = [
 const ProfilesDataTable = ({
   profiles,
   navigateCallback,
+  onRowClick,
 }: ProfilesDataTableProps) => {
   const navigate = useNavigate();
 
@@ -38,7 +40,11 @@ const ProfilesDataTable = ({
     <DataTable
       columns={columns}
       data={profiles}
-      onRowClick={(profile: User) => navigate(`/profiles/${profile.id}`)}
+      onRowClick={
+        onRowClick
+          ? onRowClick
+          : (profile: User) => navigate(`/profiles/${profile.username}`)
+      }
       navigateCallback={navigateCallback}
     />
   );

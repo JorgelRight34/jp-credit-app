@@ -3,6 +3,7 @@ import AccentBtn from "./AccentBtn";
 
 interface EntityLayoutProps {
   children: ReactNode;
+  extraOption?: ReactNode;
   title: string;
   onAddNew?: () => void;
   onEdit?: () => void;
@@ -25,6 +26,7 @@ interface EntityLayoutProps {
  */
 const EntityLayout = ({
   children,
+  extraOption,
   title,
   onAddNew,
   onEdit,
@@ -41,26 +43,29 @@ const EntityLayout = ({
         <div className="bg-white rounded-3 shadow-sm p-3">
           <div className="d-flex align-items-center border-bottom pb-3 px-3">
             <h3 className="mb-0">{title}</h3>
-            {onAddNew && (
-              <AccentBtn className="ms-auto" onClick={onAddNew}>
-                Añadir nuevo +
-              </AccentBtn>
-            )}
-            {onEdit && (
-              <AccentBtn className="ms-auto" onClick={onEdit}>
-                Editar
-              </AccentBtn>
-            )}
-            {onDelete && (
-              <AccentBtn className="ms-auto" onClick={onDelete}>
-                Eliminar
-              </AccentBtn>
-            )}
-            {onDownload && (
-              <AccentBtn className="ms-auto" onClick={onDownload}>
-                Descargar
-              </AccentBtn>
-            )}
+            <div className="ms-auto">
+              {extraOption && extraOption}
+              {onAddNew && (
+                <AccentBtn className="ms-3" onClick={onAddNew}>
+                  Añadir nuevo +
+                </AccentBtn>
+              )}
+              {onEdit && (
+                <AccentBtn className="ms-3" onClick={onEdit}>
+                  Editar
+                </AccentBtn>
+              )}
+              {onDelete && (
+                <AccentBtn className="ms-3" onClick={onDelete}>
+                  Eliminar
+                </AccentBtn>
+              )}
+              {onDownload && (
+                <AccentBtn className="ms-3" onClick={onDownload}>
+                  Descargar
+                </AccentBtn>
+              )}
+            </div>
           </div>
           <div className="entity-layout p-3">{children}</div>
         </div>

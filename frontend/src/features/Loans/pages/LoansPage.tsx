@@ -47,7 +47,7 @@ const LoansPage = () => {
           </Tab>
         </Tabs>
       </EntityLayout>
-      <Modal show={isModalShowing} onHide={hideModal} title="Add New Loan">
+      <Modal show={isModalShowing} onHide={hideModal} title="Nuevo Préstamo">
         <LoanForm />
       </Modal>
     </>

@@ -23,7 +23,10 @@ const columns: ColumnDef<Collateral>[] = [
     header: "Cliente",
     enableSorting: true,
     cell: ({ row }) => (
-      <NavLink to={`/profiles/${row.original.clientId}`}>
+      <NavLink
+        to={`/profiles/${row.original.clientId}`}
+        onClick={(event: React.MouseEvent) => event.stopPropagation()}
+      >
         {getFirstAndLastName(row.original.client)}
       </NavLink>
     ),

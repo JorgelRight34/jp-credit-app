@@ -16,7 +16,7 @@ const NoteSearchInput = () => {
         <input
           type="search"
           className="form-control"
-          placeholder={"Search by loan id"}
+          placeholder={"Id préstamo"}
           name="loanId"
           onChange={handleOnLoanIdChange}
         />
@@ -25,7 +25,7 @@ const NoteSearchInput = () => {
         <input
           type="search"
           className="form-control"
-          placeholder={"Search by note id"}
+          placeholder={"Id nota"}
           name="noteId"
           onChange={handleOnNoteIdChange}
         />

@@ -7,6 +7,7 @@ using api.Interfaces;
 using api.Models;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
 namespace api.Repositories;
@@ -83,6 +84,7 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
         var loan = await context.Loans
             .Include(x => x.Client)
             .Include(x => x.LoanOfficer)
+            .Include(x => x.Guarantor)
             .FirstOrDefaultAsync(x => x.Id == id);
         if (loan == null) return null;
 

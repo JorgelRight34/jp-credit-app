@@ -43,12 +43,15 @@ public class Loan
     [Required]
     public string? ClientId { get; set; }
     public string? LoanOfficerId { get; set; }
+    public string? GuarantorId { get; set; }
 
     // Navigation properties
     [ForeignKey("ClientId")]
     public AppUser? Client { get; set; }
     [ForeignKey("LoanOfficerId")]
     public AppUser? LoanOfficer { get; set; }
+    [ForeignKey("GuarantorId")]
+    public AppUser? Guarantor { get; set; }
     public List<Collateral>? Collaterals { get; set; }
     [ForeignKey("LastPaymentId")]
     public virtual Transaction? LastPayment { get; set; }

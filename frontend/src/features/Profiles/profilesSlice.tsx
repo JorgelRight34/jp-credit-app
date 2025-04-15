@@ -3,15 +3,18 @@ import { Client } from "../../models/client";
 import { LoanOfficer } from "../../models/loanOfficer";
 import { Admin } from "../../models/admin";
 import { Guarantor } from "../../models/guarantor";
+import { User } from "../../models/user";
 
 interface ProfilesState {
   loanOfficers: LoanOfficer[];
   clients: Client[];
   admins: Admin[];
   guarantors: Guarantor[];
+  users: User[];
 }
 
 const initialState: ProfilesState = {
+  users: [],
   admins: [],
   loanOfficers: [],
   clients: [],
@@ -33,6 +36,9 @@ const profiles = createSlice({
     },
     setGuarantors: (state, action) => {
       state.admins = action.payload;
+    },
+    setProfiles: (state, action) => {
+      state.users = action.payload;
     },
     addClient: (state, action) => {
       state.clients = [...state.clients, action.payload];
@@ -105,6 +111,7 @@ export const {
   setClients,
   setAdmins,
   setLoanOfficers,
+  setProfiles,
   setGuarantors,
   updateClient,
   updateAdmin,

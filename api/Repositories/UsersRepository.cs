@@ -22,7 +22,7 @@ public class UsersRepository(
     IPhotoService photoService
 ) : IUsersRepository
 {
-    public async Task<UserDto?> CreateAsync(RegisterDto registerDto)
+    public async Task<AppUser?> CreateAsync(RegisterDto registerDto)
     {
         foreach (var role in registerDto.Roles)
         {
@@ -55,7 +55,7 @@ public class UsersRepository(
                 }
             }
 
-            return mapper.Map<UserDto>(user);
+            return user;
         }
         else
         {
@@ -68,7 +68,7 @@ public class UsersRepository(
         return null;
     }
 
-    public async Task<UserDto?> UpdateAsync(UpdateUserDto updateUserDto, string id)
+    public async Task<AppUser?> UpdateAsync(UpdateUserDto updateUserDto, string id)
     {
         var user = await userManager.FindByIdAsync(id);
         if (user == null) return null;
@@ -82,52 +82,48 @@ public class UsersRepository(
 
         await userManager.UpdateAsync(user);
 
-        return mapper.Map<UserDto>(user);
+        return user;
     }
 
-    public async Task<UserDto?> DeleteAsync(string id)
+    public async Task<AppUser?> DeleteAsync(string id)
     {
         var user = await userManager.FindByIdAsync(id);
         if (user == null) return null;
 
         await userManager.DeleteAsync(user);
 
-        return mapper.Map<UserDto>(user);
+        return user;
     }
 
-    public async Task<UserDto?> GetByUsernameAsync(string username)
+    public async Task<AppUser?> GetByUsernameAsync(string username)
     {
         var user = await context.Users.Include(x => x.Photo)
             .FirstOrDefaultAsync(x => x.UserName != null && x.UserName.ToLower() == username.ToLower());
         if (user == null) return null;
 
-        var roles = await userManager.GetRolesAsync(user);
-        var userDto = mapper.Map<UserDto>(user);
+        var roles = await userManager.GetRolesAsync(user);;
 
-        userDto.Roles = roles.ToList();
-
-        return userDto;
+        return user;
     }
 
-    public async Task<IEnumerable<UserDto>> GetAllAsync(UserQuery query)
+    public async Task<IEnumerable<AppUser>> GetAllAsync(UserQuery query)
     {
-        var users = context.Users.ProjectTo<UserDto>(mapper.ConfigurationProvider).AsQueryable();
+        var users = context.Users.AsQueryable();
 
         users = FilterByQuery(users, query);
 
         return await users.PaginateAsync(query);
     }
 
-    public async Task<IEnumerable<UserDto>> GetUsersInRoleAsync(string role, UserQuery? query)
+    public async Task<IEnumerable<AppUser>> GetUsersInRoleAsync(string role, UserQuery? query)
     {
         var users = await userManager.GetUsersInRoleAsync(role);
-        var userDtos = users.AsQueryable().Select(x => mapper.Map<UserDto>(x));
-        if (query != null) userDtos = FilterByQuery(userDtos, query);
+        if (query != null) return FilterByQuery(users.AsQueryable(), query);
 
-        return userDtos;
+        return new List<AppUser>();
     }
 
-    public async Task<UserDto> AddUserPhotoAsync(IFormFile file, AppUser user)
+    public async Task<AppUser> AddUserPhotoAsync(IFormFile file, AppUser user)
     {
         var result = await photoService.AddPhotoAsync(file);
 
@@ -145,7 +141,7 @@ public class UsersRepository(
         await context.Photos.AddAsync(photo);
         await context.SaveChangesAsync();
 
-        return mapper.Map<UserDto>(user);
+        return user;
     }
 
     public async Task DeleteUserPhotoAsync(string publicId)
@@ -154,21 +150,21 @@ public class UsersRepository(
         if (result.Result != "ok") throw new Exception(result.Result);
     }
 
-    public async Task<UserDto?> GetByIdAsync(string id)
+    public async Task<AppUser?> GetByIdAsync(string id)
     {
         var user = await userManager.FindByIdAsync(id);
         if (user == null) return null;
 
-        return mapper.Map<UserDto>(user);
+        return user;
     }
 
-    public IQueryable<UserDto> FilterByQuery(IQueryable<UserDto> users, UserQuery query)
+    public IQueryable<AppUser> FilterByQuery(IQueryable<AppUser> users, UserQuery query)
     {
         if (!String.IsNullOrEmpty(query.Username))
         {
             users = users
             .Where(
-                x => x.Username != null && x.Username.ToLower().Contains(query.Username.ToLower())
+                x => x.UserName != null && x.UserName.ToLower().Contains(query.Username.ToLower())
             );
         }
 

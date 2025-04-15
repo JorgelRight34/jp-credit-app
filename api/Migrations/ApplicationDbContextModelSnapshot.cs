@@ -252,9 +252,8 @@ namespace api.Migrations
                     b.Property<DateTimeOffset?>("LockoutEnd")
                         .HasColumnType("TEXT");
 
-                    b.Property<string>("MaritalStatus")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("MaritalStatus")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
@@ -385,6 +384,9 @@ namespace api.Migrations
                     b.Property<decimal>("DisbursedAmount")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("GuarantorId")
+                        .HasColumnType("TEXT");
+
                     b.Property<DateOnly?>("LastPaymentDate")
                         .HasColumnType("TEXT");
 
@@ -423,6 +425,8 @@ namespace api.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("ClientId");
+
+                    b.HasIndex("GuarantorId");
 
                     b.HasIndex("LastPaymentId")
                         .IsUnique();
@@ -597,6 +601,10 @@ namespace api.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("api.Models.AppUser", "Guarantor")
+                        .WithMany()
+                        .HasForeignKey("GuarantorId");
+
                     b.HasOne("api.Models.Transaction", "LastPayment")
                         .WithOne()
                         .HasForeignKey("api.Models.Loan", "LastPaymentId")
@@ -607,6 +615,8 @@ namespace api.Migrations
                         .HasForeignKey("LoanOfficerId");
 
                     b.Navigation("Client");
+
+                    b.Navigation("Guarantor");
 
                     b.Navigation("LastPayment");
 

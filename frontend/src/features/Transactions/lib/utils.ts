@@ -12,7 +12,7 @@ export const schema = z.object({
   payerId: z
     .object({ value: z.string(), label: z.string() })
     .transform((val) => val.value),
-  date: z.string(),
+  date: z.string().default(new Date().toISOString()),
 });
 
 const transactionTypesOptions: [TransactionType, string][] = [
@@ -31,6 +31,7 @@ export const transactionFormFields: FormField<Transaction>[] = [
   {
     name: "date",
     label: "Fecha",
+    defaultToToday: true,
     type: "date",
   },
   {

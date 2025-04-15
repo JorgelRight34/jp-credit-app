@@ -3,6 +3,8 @@ import { FormField } from "../../../models/formField";
 import { Collateral } from "../../../models/collateral";
 import { getFirstAndLastName } from "../../../utils/utils";
 import { ReactNode } from "react";
+import { CollateralStatus } from "../../../models/collateralStatus";
+import { CollateralCondition } from "../../../models/collateralCondition";
 
 export const schema = z.object({
   title: z.string(),
@@ -27,40 +29,19 @@ export const schema = z.object({
 
 export type CollateralFormValues = z.infer<typeof schema>;
 
-export const collateralStatusOptions = [
-  ["pending", "Pendiente"],
-  ["approved", "Aprobado"],
-  ["rejected", "Rechazado"],
-  ["under review", "En revisión"],
-  ["active", "Activo"],
-  ["inactive", "Inactivo"],
-  ["seized", "Incautado"],
-  ["released", "Liberado"],
-  ["defaulted", "Incumplido"],
-  ["cleared", "Liquidado"],
-  ["expired", "Vencido"],
-  ["on hold", "En espera"],
+export const collateralStatusOptions: [CollateralStatus, string][] = [
+  [CollateralStatus.PENDING, "Pendiente"],
+  [CollateralStatus.APPROVED, "Aprobado"],
+  [CollateralStatus.REJECTED, "Rechazado"],
+  [CollateralStatus.UNDER_REVIEW, "En revisión"],
+  [CollateralStatus.ACTIVE, "Activo"],
+  [CollateralStatus.INACTIVE, "Inactivo"],
 ];
 
-export const collateralConditionsOptions = [
-  ["highQuality", "Alta calidad"],
-  ["lowQuality", "Baja calidad"],
-  ["stable", "Estable"],
-  ["depreciating", "Devaluándose"],
-  ["liquid", "Líquido"],
-  ["illiquid", "Ilíquido"],
-  ["lowRisk", "Bajo riesgo"],
-  ["highRisk", "Alto riesgo"],
-  ["easily recoverable", "Fácil de recuperar"],
-  ["difficult to seize", "Difícil de incautar"],
-  ["volatile", "Volátil"],
-  ["secure", "Seguro"],
-  ["undervalued", "Subvalorado"],
-  ["overvalued", "Sobrevalorado"],
-  ["appreciating", "Apreciándose"],
-  ["depreciating rapidly", "Devaluándose rápidamente"],
-  ["diversified", "Diversificado"],
-  ["concentrated", "Concentrado"],
+export const collateralConditionsOptions: [CollateralCondition, string][] = [
+  [CollateralCondition.HIGH_QUALITY, "Alta calidad"],
+  [CollateralCondition.LOW_QUALITY, "Baja calidad"],
+  [CollateralCondition.STABLE, "Estable"],
 ];
 
 export const collateralsFormFields: FormField<Collateral>[] = [

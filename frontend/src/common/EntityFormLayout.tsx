@@ -6,6 +6,7 @@ import { Controller, FieldValues, useForm } from "react-hook-form";
 import FormInput from "./FormInput";
 import ProfilesDataList from "../features/Profiles/components/ProfilesDataList";
 import useUploadFile from "../hooks/useUploadFile";
+import { useMemo } from "react";
 
 interface EntityFormLayoutProps<TData> {
   allowDelete?: boolean;
@@ -57,96 +58,105 @@ const EntityFormLayout = <TData,>({
   });
   const { handleOnFileChange, uploadFile } = useUploadFile();
 
-  const renderFormInputsSlice = (start: number, end: number) => {
+  const renderFormInputsSlice = (
+    start: number,
+    end: number,
+    direction: "col" | "row" = "col"
+  ) => {
     return formFields.slice(start, end).map((formField: FormField<TData>) => {
       if (edit && formField.showOnEdit === false) return;
-      const key = formField.name;
-      const className = "mb-3";
+      if (formField.showOnNewRow && direction === "col") return;
+      if (!formField.showOnNewRow && direction === "row") return;
 
-      if (formField.type === "file") {
-        return (
-          <div className={className} key={key}>
-            {formField.type === "file" && (
-              <FormInput
-                label={formField.label}
-                name={formField.name}
-                type="file"
-                onChange={handleOnFileChange}
-              />
-            )}
-          </div>
-        );
-      }
+      return renderFormInput(formField);
+    });
+  };
 
-      if (formField.type === "select") {
-        return (
-          <div className={className} key={key}>
-            {formField.type === "select" && (
-              <>
-                <label className="form-label" htmlFor={formField.name}>
-                  {formField.label}
-                </label>
-                <select
-                  className="form-select"
-                  {...register(formField.name as keyof typeof register)}
-                >
-                  {formField.options?.map((option) => (
-                    <option key={option[0]} value={option[0]}>
-                      {option[1]}
-                    </option>
-                  ))}
-                </select>
-                {errors[formField.name as keyof typeof errors]?.message}
-              </>
-            )}
-          </div>
-        );
-      }
-
-      if (formField.profileDataList) {
-        return (
-          <div className={className} key={key}>
-            {edit ? (
-              <>
-                <label className="form-label" htmlFor={formField.name}>
-                  {formField.label}
-                </label>
-                <p className="text-muted mb-0">
-                  {formField?.showOnEditFn?.(edit)}
-                </p>
-              </>
-            ) : (
-              <>
-                <label className="form-label">{formField.label}</label>
-                <Controller
-                  control={control}
-                  {...register(formField.name as keyof typeof register)}
-                  render={({ field }) => (
-                    <ProfilesDataList
-                      role={formField.profileRole || "client"}
-                      error={errors?.clientId?.message as string}
-                      {...field} // This binds react-select to React Hook Form
-                    />
-                  )}
-                />
-              </>
-            )}
-          </div>
-        );
-      }
-
+  const renderFormInput = (formField: FormField<TData>) => {
+    const key = formField.name;
+    const className = "mb-3";
+    if (formField.type === "file") {
       return (
         <div className={className} key={key}>
-          <FormInput
-            {...formField}
-            {...register(formField.name as keyof typeof register)}
-            error={
-              errors[formField.name as keyof FieldValues]?.message as string
-            }
-          />
+          {formField.type === "file" && (
+            <FormInput
+              label={formField.label}
+              name={formField.name}
+              type="file"
+              onChange={handleOnFileChange}
+            />
+          )}
         </div>
       );
-    });
+    }
+
+    if (formField.type === "select") {
+      return (
+        <div className={className} key={key}>
+          {formField.type === "select" && (
+            <>
+              <label className="form-label" htmlFor={formField.name}>
+                {formField.label}
+              </label>
+              <select
+                className="form-select"
+                {...register(formField.name as keyof typeof register)}
+              >
+                {formField.options?.map((option) => (
+                  <option key={option[0]} value={option[0]}>
+                    {option[1]}
+                  </option>
+                ))}
+              </select>
+              {errors[formField.name as keyof typeof errors]?.message}
+            </>
+          )}
+        </div>
+      );
+    }
+
+    if (formField.profileDataList) {
+      return (
+        <div className={className} key={key}>
+          {edit ? (
+            <>
+              <label className="form-label" htmlFor={formField.name}>
+                {formField.label}
+              </label>
+              <p className="text-muted mb-0">
+                {formField?.showOnEditFn?.(edit)}
+              </p>
+            </>
+          ) : (
+            <>
+              <label className="form-label">{formField.label}</label>
+              <Controller
+                control={control}
+                {...register(formField.name as keyof typeof register)}
+                render={({ field }) => (
+                  <ProfilesDataList
+                    role={formField.profileRole || "client"}
+                    error={errors?.clientId?.message as string}
+                    {...field} // This binds react-select to React Hook Form
+                  />
+                )}
+              />
+            </>
+          )}
+        </div>
+      );
+    }
+
+    return (
+      <div className={className} key={key}>
+        <FormInput
+          defaultToToday={formField.defaultToToday}
+          {...formField}
+          {...register(formField.name as keyof typeof register)}
+          error={errors[formField.name as keyof FieldValues]?.message as string}
+        />
+      </div>
+    );
   };
 
   const handleOnSubmit = async (data: FieldValues) => {
@@ -158,6 +168,11 @@ const EntityFormLayout = <TData,>({
     }
   };
 
+  const rowFormFields = useMemo(
+    () => formFields.filter((field) => field.showOnNewRow),
+    [formFields]
+  );
+
   return (
     <form onSubmit={handleSubmit(handleOnSubmit)}>
       <div className="row mx-0 pt-3">
@@ -165,16 +180,17 @@ const EntityFormLayout = <TData,>({
           .fill(null)
           .map((_, index) => (
             <div className="col" key={`col-${index}`}>
-              {renderFormInputsSlice(rows * index, rows * index + rows)}
+              {renderFormInputsSlice(rows * index, rows * index + rows, "col")}
             </div>
           ))}
       </div>
+      {rowFormFields.map((field, index) => (
+        <div className="row mx-0" key={index}>
+          {renderFormInput(field)}
+        </div>
+      ))}
       <div className="d-flex">
-        <AccentBtn
-          type="submit"
-          className="w-100"
-          onClick={() => console.log(errors)}
-        >
+        <AccentBtn type="submit" className="w-100">
           Ok
         </AccentBtn>
         {allowDelete && (

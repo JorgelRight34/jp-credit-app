@@ -2,6 +2,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 using api.Dtos.Validators;
+using api.Enums;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +22,7 @@ public class AppUser : IdentityUser
     [Required]
     public DateOnly DateOfBirth { get; set; }
     [Required]
-    public string? MaritalStatus { get; set; }
+    public MaritalStatus MaritalStatus { get; set; }
     [Required]
     [DNI]
     public string? DNI { get; set; }
