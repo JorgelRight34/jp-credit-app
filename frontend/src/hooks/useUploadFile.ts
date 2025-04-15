@@ -9,11 +9,12 @@ const useUploadFile = () => {
         if (uploadedFile) setFile(uploadedFile);
     }
 
-    const uploadFile = async (url: string) => {
-        if (!file) return;
+    const uploadFile = async (url: string, files: File[] = []) => {
+        if (files.length === 0) return;
+        if (file) files.push(file);
 
         const data = new FormData();
-        data.append("file", file);
+        files.forEach(fil => data.append("file", fil));
 
         await api.post(url, data);
     }

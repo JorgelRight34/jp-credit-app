@@ -1,13 +1,13 @@
 import { Tab, Tabs } from "react-bootstrap";
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import useTransactions from "../hooks/useTransactions";
 import TransactionsDataTable from "../components/TransactionsDataTable";
-import Modal from "../../../common/Modal";
+import Modal from "../../../common/ui/Modal";
 import { useState } from "react";
 import TransactionForm from "../components/TransactionForm";
 
 const TransactionsPage = () => {
-  const [transactions, fetchTransactions] = useTransactions();
+  const { transactions, fetchPage } = useTransactions();
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -17,7 +17,7 @@ const TransactionsPage = () => {
           <Tab eventKey="transactions" title="Transacciones" className="p-3">
             <TransactionsDataTable
               transactions={transactions}
-              navigateCallback={fetchTransactions}
+              navigateCallback={(page: number) => fetchPage(page)}
             />
           </Tab>
         </Tabs>

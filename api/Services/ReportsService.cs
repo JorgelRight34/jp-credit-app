@@ -3,6 +3,7 @@ using System.Text;
 using api.DTOs.Armotization;
 using api.DTOs.Transaction;
 using api.Interfaces;
+using api.Models;
 
 namespace api.Services;
 
@@ -26,7 +27,7 @@ public class ReportsService : IReportsService
         return sb.ToString();
     }
 
-    public string GenerateTransactionsCSVString(IEnumerable<TransactionDto> transactions)
+    public string GenerateTransactionsCSVString(IEnumerable<Transaction> transactions)
     {
         var sb = new StringBuilder();
         sb.AppendLine("Id,Capital,Interests,Delinquency,LoanId,Date");

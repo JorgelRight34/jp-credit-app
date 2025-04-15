@@ -48,6 +48,7 @@ public class LoanDto
     public UserDto? LoanOfficer { get; set; }
     public UserDto? Guarantor { get; set; }
     public List<CollateralDto>? Collateral { get; set; }
+    public List<TransactionDto>? Transactions { get; set; }
     public TransactionDto? LastPayment { get; set; }
 
     // Audit fields

@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import DataTable from "../../../common/DataTable";
+import DataTable from "../../../common/DataTable/DataTable";
 import { User } from "../../../models/user";
 import { useNavigate } from "react-router";
 import { toFormattedDate } from "../../../utils/utils";

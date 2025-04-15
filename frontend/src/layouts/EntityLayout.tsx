@@ -1,5 +1,5 @@
 import { ReactNode, useEffect } from "react";
-import AccentBtn from "./AccentBtn";
+import AccentBtn from "../common/ui/AccentBtn";
 
 interface EntityLayoutProps {
   children: ReactNode;
@@ -47,7 +47,7 @@ const EntityLayout = ({
               {extraOption && extraOption}
               {onAddNew && (
                 <AccentBtn className="ms-3" onClick={onAddNew}>
-                  Añadir nuevo +
+                  Añadir Nuevo +
                 </AccentBtn>
               )}
               {onEdit && (

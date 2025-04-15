@@ -1,4 +1,4 @@
-import InfoTable from "../../../common/InfoTable";
+import InfoTable from "../../../common/DataTable/InfoTable";
 import { Transaction } from "../../../models/transaction";
 import { getFullName, toCurrency, toFormattedDate } from "../../../utils/utils";
 

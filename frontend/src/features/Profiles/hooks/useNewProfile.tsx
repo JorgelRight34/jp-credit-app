@@ -34,6 +34,7 @@ const useNewProfile = (role: Role) => {
       default:
         dispatch(addClient(response.data));
     }
+    dispatch(addClient(response.data));
 
     return response.data;
   };

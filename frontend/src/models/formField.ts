@@ -15,4 +15,6 @@ export interface FormField<TData> {
   defaultToToday?: boolean;
   showOnNewRow?: boolean;
   showOnEditFn?: (entity: TData) => ReactNode;
+  disabledFn?: (data: any) => boolean;
+  multiple?: boolean;
 }

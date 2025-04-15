@@ -1,9 +1,9 @@
 import useNewLoan from "../hooks/useNewLoan";
 import { loanFormFields, LoanFormValues, schema } from "../lib/constants";
-import EntityFormLayout from "../../../common/EntityFormLayout";
 import useEditLoan from "../hooks/useEditLoan";
 import { Loan } from "../../../models/loan";
 import { useNavigate } from "react-router";
+import EntityForm from "../../../common/EntityForm/EntityForm";
 
 interface LoanFormDefaultProps {
   defaultValues?: LoanFormValues;
@@ -46,7 +46,7 @@ const LoanForm = ({ defaultValues, edit }: LoanFormDefaultProps) => {
   };
 
   return (
-    <EntityFormLayout<Loan>
+    <EntityForm<Loan, LoanFormValues>
       onSubmit={handleOnSubmit}
       formFields={loanFormFields}
       defaultValues={defaultValues}

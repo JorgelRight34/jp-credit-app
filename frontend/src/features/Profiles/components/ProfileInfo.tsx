@@ -1,6 +1,6 @@
 import { NavLink } from "react-router";
 import EntityCard from "../../../common/EntityCard";
-import InfoTable from "../../../common/InfoTable";
+import InfoTable from "../../../common/DataTable/InfoTable";
 import { User } from "../../../models/user";
 import { toFormattedDate } from "../../../utils/utils";
 import useProfileStats from "../hooks/useProfileStats";
@@ -11,7 +11,7 @@ interface ProfileInfoProps {
 }
 
 const ProfileInfo = ({ profile }: ProfileInfoProps) => {
-  const [stats] = useProfileStats(profile.username);
+  const { stats } = useProfileStats(profile.username);
 
   return (
     <div className="row mx-0">

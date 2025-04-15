@@ -2,8 +2,7 @@ using System.Text;
 using api.Data;
 using api.DTOs.Transaction;
 using api.Interfaces;
-
-
+using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -13,14 +12,15 @@ namespace api.Controllers
     public class TransactionsController(
         ITransactionsRepository transactionsRepository,
         IReportsService reportsService,
-        ApplicationDbContext context
+        ApplicationDbContext context,
+        IMapper mapper
     ) : BaseApiController
     {
         [HttpGet]
         public async Task<ActionResult<IEnumerable<TransactionDto>>> GetAll([FromQuery] TransactionQuery query)
         {
             var transactions = await transactionsRepository.GetAllAsync(query);
-            return Ok(transactions);
+            return Ok(transactions.Select(mapper.Map<TransactionDto>));
         }
 
         [HttpGet("{id:int}")]
@@ -29,7 +29,7 @@ namespace api.Controllers
             var transaction = await transactionsRepository.GetByIdAsync(id);
             if (transaction == null) return NotFound();
 
-            return Ok(transaction);
+            return Ok(mapper.Map<TransactionDto>(transaction));
         }
 
         [HttpPost]
@@ -41,7 +41,7 @@ namespace api.Controllers
             if (user == null) return BadRequest("User doesn't exist");
 
             var transaction = await transactionsRepository.CreateAsync(createTransactionDto);
-            return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, transaction);
+            return CreatedAtAction(nameof(GetById), new { id = transaction.Id }, mapper.Map<TransactionDto>(transaction));
         }
 
         [HttpDelete("{id:int}")]
@@ -61,7 +61,7 @@ namespace api.Controllers
 
             var transactions = await transactionsRepository.GetUserTransactions(userId);
 
-            return Ok(transactions);
+            return Ok(transactions.Select(mapper.Map<TransactionDto>));
         }
 
         [HttpGet("loans/{loanId:int}")]
@@ -72,7 +72,7 @@ namespace api.Controllers
 
             var transactions = await transactionsRepository.GetLoanTransactions(loanId);
 
-            return Ok(transactions);
+            return Ok(transactions.Select(mapper.Map<TransactionDto>));
         }
 
         [HttpGet("users/{userId}/csv")]

@@ -1,9 +1,9 @@
-import EntityFormLayout from "../../../common/EntityFormLayout";
 import { noteFormFields, NoteFormValues, schema } from "../lib/constants";
 import useNewNote from "../hooks/useNewNote";
 import useEditNote from "../hooks/useEditNote";
 import useDeleteNote from "../hooks/useDeleteNote";
 import { Note } from "../../../models/note";
+import EntityForm from "../../../common/EntityForm/EntityForm";
 
 interface NoteFormProps {
   defaultValues?: NoteFormValues;
@@ -26,7 +26,7 @@ const NoteForm = ({ edit, defaultValues }: NoteFormProps) => {
 
   return (
     <>
-      <EntityFormLayout<Note>
+      <EntityForm<Note, NoteFormValues>
         onSubmit={onSubmit}
         formFields={noteFormFields}
         schema={schema}

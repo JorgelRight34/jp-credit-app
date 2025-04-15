@@ -1,6 +1,6 @@
 import { useNavigate, useParams } from "react-router";
 import useTransaction from "../hooks/useTransaction";
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import { Tab, Tabs } from "react-bootstrap";
 import NotFound from "../../../pages/NotFound";
 import ProfileInfo from "../../Profiles/components/ProfileInfo";
@@ -10,7 +10,7 @@ import useDeleteTransaction from "../hooks/useDeleteTransaction";
 
 const TransactionPage = () => {
   const { id } = useParams();
-  const { transaction, error } = useTransaction(Number(id));
+  const { transaction, isError, isLoading } = useTransaction(Number(id));
   const [onDelete] = useDeleteTransaction();
   const navigate = useNavigate();
 
@@ -19,9 +19,9 @@ const TransactionPage = () => {
       onDelete(id).then(() => navigate("/transactions"));
     }
   };
-  if (error) return <NotFound />;
+  if (isError) return <NotFound />;
 
-  if (!transaction) return <></>;
+  if (isLoading) return <></>;
 
   return (
     <EntityLayout title={`Transacción #${id}`} onDelete={handleOnDelete}>

@@ -85,6 +85,8 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
             .Include(x => x.Client)
             .Include(x => x.LoanOfficer)
             .Include(x => x.Guarantor)
+            .Include(x => x.LastPayment)
+            .Include(x => x.Transactions)
             .FirstOrDefaultAsync(x => x.Id == id);
         if (loan == null) return null;
 

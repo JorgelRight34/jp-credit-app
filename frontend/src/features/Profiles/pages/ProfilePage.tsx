@@ -1,10 +1,10 @@
 import { Tab, Tabs } from "react-bootstrap";
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import ProfileInfo from "../components/ProfileInfo";
 import { useParams } from "react-router";
 import LoansDataTable from "../../Loans/components/LoansDataTable";
 import useLoans from "../../Loans/hooks/useLoans";
-import Modal from "../../../common/Modal";
+import Modal from "../../../common/ui/Modal";
 import useProfile from "../hooks/useProfile";
 import CollateralsDataTable from "../../Collaterals/components/CollateralsDataTable";
 import useCollaterals from "../../Collaterals/hooks/useCollaterals";
@@ -19,19 +19,17 @@ import LoanSearchInput from "../../Loans/components/LoanSearch";
 
 const ProfilePage = () => {
   const { username } = useParams();
-  const { profile, error } = useProfile(username || "");
-  const [userLoans, fetchLoans] = useLoans(`username=${username}`);
-  const [collaterals, fetchCollaterals] = useCollaterals(
+  const { profile, isError, isLoading } = useProfile(username || "");
+  const { loans, fetchPage: fetchLoans } = useLoans(`username=${username}`);
+  const { collaterals, fetchPage: fetchCollaterals } = useCollaterals(
     `username=${username}`
   );
-  const [transactions, fetchTransactions] = useTransactions(
-    `username=${username}`
-  );
+  const { transactions, fetchPage: fetchTransactions } = useTransactions();
   const [showModal, setShowModal] = useState(false);
 
-  if (error) return <NotFound />;
+  if (isError) return <NotFound />;
 
-  if (!profile) return <></>;
+  if (isLoading) return <></>;
 
   return (
     <>
@@ -48,7 +46,7 @@ const ProfilePage = () => {
               <LoanSearchInput fetchData={false} />
             </div>
             <LoansDataTable
-              loans={userLoans}
+              loans={loans}
               navigateCallback={(page: number) => fetchLoans(page)}
             />
           </Tab>

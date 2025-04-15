@@ -1,5 +1,5 @@
 import React from "react";
-import { getTodayFormattedDate } from "../utils/utils";
+import { getTodayFormattedDate } from "../../utils/utils";
 
 interface FormInputProps {
   label: string;

@@ -15,7 +15,9 @@ export const schema = z.object({
   date: z.string().default(new Date().toISOString()),
 });
 
-const transactionTypesOptions: [TransactionType, string][] = [
+export type TransactionFormValues = z.infer<typeof schema>;
+
+export const transactionTypesOptions: [TransactionType, string][] = [
   [TransactionType.DS, "DS | Desembolso"],
   [TransactionType.PC, "PC | Pago Cuota"],
   [TransactionType.NC, "NC | Nota de Crédito"],

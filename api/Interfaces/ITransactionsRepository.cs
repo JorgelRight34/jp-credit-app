@@ -1,15 +1,16 @@
 using System;
 using api.DTOs.Transaction;
+using api.Models;
 
 namespace api.Interfaces;
 
 public interface ITransactionsRepository
 {
-    Task<TransactionDto> CreateAsync(CreateTransactionDto createTransactionDto);
-    Task<TransactionDto?> DeleteAsync(int id);
-    Task<IEnumerable<TransactionDto>> GetAllAsync(TransactionQuery query);
-    Task<TransactionDto?> GetByIdAsync(int id);
-    Task<IEnumerable<TransactionDto>> GetLoanTransactions(int loanId);
-    Task<IEnumerable<TransactionDto>> GetUserTransactions(string userId);
+    Task<Transaction> CreateAsync(CreateTransactionDto createTransactionDto);
+    Task<Transaction?> DeleteAsync(int id);
+    Task<IEnumerable<Transaction>> GetAllAsync(TransactionQuery query);
+    Task<Transaction?> GetByIdAsync(int id);
+    Task<IEnumerable<Transaction>> GetLoanTransactions(int loanId);
+    Task<IEnumerable<Transaction>> GetUserTransactions(string userId);
 
 }

@@ -1,7 +1,7 @@
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import "../loans.css";
 import { Tab, Tabs } from "react-bootstrap";
-import Modal from "../../../common/Modal";
+import Modal from "../../../common/ui/Modal";
 import { useMemo, useState } from "react";
 import LoanForm from "../components/LoanForm";
 import LoansDataTable from "../components/LoansDataTable";
@@ -10,7 +10,7 @@ import LoanSearchInput from "../components/LoanSearch";
 import { LoanStatus } from "../../../models/loanStatus";
 
 const LoansPage = () => {
-  const [loans, fetchLoans] = useLoans();
+  const { loans, fetchPage } = useLoans();
   const [isModalShowing, setIsModalShowing] = useState(false);
 
   const hideModal = () => setIsModalShowing(false);
@@ -34,7 +34,7 @@ const LoansPage = () => {
             <div className="mb-3">
               <LoanSearchInput />
             </div>
-            <LoansDataTable loans={activeLoans} navigateCallback={fetchLoans} />
+            <LoansDataTable loans={activeLoans} navigateCallback={fetchPage} />
           </Tab>
           <Tab eventKey={"pending"} title="Pendientes" className="p-3">
             <div className="mb-3">
@@ -42,7 +42,7 @@ const LoansPage = () => {
             </div>
             <LoansDataTable
               loans={inactiveLoans}
-              navigateCallback={fetchLoans}
+              navigateCallback={fetchPage}
             />
           </Tab>
         </Tabs>

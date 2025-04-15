@@ -2,7 +2,7 @@ import { Tab, Tabs } from "react-bootstrap";
 import EntityLayout from "../../../common/EntityLayout";
 import useNotes from "../hooks/useNotes";
 import NotesDataTable from "../components/NotesDataTable";
-import Modal from "../../../common/Modal";
+import Modal from "../../../common/ui/Modal";
 import NoteForm from "../components/NoteForm";
 import { useState } from "react";
 import NoteSearchInput from "../components/NoteSearchInput";

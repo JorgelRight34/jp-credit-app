@@ -93,5 +93,6 @@ export const collateralsFormFields: FormField<Collateral>[] = [
     name: "photo",
     label: "Foto",
     type: "file",
+    multiple: true,
   },
 ];

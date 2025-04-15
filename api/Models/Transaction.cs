@@ -18,6 +18,7 @@ public class Transaction
     [Required]
     public decimal InterestValue { get; set; }
     public decimal Delinquency { get; set; }
+    public decimal PenaltyFee { get; set; }
     [Required]
     public int LoanId { get; set; }
     [Required]

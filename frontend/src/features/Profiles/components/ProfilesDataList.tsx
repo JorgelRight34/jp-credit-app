@@ -8,6 +8,8 @@ import { SingleValue } from "react-select";
 interface ProfilesDataListProps {
   role: Role;
   error?: string;
+  isDisabled?: boolean;
+  data?: User[];
 }
 
 interface Option {
@@ -18,11 +20,21 @@ interface Option {
 const ProfilesDataList = ({
   role = "client",
   error,
+  data,
+  isDisabled = false,
   ...props
 }: ProfilesDataListProps) => {
   const [query, setQuery] = useState<Option | null>(null);
 
   const loadOptions = async (inputValue: string): Promise<Option[]> => {
+    if (data)
+      // Return given data
+      return data.map((item) => ({
+        value: item.id,
+        label: `${item.firstName} | ${item.lastName} (${item.label})`,
+      }));
+
+    // Fetch data from the api
     const response = await api.get(
       `users/role/${role}/?firstname=${inputValue}&lastname=${inputValue}`
     );
@@ -36,10 +48,13 @@ const ProfilesDataList = ({
   return (
     <>
       <AsyncSelect
+        key={data?.length} // Rerenders each time data (if data is given) changes
+        placeholder="---"
         defaultOptions
         onChange={(selectedOption: SingleValue<Option> | null) => {
           setQuery(selectedOption);
         }}
+        isDisabled={isDisabled}
         loadOptions={loadOptions}
         value={query}
         {...props}
@@ -56,7 +71,6 @@ const ProfilesDataList = ({
         }}
         required
       />
-      {query}
       {error && <p className="text-danger">{error}</p>}
     </>
   );

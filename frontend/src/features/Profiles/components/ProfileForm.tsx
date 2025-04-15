@@ -8,8 +8,10 @@ import useNewProfile from "../hooks/useNewProfile";
 import useEditProfile from "../hooks/useEditProfile";
 import useDeleteProfile from "../hooks/useDeleteProfile";
 import { Role } from "../../../models/role";
-import EntityFormLayout from "../../../common/EntityFormLayout";
 import { User } from "../../../models/user";
+import { useState } from "react";
+import useUploadFile from "../../../hooks/useUploadFile";
+import EntityForm from "../../../common/EntityForm/EntityForm";
 
 interface ProfileFormProps {
   role: Role;
@@ -25,18 +27,27 @@ const ProfileForm = ({
   const [onSubmit] = useNewProfile(role);
   const [onEdit] = useEditProfile(role);
   const [deleteProfile] = useDeleteProfile(role);
+  const [files, setFiles] = useState<File[]>([]);
+  const { uploadFile } = useUploadFile();
 
   const handleOnSubmit = async (data: ProfileFormValues) => {
+    let response;
     if (edit) {
-      await onEdit(data, edit.id);
+      response = await onEdit(data, edit.id);
     } else {
-      await onSubmit(data);
+      response = await onSubmit(data);
+    }
+    if (files.length > 0) {
+      await uploadFile(`users/${response.data.username}/photo`, files);
     }
   };
 
   return (
-    <EntityFormLayout<User>
+    <EntityForm<User, ProfileFormValues>
       onSubmit={handleOnSubmit}
+      filesMaxLength={1}
+      files={files}
+      setFiles={setFiles}
       columns={3}
       rows={4}
       allowDelete={edit ? true : false}
@@ -56,7 +67,6 @@ const ProfileForm = ({
       }
       resetValues={edit ? true : false}
       schema={schema}
-      uploadFileUrl={edit ? `users/${edit.username}/photo` : ""}
     />
   );
 };

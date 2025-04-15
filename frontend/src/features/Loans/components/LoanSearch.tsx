@@ -1,7 +1,7 @@
 import { toast } from "react-toastify";
 import useSearchLoan, { SearchLoanQuery } from "../hooks/useSearchLoan";
 import LoanSearchInput from "./LoanSearchInput";
-import SearchBtn from "../../../common/SearchBtn";
+import SearchBtn from "../../../common/ui/SearchBtn";
 
 interface LoanSearchProps {
   fetchData?: boolean;

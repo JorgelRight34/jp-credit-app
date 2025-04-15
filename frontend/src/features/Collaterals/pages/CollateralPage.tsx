@@ -1,9 +1,9 @@
 import { Tab, Tabs } from "react-bootstrap";
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import CollateralForm from "../components/CollateralForm";
 import { useParams } from "react-router";
 import useCollateral from "../hooks/useCollateral";
-import Modal from "../../../common/Modal";
+import Modal from "../../../common/ui/Modal";
 import { useState } from "react";
 import NotFound from "../../../pages/NotFound";
 import LoanInfo from "../../Loans/components/LoanInfo";
@@ -12,10 +12,10 @@ import CollateralInfo from "../components/CollateralInfo";
 
 const CollateralPage = () => {
   const { id } = useParams();
-  const { collateral, error } = useCollateral(id);
+  const { collateral, isError } = useCollateral(id || "");
   const [showModal, setShowModal] = useState(false);
 
-  if (error) return <NotFound />;
+  if (isError) return <NotFound />;
 
   if (!collateral) return <></>;
 

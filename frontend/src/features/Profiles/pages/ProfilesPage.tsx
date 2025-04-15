@@ -1,22 +1,24 @@
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import useProfiles from "../hooks/useProfiles";
 import { useState } from "react";
 import ProfileForm from "../components/ProfileForm";
-import Modal from "../../../common/Modal";
+import Modal from "../../../common/ui/Modal";
 import { Tab, Tabs } from "react-bootstrap";
 import { Role } from "../../../models/role";
 import ProfilesDataTable from "../components/ProfilesDataTable";
 import ProfileSearchForm from "../components/ProfileSearchForm";
-import AccentBtn from "../../../common/AccentBtn";
+import AccentBtn from "../../../common/ui/AccentBtn";
 import AddProfileToRoleForm from "../components/AddProfileToRoleForm";
 import { toTitleCase } from "../../../utils/utils";
 import { roleSpanishTranslations } from "../../../utils/constants";
 
 const ProfilesPage = () => {
-  const [clients, fetchClients] = useProfiles("client");
-  const [loanOfficers, fetchLoanOfficers] = useProfiles("loanOfficer");
-  const [admins, fetchAdmins] = useProfiles("admin");
-  const [guarantors, fetchGuarantors] = useProfiles("guarantor");
+  const { profiles: clients, fetchPage: fetchClients } = useProfiles("client");
+  const { profiles: loanOfficers, fetchPage: fetchLoanOfficers } =
+    useProfiles("loanOfficer");
+  const { profiles: admins, fetchPage: fetchAdmins } = useProfiles("admin");
+  const { profiles: guarantors, fetchPage: fetchGuarantors } =
+    useProfiles("guarantor");
   const [showCreateFormModal, setShowCreateFormModal] = useState(false);
   const [showAddToRoleFormModal, setShowAddToRoleFormModal] = useState(false);
   const [selectedRole, setSelectedRole] = useState<Role>("client");
@@ -31,7 +33,7 @@ const ProfilesPage = () => {
             className="mx-3"
             onClick={() => setShowAddToRoleFormModal(true)}
           >
-            Anadir existente a rol
+            Añadir Existente a Rol
           </AccentBtn>
         }
       >

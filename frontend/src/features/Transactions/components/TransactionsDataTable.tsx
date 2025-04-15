@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import DataTable from "../../../common/DataTable";
+import DataTable from "../../../common/DataTable/DataTable";
 import { Transaction } from "../../../models/transaction";
 import {
   getFirstAndLastName,
@@ -75,7 +75,6 @@ const TransactionsDataTable = ({
       columns={columns}
       data={transactions}
       onRowClick={(transaction: Transaction) => {
-        console.log("ta");
         navigate(`/transactions/${transaction.id}`);
       }}
       navigateCallback={navigateCallback}

@@ -28,6 +28,7 @@ export interface Loan {
   loanOfficer?: User; // Optional UserDto type
   lastPayment?: Transaction;
   guarantor?: User;
+  transactions?: Transaction[];
 
   // Audit fields
   createdAt: Date | string; // DateTime in C# is replaced by string (ISO format) in TypeScript

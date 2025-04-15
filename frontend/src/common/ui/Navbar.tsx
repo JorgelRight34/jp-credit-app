@@ -1,7 +1,7 @@
 import { useSelector } from "react-redux";
 import { NavLink } from "react-router";
-import { RootState } from "../store";
-import useLogout from "../features/Auth/hooks/useLogout";
+import { RootState } from "../../store";
+import useLogout from "../../features/Auth/hooks/useLogout";
 
 /**
  * A navbar component that displays a list of navigation options and a logout button.

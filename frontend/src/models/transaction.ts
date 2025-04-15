@@ -5,6 +5,7 @@ export interface Transaction {
   id: number;
   capitalValue: number;
   interestValue: number;
+  penaltyFee: number;
   delinquency: number;
   loanId: number;
   payerId: number;

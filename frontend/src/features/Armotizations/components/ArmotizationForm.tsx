@@ -1,4 +1,4 @@
-import SearchBtn from "../../../common/SearchBtn";
+import SearchBtn from "../../../common/ui/SearchBtn";
 
 interface ArmotizationFormProps {
   handleOnChange: (

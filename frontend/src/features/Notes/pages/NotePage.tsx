@@ -1,9 +1,9 @@
 import { Tab, Tabs } from "react-bootstrap";
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import useNote from "../hooks/useNote";
 import { useParams } from "react-router";
 import NotFound from "../../../pages/NotFound";
-import Modal from "../../../common/Modal";
+import Modal from "../../../common/ui/Modal";
 import NoteForm from "../components/NoteForm";
 import { useState } from "react";
 import NoteInfo from "../components/NoteInfo";
@@ -11,11 +11,11 @@ import LoanInfo from "../../Loans/components/LoanInfo";
 
 const NotePage = () => {
   const { id } = useParams();
-  const [note, error] = useNote(id || "");
+  const { note, isError, isLoading } = useNote(id || "");
   const [showModal, setShowModal] = useState(false);
 
-  if (error) return <NotFound />;
-  if (!note) return <></>;
+  if (isError) return <NotFound />;
+  if (isLoading) return <>...</>;
 
   return (
     <>

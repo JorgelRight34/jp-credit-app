@@ -17,4 +17,5 @@ export interface User {
   officePhone: string;
   roles?: Role[];
   photo?: Photo;
+  label?: string;
 }

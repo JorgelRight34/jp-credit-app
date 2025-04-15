@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from "react-router";
-import DataTable from "../../../common/DataTable";
+import DataTable from "../../../common/DataTable/DataTable";
 import { Loan } from "../../../models/loan";
 import {
   getFirstAndLastName,

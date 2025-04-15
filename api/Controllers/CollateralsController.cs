@@ -67,13 +67,16 @@ namespace api.Controllers
 
         // Photos
         [HttpPost("{id:int}/photo")]
-        public async Task<ActionResult<CollateralDto>> CreatePhoto([FromForm] IFormFile file, [FromRoute] int id)
+        public async Task<ActionResult<CollateralDto>> CreatePhoto([FromForm] List<IFormFile> files, [FromRoute] int id)
         {
             var collateral = await context.Collaterals.FindAsync(id);
             if (collateral == null) return BadRequest("Collateral doesn't exist");
 
-            var collateralWithPhoto = await collateralsRepository.AddCollateralPhotoAsync(file, collateral);
-            var collateralDto = mapper.Map<CollateralDto>(collateralWithPhoto);
+            foreach (var file in files)
+            {
+                var collateralWithPhoto = await collateralsRepository.AddCollateralPhotoAsync(file, collateral);
+            }
+            var collateralDto = mapper.Map<CollateralDto>(collateral);
 
             return CreatedAtAction(nameof(GetById), new { id = collateralDto.Id }, collateralDto);
         }

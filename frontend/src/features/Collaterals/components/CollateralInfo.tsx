@@ -1,5 +1,5 @@
 import { NavLink } from "react-router";
-import InfoTable from "../../../common/InfoTable";
+import InfoTable from "../../../common/DataTable/InfoTable";
 import { Collateral } from "../../../models/collateral";
 import { getFullName, toTitleCase } from "../../../utils/utils";
 import EntityCard from "../../../common/EntityCard";

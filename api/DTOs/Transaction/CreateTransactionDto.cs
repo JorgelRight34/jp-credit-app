@@ -11,7 +11,7 @@ public class CreateTransactionDto
     public decimal Value { get; set; }
     public TransactionType? Type { get; set; }
     [Required]
-    public decimal PenaltyRate { get; set; } = 0.05M;
+    public decimal PenaltyRate { get; set; } = 0.05M;   // Default penalty rate
     [Required]
     public int MaxiumDelayDays { get; set; } = 5;
     [Required]

@@ -1,7 +1,7 @@
 import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
-import { completeLoadingBar, startLoadingBar } from "./common/LoadingBar";
+import { completeLoadingBar, startLoadingBar } from "./common/ui/LoadingBar";
 
 const api = axios.create({ baseURL: "http://localhost:5270/api/" });
 

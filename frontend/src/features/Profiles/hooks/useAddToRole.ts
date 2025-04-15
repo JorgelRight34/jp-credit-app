@@ -6,16 +6,18 @@ import {
   addGuarantor,
   addLoanOfficer,
 } from "../profilesSlice";
+import { roleSpanishTranslations } from "../../../utils/constants";
+import { Role } from "../../../models/role";
 
-type UseAddToRoleReturn = [(username: string, role: string) => Promise<void>];
+type UseAddToRoleReturn = [(username: string, role: Role) => Promise<void>];
 
 const useAddToRole = (): UseAddToRoleReturn => {
   const dispatch = useDispatch();
 
-  const addToRole = async (username: string, role: string) => {
+  const addToRole = async (username: string, role: Role) => {
     if (role === "user" || role === "profile") return;
 
-    if (!confirm(`¿Está seguro que desea agregar este usuario al rol ${role}?`))
+    if (!confirm(`¿Está seguro que desea agregar este usuario al rol ${roleSpanishTranslations[role]}?`))
       return;
 
     const response = await api.put(`users/${username}/roles/${role}`);

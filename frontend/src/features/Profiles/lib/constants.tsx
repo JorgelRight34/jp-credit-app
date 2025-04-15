@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { FormField } from "../../../models/formField";
+import { User } from "../../../models/user";
 
 export const baseUrl = "users";
 
@@ -35,7 +36,7 @@ export const profileFormDefaultValues: ProfileFormValues = {
 
 export type ProfileFormValues = z.infer<typeof schema>;
 
-export const profileFormFields: FormField[] = [
+export const profileFormFields: FormField<User>[] = [
   {
     name: "username",
     label: "Username",

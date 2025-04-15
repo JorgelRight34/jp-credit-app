@@ -490,6 +490,9 @@ namespace api.Migrations
                         .IsRequired()
                         .HasColumnType("TEXT");
 
+                    b.Property<decimal>("PenaltyFee")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Type")
                         .HasMaxLength(10)
                         .HasColumnType("INTEGER");

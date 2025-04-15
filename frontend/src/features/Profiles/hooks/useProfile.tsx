@@ -1,24 +1,19 @@
-import { useEffect, useState } from "react";
 import api from "../../../api";
-import { Client } from "../../../models/client";
 import { baseUrl } from "../lib/constants";
+import { useQuery } from "@tanstack/react-query";
 
 const useProfile = (username: string) => {
-  const [profile, setProfile] = useState<Client | null>(null);
-  const [error, setError] = useState(false);
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["profile", username],
+    queryFn: () => fetchProfile(username),
+  });
 
-  const fetchProfile = () => {
-    api
-      .get(`${baseUrl}/${username}`)
-      .then((res) => setProfile(res.data))
-      .catch(() => setError(true));
+  const fetchProfile = async (username: string) => {
+    const response = await api.get(`${baseUrl}/${username}`);
+    return response.data;
   };
 
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  return { profile, error };
+  return { profile: data, isError, isLoading };
 };
 
 export default useProfile;

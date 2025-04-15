@@ -8,7 +8,8 @@ import { Bounce, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { lazy, Suspense } from "react";
 import ProtectedRoute from "./common/ProtectedRoute";
-import LoadingBar from "./common/LoadingBar";
+import LoadingBar from "./common/ui/LoadingBar";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 // Pages
 const Login = lazy(() => import("./pages/Login/Login"));
@@ -38,52 +39,56 @@ const ArmotizationsPage = lazy(
 );
 const NotFound = lazy(() => import("./pages/NotFound"));
 
+export const queryClient = new QueryClient();
+
 function App() {
   return (
-    <Provider store={store}>
-      <LoadingBar />
-      <BrowserRouter>
-        <Suspense fallback={<div>Loading...</div>}>
-          <Routes>
-            <Route
-              path="/"
-              element={
-                <ProtectedRoute>
-                  <Index />
-                </ProtectedRoute>
-              }
-            >
-              <Route path="armotizations" element={<ArmotizationsPage />} />
-              <Route path="collaterals" element={<CollateralsPage />} />
-              <Route path="collaterals/:id" element={<CollateralPage />} />
-              <Route path="notes" element={<NotesPage />} />
-              <Route path="notes/:id" element={<NotePage />} />
-              <Route path="profiles" element={<ProfilesPage />} />
-              <Route path="profiles/:username" element={<ProfilePage />} />
-              <Route path="loans" element={<LoansPage />} />
-              <Route path="loans/:id" element={<LoanPage />} />
-              <Route path="transactions" element={<TransactionsPage />} />
-              <Route path="transactions/:id" element={<TransactionPage />} />
-            </Route>
-            <Route path="login" element={<Login />} />
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </Suspense>
-      </BrowserRouter>
-      <ToastContainer
-        position="top-right"
-        autoClose={5000}
-        hideProgressBar={false}
-        newestOnTop={false}
-        closeOnClick={false}
-        rtl={false}
-        pauseOnFocusLoss
-        draggable
-        pauseOnHover
-        theme="light"
-        transition={Bounce}
-      />
-    </Provider>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
+        <LoadingBar />
+        <BrowserRouter>
+          <Suspense fallback={<div>Loading...</div>}>
+            <Routes>
+              <Route
+                path="/"
+                element={
+                  <ProtectedRoute>
+                    <Index />
+                  </ProtectedRoute>
+                }
+              >
+                <Route path="armotizations" element={<ArmotizationsPage />} />
+                <Route path="collaterals" element={<CollateralsPage />} />
+                <Route path="collaterals/:id" element={<CollateralPage />} />
+                <Route path="notes" element={<NotesPage />} />
+                <Route path="notes/:id" element={<NotePage />} />
+                <Route path="profiles" element={<ProfilesPage />} />
+                <Route path="profiles/:username" element={<ProfilePage />} />
+                <Route path="loans" element={<LoansPage />} />
+                <Route path="loans/:id" element={<LoanPage />} />
+                <Route path="transactions" element={<TransactionsPage />} />
+                <Route path="transactions/:id" element={<TransactionPage />} />
+              </Route>
+              <Route path="login" element={<Login />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Suspense>
+        </BrowserRouter>
+        <ToastContainer
+          position="top-right"
+          autoClose={5000}
+          hideProgressBar={false}
+          newestOnTop={false}
+          closeOnClick={false}
+          rtl={false}
+          pauseOnFocusLoss
+          draggable
+          pauseOnHover
+          theme="light"
+          transition={Bounce}
+        />
+      </Provider>
+    </QueryClientProvider>
   );
 }
 

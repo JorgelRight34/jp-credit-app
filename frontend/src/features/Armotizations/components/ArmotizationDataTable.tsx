@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import DataTable from "../../../common/DataTable";
+import DataTable from "../../../common/DataTable/DataTable";
 import { ArmotizationPayment } from "../../../models/armotizationPayment";
 import { toCurrency } from "../../../utils/utils";
 

@@ -1,24 +1,19 @@
-import { useEffect, useState } from "react";
-import { Loan } from "../../../models/loan";
 import api from "../../../api";
 import { baseUrl } from "../lib/constants";
+import { useQuery } from "@tanstack/react-query";
 
 const useLoan = (id: string) => {
-  const [loan, setLoan] = useState<Loan | undefined>();
-  const [error, setError] = useState(false);
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["loan", id],
+    queryFn: () => fetchLoan(id),
+  });
 
-  const fetchLoan = () => {
-    api
-      .get(`${baseUrl}/${id}`)
-      .then((res) => setLoan(res.data))
-      .catch(() => setError(true));
+  const fetchLoan = async (id: string) => {
+    const response = await api.get(`${baseUrl}/${id}`);
+    return response.data;
   };
 
-  useEffect(() => {
-    fetchLoan();
-  }, []);
-
-  return { loan, error };
+  return { loan: data, isError, isLoading };
 };
 
 export default useLoan;

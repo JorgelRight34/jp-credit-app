@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import DataTable from "../../../common/DataTable";
+import DataTable from "../../../common/DataTable/DataTable";
 import { Collateral } from "../../../models/collateral";
 import { NavLink, useNavigate } from "react-router";
 import { getFirstAndLastName, toCurrency } from "../../../utils/utils";

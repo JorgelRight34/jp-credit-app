@@ -13,7 +13,7 @@ namespace api.Repositories;
 
 public class TransactionsRepository(ApplicationDbContext context, IMapper mapper) : ITransactionsRepository
 {
-    public async Task<TransactionDto> CreateAsync(CreateTransactionDto createTransactionDto)
+    public async Task<Transaction> CreateAsync(CreateTransactionDto createTransactionDto)
     {
         var transaction = mapper.Map<Transaction>(createTransactionDto);
 
@@ -26,9 +26,19 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         var principalBalance = loan.PrincipalBalance;
 
         // Check if transaction is late
-        if (transaction.Date >= payday.AddDays(createTransactionDto.MaxiumDelayDays))
+        if (transaction.Date > payday.AddDays(createTransactionDto.MaxiumDelayDays))
         {
-            principalBalance = principalBalance + principalBalance * createTransactionDto.PenaltyRate;
+            // Add penalty to principal balance
+            var penaltyFee = principalBalance * createTransactionDto.PenaltyRate;
+            principalBalance = principalBalance + penaltyFee;
+            transaction.PenaltyFee = penaltyFee;
+        }
+
+        // Check if payment is less than what has to be paid
+        if (createTransactionDto.Value < loan.PaymentValue) 
+        {
+            // If payment doesn't cover the whole (A) then record it as delinquency (atraso)
+            transaction.Delinquency = loan.PaymentValue - createTransactionDto.Value;
         }
 
         // Get periodly interest 
@@ -59,10 +69,10 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         loan.LastPaymentId = transaction.Id;
         await context.SaveChangesAsync();
 
-        return mapper.Map<TransactionDto>(transaction);
+        return transaction;
     }
 
-    public async Task<TransactionDto?> DeleteAsync(int id)
+    public async Task<Transaction?> DeleteAsync(int id)
     {
         // Get transaction
         var transaction = await context.Transactions.FindAsync(id);
@@ -84,20 +94,21 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         loan.CalculatePaymentValue(loan.PrincipalBalance);
 
         // Get payment before this
-        var newLastPayment = context.Transactions.OrderByDescending(x => x.Date).FirstOrDefaultAsync(x => x.Date <= transaction.Date);
+        var newLastPayment = context.Transactions
+            .OrderByDescending(x => x.Date)
+            .FirstOrDefaultAsync(x => x.Date <= transaction.Date);
         loan.LastPaymentId = newLastPayment.Id;
 
         // Remove transaction
         context.Transactions.Remove(transaction);
         await SaveChanges();
 
-        return mapper.Map<TransactionDto>(transaction);
+        return transaction;
     }
 
-    public async Task<IEnumerable<TransactionDto>> GetAllAsync(TransactionQuery query)
+    public async Task<IEnumerable<Transaction>> GetAllAsync(TransactionQuery query)
     {
         var transactions = context.Transactions
-        .ProjectTo<TransactionDto>(mapper.ConfigurationProvider)
         .AsQueryable();
 
         if (query.MinValue > 0)
@@ -131,27 +142,24 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         return await transactions.PaginateAsync(query);
     }
 
-    public async Task<TransactionDto?> GetByIdAsync(int id)
+    public async Task<Transaction?> GetByIdAsync(int id)
     {
         var transaction = await context.Transactions.Include(x => x.Loan).Include(x => x.Payer).FirstOrDefaultAsync(x => x.Id == id);
-
-        return mapper.Map<TransactionDto>(transaction);
+        return transaction;
     }
 
-    public async Task<IEnumerable<TransactionDto>> GetLoanTransactions(int loanId)
+    public async Task<IEnumerable<Transaction>> GetLoanTransactions(int loanId)
     {
         var transactions = await context.Transactions
-            .ProjectTo<TransactionDto>(mapper.ConfigurationProvider)
             .Where(x => x.LoanId == loanId)
             .ToListAsync();
 
         return transactions;
     }
 
-    public async Task<IEnumerable<TransactionDto>> GetUserTransactions(string userId)
+    public async Task<IEnumerable<Transaction>> GetUserTransactions(string userId)
     {
         var transactions = await context.Transactions
-            .ProjectTo<TransactionDto>(mapper.ConfigurationProvider)
             .Where(x => x.PayerId == userId)
             .ToListAsync();
 

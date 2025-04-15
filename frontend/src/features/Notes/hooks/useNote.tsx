@@ -1,9 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import api from "../../../api";
 import { Note } from "../../../models/note";
 import { baseUrl } from "../lib/constants";
 import { useSelector } from "react-redux";
 import { RootState } from "../../../store";
+import { useQuery } from "@tanstack/react-query";
 
 /**
  * Custom React hook for fetching and managing a single Note
@@ -23,41 +24,24 @@ import { RootState } from "../../../store";
  * // Conditional fetching
  * const [note, error] = useNote(someId || undefined);
  */
-type UseNoteReturn = [note: Note | null, error: boolean];
+type UseNoteReturn = {
+  note: Note | null;
+  error: boolean;
+  fetchNote: (id: string) => Promise<Note>;
+};
 
-/**
- * Fetches a single note either from Redux store or API
- * @param {string} [id] - Optional ID of the note to fetch
- * @returns {UseNoteReturn} Tuple containing note and error state
- */
+const useNote = (id: string) => {
+  const { data, isError, isLoading } = useQuery({
+    queryKey: ["note", id],
+    queryFn: () => fetchNote(id),
+  });
 
-const useNote = (id?: string): UseNoteReturn => {
-  const [note, setNote] = useState<Note | null>(null);
-  const [error, setError] = useState(false);
-  const { notes } = useSelector((state: RootState) => state.notes);
-
-  const fetchNote = () => {
-    if (!id || !Number(id)) return;
-
-    // Try to find item in memory
-    const found = notes.find((note) => note.id === Number(id));
-    if (found) {
-      setNote(found);
-      return;
-    }
-
-    // If item not in memory then fetch it
-    api
-      .get(`${baseUrl}/${id}`)
-      .then((res) => setNote(res.data))
-      .catch(() => setError(true));
+  const fetchNote = async (id: string) => {
+    const response = await api.get(`${baseUrl}/${id}`);
+    return response.data;
   };
 
-  useEffect(() => {
-    fetchNote();
-  }, []);
-
-  return [note, error];
+  return { note: data, isError, isLoading };
 };
 
 export default useNote;

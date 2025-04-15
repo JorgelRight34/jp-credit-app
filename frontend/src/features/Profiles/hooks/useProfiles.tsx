@@ -7,47 +7,65 @@ import {
   setGuarantors,
   setProfiles,
 } from "../profilesSlice";
-import { useEffect } from "react";
 import { RootState } from "../../../store";
 import { Role } from "../../../models/role";
 import { baseUrl } from "../lib/constants";
+import { useQuery } from "@tanstack/react-query";
+import { queryClient } from "../../../App";
 import { User } from "../../../models/user";
 
-const useProfiles = (
-  role: Role = "user"
-): [User[], (page: number) => Promise<void>] => {
+const useProfiles = (role: Role = "user", page = 1) => {
   const profiles = useSelector((state: RootState) => state.profiles);
+  const { isError, isLoading } = useQuery({
+    queryKey: ["profiles", role],
+    queryFn: () => fetchClients(page),
+  });
   const dispatch = useDispatch();
 
   const fetchClients = async (page: number = 1) => {
     const response = await api.get(`${baseUrl}/role/${role}/?page=${page}`);
+    setCorrectProfiles(role, response.data);
 
+    return response.data;
+  };
+
+  const fetchPage = async (page: number) => {
+    const data = await queryClient.fetchQuery({
+      queryKey: ["profiles", role],
+      queryFn: () => fetchClients(page),
+    });
+    setCorrectProfiles(role, data);
+    return data;
+  };
+
+  const setCorrectProfiles = (role: Role, data: User[]) => {
     switch (role) {
       case "client":
-        dispatch(setClients(response.data));
+        dispatch(setClients(data));
         break;
       case "loanOfficer":
-        dispatch(setLoanOfficers(response.data));
+        dispatch(setLoanOfficers(data));
         break;
       case "admin":
-        dispatch(setAdmins(response.data));
+        dispatch(setAdmins(data));
         break;
       case "user":
-        dispatch(setProfiles(response.data));
+        dispatch(setProfiles(data));
         break;
       case "guarantor":
-        dispatch(setGuarantors(response.data));
+        dispatch(setGuarantors(data));
         break;
       default:
-        dispatch(setClients(response.data));
+        dispatch(setClients(data));
     }
   };
 
-  useEffect(() => {
-    fetchClients();
-  }, []);
-
-  return [profiles[`${role}s` as keyof typeof profiles], fetchClients];
+  return {
+    profiles: profiles[`${role}s` as keyof typeof profiles],
+    isError,
+    isLoading,
+    fetchPage,
+  };
 };
 
 export default useProfiles;

@@ -1,5 +1,5 @@
 import { Tab, Tabs } from "react-bootstrap";
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import LoanInformation from "../components/LoanInfo";
 import useLoan from "../hooks/useLoan";
 import { useParams } from "react-router";
@@ -14,16 +14,18 @@ import NotesDataTable from "../../Notes/components/NotesDataTable";
 import useNotes from "../../Notes/hooks/useNotes";
 import { toast } from "react-toastify";
 import { useState } from "react";
-import Modal from "../../../common/Modal";
+import Modal from "../../../common/ui/Modal";
 import LoanForm from "../components/LoanForm";
 
 const LoanPage = () => {
   const { id } = useParams<{ id: string }>();
-  const { loan, error } = useLoan(id || "");
+  const { loan, isError, isLoading } = useLoan(id || "");
   const [showEditModal, setShowEditModal] = useState(false);
-  const [collaterals, fetchCollaterals] = useCollaterals(`loanId=${id}`);
-  const [transactions, fetchTransactions] = useTransactions(`loanId=${id}`);
-  const [notes, fetchNotes] = useNotes(`loanId=${id}`);
+  const { collaterals, fetchPage: fetchCollateralPage } = useCollaterals(
+    `loanId=${id}`
+  );
+  const { transactions, fetchPage: fetchTransactions } = useTransactions();
+  const { notes, fetchPage: fetchNotes } = useNotes(`loanId=${id}`);
   const [onDelete] = useDeleteLoan();
 
   const handleOnDelete = async () => {
@@ -33,9 +35,9 @@ const LoanPage = () => {
       await onDelete(numberId);
   };
 
-  if (error) return <NotFound />;
+  if (isError) return <NotFound />;
 
-  if (!loan) return <></>;
+  if (isLoading) return <>...</>;
 
   return (
     <>
@@ -60,7 +62,9 @@ const LoanPage = () => {
           <Tab className="p-3" eventKey="collaterals" title="Garantías">
             <CollateralsDataTable
               collaterals={collaterals}
-              navigateCallback={(page: number) => fetchCollaterals(page)}
+              navigateCallback={(page: number) =>
+                fetchCollateralPage(page, `loanId=${id}`)
+              }
             />
           </Tab>
           <Tab className="p-3" eventKey="transactions" title="Transacciones">
@@ -86,6 +90,7 @@ const LoanPage = () => {
           edit={loan}
           defaultValues={{
             ...loan,
+            description: loan.description || "",
             loanOfficerId: loan.loanOfficer?.id || "",
             clientId: loan.client.id,
             guarantorId: loan.guarantorId || "",

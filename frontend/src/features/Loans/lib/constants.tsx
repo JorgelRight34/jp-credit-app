@@ -84,24 +84,28 @@ export const loanFormFields: FormField<Loan>[] = [
     name: "approvedAmount",
     label: "Monto Aprobado",
     type: "number",
+    min: "0",
     step: 0.001,
   },
   {
     name: "disbursedAmount",
     label: "Desembolsado",
     type: "number",
+    min: "0",
     step: 0.001,
   },
   {
     name: "annualInterestRate",
     label: "Tasa Interés Anual",
     type: "number",
+    min: "0",
     step: 0.001,
   },
   {
     name: "numberOfPayments",
     label: "Número de Pagos",
     type: "number",
+    min: "0",
     step: 0.001,
   },
   {
