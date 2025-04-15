@@ -1,11 +1,8 @@
-import { NavLink } from "react-router";
-import EntityCard from "../../../common/EntityCard";
 import { User } from "../../../models/user";
 import "../profiles.css";
 import ProfileInfoTable from "./ProfileInfoTable";
 import ProfileCard from "./ProfileCard";
 import LoanInfo from "../../Loans/components/LoanInfo";
-import useLoan from "../../Loans/hooks/useLoan";
 import useProfileStats from "../hooks/useProfileStats";
 import useFetchLoan from "../../Loans/hooks/useFetchLoan";
 import { useEffect } from "react";
