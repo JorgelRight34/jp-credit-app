@@ -68,9 +68,9 @@ public class UsersRepository(
         return null;
     }
 
-    public async Task<AppUser?> UpdateAsync(UpdateUserDto updateUserDto, string id)
+    public async Task<AppUser?> UpdateAsync(UpdateUserDto updateUserDto, string username)
     {
-        var user = await userManager.FindByIdAsync(id);
+        var user = await userManager.FindByNameAsync(username);
         if (user == null) return null;
 
         mapper.Map(updateUserDto, user);

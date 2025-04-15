@@ -10,7 +10,7 @@ interface AddProfileToRoleFormProps {
 }
 
 const AddProfileToRoleForm = ({ role }: AddProfileToRoleFormProps) => {
-  const [profiles, fetchProfiles] = useProfiles("user");
+  const { profiles, fetchPage } = useProfiles("user");
   const [addToRole] = useAddToRole();
 
   const onRowClick = async (profile: User) => {
@@ -21,7 +21,7 @@ const AddProfileToRoleForm = ({ role }: AddProfileToRoleFormProps) => {
     <div className="p-3">
       <ProfileSearchForm role="client" />
       <ProfilesDataTable
-        navigateCallback={(page: number) => fetchProfiles(page)}
+        navigateCallback={(page: number) => fetchPage(page)}
         profiles={profiles}
         onRowClick={onRowClick}
       />

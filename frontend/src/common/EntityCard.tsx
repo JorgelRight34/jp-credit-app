@@ -3,7 +3,7 @@ import { ReactNode } from "react";
 interface EntityCardProps {
   header: string | ReactNode;
   photoUrl: string;
-  footer: string | ReactNode;
+  footer?: string | ReactNode;
 }
 
 /**
@@ -25,7 +25,7 @@ const EntityCard = ({
         <img className="img-fluid w-100 rounded-3 mb-3" src={photoUrl} />
       </div>
       <div className="profile-info-contact">
-        <h4 className="text-center">{footer}</h4>
+        <span className="text-center text-wrap">{footer}</span>
       </div>
     </div>
   );

@@ -10,6 +10,7 @@ public class UpdateLoanDto
     // Loan details
     [Required]
     public decimal ApprovedAmount { get; set; } // Monto aprobado
+    public string? Description { get; set; }
     [Required]
     public decimal DisbursedAmount { get; set; }    // Monto desembolsado
     public decimal AnnualInterestRate { get; set; }

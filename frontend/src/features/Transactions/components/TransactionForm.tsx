@@ -11,10 +11,15 @@ import { renderFormInputs } from "../../../utils/formUtils";
 import ProfilesDataList from "../../Profiles/components/ProfilesDataList";
 import FormInput from "../../../common/EntityForm/FormInput";
 import { useEffect, useMemo } from "react";
-import useLoan from "../../Loans/hooks/useLoan";
 import TransactionFormDetails from "./TransactionFormDetails";
+import useFetchLoan from "../../Loans/hooks/useFetchLoan";
+import { Loan } from "../../../models/loan";
 
-const TransactionForm = () => {
+interface TransactionFormProps {
+  fixedLoan?: Loan;
+}
+
+const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
   const {
     control,
     register,
@@ -23,9 +28,12 @@ const TransactionForm = () => {
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
+    defaultValues: {
+      loanId: fixedLoan?.id || undefined,
+    },
   });
   const [onSubmit] = useNewTransaction();
-  const { loan, fetchLoan } = useLoan();
+  const { loan, fetchLoan } = useFetchLoan();
   const amount = watch("value");
   const loanId = watch("loanId"); // Watch for loan id changes
   const isProfilesDataListDisabled = useMemo(
@@ -44,7 +52,7 @@ const TransactionForm = () => {
   }, [loan]);
 
   useEffect(() => {
-    if (loanId && loanId !== 0) fetchLoan(String(loanId));
+    if (loanId && loanId !== 0) fetchLoan(loanId);
   }, [loanId]);
 
   return (
@@ -77,6 +85,7 @@ const TransactionForm = () => {
             {/* Loan */}
             <div className="mb-3">
               <FormInput
+                disabled={fixedLoan ? true : false}
                 label="Id Préstamo"
                 type="number"
                 error={errors.loanId?.message}
@@ -105,11 +114,13 @@ const TransactionForm = () => {
             </div>
           </div>
         </div>
-        <div className="row mx-0">
-          {loan && amount && (
-            <TransactionFormDetails loan={loan} amount={Number(amount)} />
-          )}
-        </div>
+
+        {loan && amount && (
+          <TransactionFormDetails
+            loan={fixedLoan || loan}
+            amount={Number(amount)}
+          />
+        )}
       </EntityFormLayout>
     </>
   );

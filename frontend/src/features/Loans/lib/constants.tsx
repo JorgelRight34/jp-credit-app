@@ -171,6 +171,7 @@ export const loanFormFields: FormField<Loan>[] = [
     name: "description",
     label: "Descripción",
     type: "textarea",
+    rows: 2,
     showOnNewRow: true,
   },
 ];

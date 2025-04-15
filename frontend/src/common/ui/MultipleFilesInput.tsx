@@ -3,6 +3,7 @@ import Modal from "./Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
+import AccentBtn from "./AccentBtn";
 
 interface MultipleFilesInputProps {
   setFiles: (files: File[] | ((prev: File[]) => File[])) => void;
@@ -97,6 +98,11 @@ const MultipleFilesInput = ({
                 />
               </label>
             ))}
+          </div>
+          <div>
+            <AccentBtn onClick={() => setShowModal(false)} className="w-100">
+              Ok
+            </AccentBtn>
           </div>
         </div>
       </Modal>

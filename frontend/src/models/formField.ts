@@ -8,6 +8,7 @@ export interface FormField<TData> {
   min?: string;
   required?: true;
   step?: number;
+  rows?: number;
   options?: (string | number)[][];
   profileDataList?: boolean;
   profileRole?: Role;

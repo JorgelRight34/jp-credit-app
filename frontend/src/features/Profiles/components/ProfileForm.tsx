@@ -12,6 +12,7 @@ import { User } from "../../../models/user";
 import { useState } from "react";
 import useUploadFile from "../../../hooks/useUploadFile";
 import EntityForm from "../../../common/EntityForm/EntityForm";
+import { useNavigate } from "react-router";
 
 interface ProfileFormProps {
   role: Role;
@@ -29,16 +30,21 @@ const ProfileForm = ({
   const [deleteProfile] = useDeleteProfile(role);
   const [files, setFiles] = useState<File[]>([]);
   const { uploadFile } = useUploadFile();
+  const navigate = useNavigate();
 
   const handleOnSubmit = async (data: ProfileFormValues) => {
     let response;
     if (edit) {
-      response = await onEdit(data, edit.id);
+      response = await onEdit(data, edit.username);
+      navigate(0);
     } else {
       response = await onSubmit(data);
     }
+
     if (files.length > 0) {
-      await uploadFile(`users/${response.data.username}/photo`, files);
+      alert("uploading file");
+      await uploadFile(`users/${response.username}/photo`, files);
+      setFiles([]);
     }
   };
 
@@ -65,7 +71,7 @@ const ProfileForm = ({
             ]
           : profileFormFields
       }
-      resetValues={edit ? true : false}
+      resetValues={edit ? false : true}
       schema={schema}
     />
   );

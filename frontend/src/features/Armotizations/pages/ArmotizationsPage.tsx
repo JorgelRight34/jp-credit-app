@@ -1,5 +1,5 @@
 import { Tabs, Tab } from "react-bootstrap";
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import CustomArmotization from "../components/CustomArmotization";
 import ArmotizationLoan from "../components/ArmotizationLoan";
 import { useState } from "react";

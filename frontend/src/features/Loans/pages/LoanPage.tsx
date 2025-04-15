@@ -16,11 +16,14 @@ import { toast } from "react-toastify";
 import { useState } from "react";
 import Modal from "../../../common/ui/Modal";
 import LoanForm from "../components/LoanForm";
+import AccentBtn from "../../../common/ui/AccentBtn";
+import TransactionForm from "../../Transactions/components/TransactionForm";
 
 const LoanPage = () => {
   const { id } = useParams<{ id: string }>();
   const { loan, isError, isLoading } = useLoan(id || "");
   const [showEditModal, setShowEditModal] = useState(false);
+  const [showTransactionModal, setShowTransactionModal] = useState(false);
   const { collaterals, fetchPage: fetchCollateralPage } = useCollaterals(
     `loanId=${id}`
   );
@@ -43,6 +46,11 @@ const LoanPage = () => {
     <>
       <EntityLayout
         title={`Préstamo #${loan.id}`}
+        extraOption={
+          <AccentBtn onClick={() => setShowTransactionModal(true)}>
+            Hacer Pago
+          </AccentBtn>
+        }
         onDelete={handleOnDelete}
         onEdit={() => setShowEditModal(true)}
       >
@@ -97,6 +105,13 @@ const LoanPage = () => {
             status: loan.status.toLowerCase(),
           }}
         />
+      </Modal>
+      <Modal
+        title="Hacer Pago"
+        show={showTransactionModal}
+        onHide={() => setShowTransactionModal(false)}
+      >
+        <TransactionForm fixedLoan={loan} />
       </Modal>
     </>
   );

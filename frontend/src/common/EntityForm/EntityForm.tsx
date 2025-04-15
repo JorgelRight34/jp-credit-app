@@ -89,6 +89,7 @@ const EntityForm = <TData, T>({
 
   return (
     <EntityFormLayout
+      allowDelete={allowDelete}
       onDelete={onDelete as MouseEventHandler}
       onSubmit={handleSubmit(handleOnSubmit)}
     >

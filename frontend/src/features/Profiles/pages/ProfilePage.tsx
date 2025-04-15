@@ -50,7 +50,7 @@ const ProfilePage = () => {
               navigateCallback={(page: number) => fetchLoans(page)}
             />
           </Tab>
-          <Tab eventKey={"collaterals"} title="Garantía" className="p-3">
+          <Tab eventKey={"collaterals"} title="Garantías" className="p-3">
             <CollateralsDataTable
               collaterals={collaterals}
               navigateCallback={(page: number) => fetchCollaterals(page)}
@@ -76,6 +76,7 @@ const ProfilePage = () => {
           edit={profile}
           defaultValues={{
             ...profile,
+            maritalStatus: String(profile.maritalStatus).toLowerCase(),
             dateOfBirth: profile.dateOfBirth.toString(),
             password: "",
           }}

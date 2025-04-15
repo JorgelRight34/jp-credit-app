@@ -1,5 +1,5 @@
 import { Tab, Tabs } from "react-bootstrap";
-import EntityLayout from "../../../common/EntityLayout";
+import EntityLayout from "../../../layouts/EntityLayout";
 import useNotes from "../hooks/useNotes";
 import NotesDataTable from "../components/NotesDataTable";
 import Modal from "../../../common/ui/Modal";
@@ -8,7 +8,7 @@ import { useState } from "react";
 import NoteSearchInput from "../components/NoteSearchInput";
 
 const NotesPage = () => {
-  const [notes, fetchNotes] = useNotes();
+  const { notes, fetchPage } = useNotes();
   const [showModal, setShowModal] = useState(false);
 
   return (
@@ -19,7 +19,7 @@ const NotesPage = () => {
             <div className="row mb-3">
               <NoteSearchInput />
             </div>
-            <NotesDataTable notes={notes} navigateCallback={fetchNotes} />
+            <NotesDataTable notes={notes} navigateCallback={fetchPage} />
           </Tab>
         </Tabs>
       </EntityLayout>

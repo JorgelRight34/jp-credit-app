@@ -6,6 +6,7 @@ import {
   getFullName,
   toCurrency,
 } from "../../../utils/utils";
+import { loanStatusSpanishTranslations } from "../../../utils/constants";
 
 interface LoanInfoProps {
   loan: Loan;
@@ -25,14 +26,6 @@ interface LoanInfoProps {
 const LoanInfo = ({ loan }: LoanInfoProps) => {
   return (
     <div className="row mx-0">
-      <div className="mb-3">
-        <h4>Descripción</h4>
-        <p>
-          {loan.description
-            ? loan.description
-            : "No description provided for this loan."}
-        </p>
-      </div>
       <div>
         <InfoTable
           data={[
@@ -68,7 +61,7 @@ const LoanInfo = ({ loan }: LoanInfoProps) => {
                 {getFullName(loan.loanOfficer)}
               </NavLink>,
               "Estado",
-              loan.status,
+              loanStatusSpanishTranslations[loan.status],
             ],
             [
               "N. Pagos",
@@ -92,6 +85,10 @@ const LoanInfo = ({ loan }: LoanInfoProps) => {
             ],
           ]}
         />
+      </div>
+      <div className="mt-3">
+        <h4>Descripción</h4>
+        <p>{loan.description ? loan.description : "Sin descripción"}</p>
       </div>
     </div>
   );

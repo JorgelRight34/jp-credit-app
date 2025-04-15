@@ -1,7 +1,8 @@
 import { Row } from "@tanstack/react-table";
 import { User } from "../models/user";
 
-export const toCurrency = (money: number): string => {
+export const toCurrency = (money: number | undefined): string | number => {
+  if (money === undefined) return NaN;
   const formattedAmount = new Intl.NumberFormat("en-US", {
     style: "currency",
     currency: "USD",

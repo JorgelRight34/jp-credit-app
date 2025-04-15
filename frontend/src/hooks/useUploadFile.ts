@@ -1,25 +1,26 @@
-import { useState } from "react"
+import { useState } from "react";
 import api from "../api";
 
 const useUploadFile = () => {
-    const [file, setFile] = useState<File | null>(null);
+  const [file, setFile] = useState<File | null>(null);
 
-    const handleOnFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const uploadedFile = event.target?.files?.[0];
-        if (uploadedFile) setFile(uploadedFile);
-    }
+  const handleOnFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const uploadedFile = event.target?.files?.[0];
+    if (uploadedFile) setFile(uploadedFile);
+  };
 
-    const uploadFile = async (url: string, files: File[] = []) => {
-        if (files.length === 0) return;
-        if (file) files.push(file);
+  const uploadFile = async (url: string, files: File[] = []) => {
+    console.log(files);
+    if (files.length === 0) return;
+    if (file) files.push(file);
 
-        const data = new FormData();
-        files.forEach(fil => data.append("file", fil));
+    const data = new FormData();
+    files.forEach((fil) => data.append("file", fil));
 
-        await api.post(url, data);
-    }
+    await api.post(url, data);
+  };
 
-    return { handleOnFileChange, uploadFile }
-}
+  return { handleOnFileChange, uploadFile };
+};
 
 export default useUploadFile;

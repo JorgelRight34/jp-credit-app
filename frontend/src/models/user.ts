@@ -1,3 +1,4 @@
+import { MaritalStatus } from "./maritalStatus";
 import { Photo } from "./photo";
 import { Role } from "./role";
 
@@ -11,7 +12,7 @@ export interface User {
   address: string;
   email: string;
   dateOfBirth: string | Date;
-  maritalStatus: string;
+  maritalStatus: MaritalStatus;
   dni: string;
   landline: string;
   officePhone: string;

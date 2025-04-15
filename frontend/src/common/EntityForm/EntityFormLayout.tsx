@@ -26,7 +26,12 @@ const EntityFormLayout = ({
   allowDelete = false,
 }: EntityFormLayoutProps) => {
   return (
-    <form onSubmit={onSubmit}>
+    <form
+      onSubmit={(event) => {
+        event.preventDefault();
+        onSubmit(event);
+      }}
+    >
       {children}
       <div className="d-flex">
         <AccentBtn type="submit" className="w-100">

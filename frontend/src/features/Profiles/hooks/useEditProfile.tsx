@@ -11,8 +11,8 @@ import { Role } from "../../../models/role.tsx";
 const useEditProfile = (role: Role) => {
   const dispatch = useDispatch();
 
-  const editClient = async (data: ProfileFormValues, id: string) => {
-    const response = await api.put(`${baseUrl}/${id}`, data);
+  const editClient = async (data: ProfileFormValues, username: string) => {
+    const response = await api.put(`${baseUrl}/${username}`, data);
 
     switch (role) {
       case "user":
@@ -28,7 +28,6 @@ const useEditProfile = (role: Role) => {
         dispatch(updateClient(response.data));
     }
 
-    window.location.reload();
     return response.data;
   };
 

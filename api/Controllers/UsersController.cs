@@ -81,10 +81,10 @@ namespace api.Controllers
             return CreatedAtAction(nameof(GetByUsername), new { username = createdUser.UserName }, mapper.Map<UserDto>(createdUser));
         }
 
-        [HttpPut("{id}")]
-        public async Task<ActionResult<UserDto?>> UpdateUser([FromBody] UpdateUserDto updateUserDto, [FromRoute] string id)
+        [HttpPut("{username}")]
+        public async Task<ActionResult<UserDto?>> UpdateUser([FromBody] UpdateUserDto updateUserDto, [FromRoute] string username)
         {
-            var user = await usersRepository.UpdateAsync(updateUserDto, id);
+            var user = await usersRepository.UpdateAsync(updateUserDto, username);
             if (user == null) return NotFound();
 
             return Ok(mapper.Map<UserDto>(user));

@@ -27,6 +27,8 @@ const FormFieldInput = <TData,>({
   error,
   ...props
 }: FormFieldInputProps<TData>) => {
+  const { showOnNewRow, ...formFieldProps } = formField;
+
   if (formField.type === "file" && setFiles && files) {
     return (
       <div className={className}>
@@ -100,12 +102,22 @@ const FormFieldInput = <TData,>({
     );
   }
 
+  if (formField.type === "textarea") {
+    return (
+      <div className={className}>
+        <label className="form-label">{formField.label}</label>
+        <textarea {...props} className="form-control"></textarea>
+        {error && <p className="text-danger">{error}</p>}
+      </div>
+    );
+  }
+
   return (
     <div className={className}>
       <FormInput
         disabled={formField.disabledFn?.(schema)}
         defaultToToday={formField.defaultToToday}
-        {...formField}
+        {...formFieldProps}
         {...props}
         error={error}
       />
