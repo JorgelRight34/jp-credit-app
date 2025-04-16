@@ -1,4 +1,3 @@
-import { Tab, Tabs } from "react-bootstrap";
 import EntityLayout from "../../../layouts/EntityLayout";
 import ProfileInfo from "../components/ProfileInfo";
 import { useParams } from "react-router";
@@ -16,6 +15,9 @@ import ProfileForm from "../components/ProfileForm";
 import { Role } from "../../../models/role";
 import { getFullName } from "../../../utils/utils";
 import LoanSearchInput from "../../Loans/components/LoanSearch";
+import EntityTabs from "../../../common/ui/EntityTabs";
+import { Tab } from "react-bootstrap";
+import EntityTab from "../../../common/ui/EntityTab";
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -37,11 +39,11 @@ const ProfilePage = () => {
         title={getFullName(profile)}
         onEdit={() => setShowModal(true)}
       >
-        <Tabs>
-          <Tab eventKey={"info"} title="Información" className="p-3">
+        <EntityTabs route={`/profiles/${username}`} defaultActiveKey="info">
+          <EntityTab eventKey={"info"} title="Información">
             {profile && <ProfileInfo profile={profile} />}
-          </Tab>
-          <Tab eventKey={"loans"} title="Préstamos" className="p-3">
+          </EntityTab>
+          <EntityTab eventKey={"loans"} title="Préstamos">
             <div className="mb-3">
               <LoanSearchInput fetchData={false} />
             </div>
@@ -49,20 +51,20 @@ const ProfilePage = () => {
               loans={loans}
               navigateCallback={(page: number) => fetchLoans(page)}
             />
-          </Tab>
-          <Tab eventKey={"collaterals"} title="Garantías" className="p-3">
+          </EntityTab>
+          <EntityTab eventKey={"collaterals"} title="Garantías">
             <CollateralsDataTable
               collaterals={collaterals}
               navigateCallback={(page: number) => fetchCollaterals(page)}
             />
-          </Tab>
-          <Tab eventKey={"transactions"} title="Transacciones" className="p-3">
+          </EntityTab>
+          <EntityTab eventKey={"transactions"} title="Transacciones">
             <TransactionsDataTable
               transactions={transactions}
               navigateCallback={(page: number) => fetchTransactions(page)}
             />
-          </Tab>
-        </Tabs>
+          </EntityTab>
+        </EntityTabs>
       </EntityLayout>
       <Modal
         title="Editar Pérfil"

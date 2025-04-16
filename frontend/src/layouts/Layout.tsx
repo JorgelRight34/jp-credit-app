@@ -16,10 +16,12 @@ interface LayoutProps {
 const Layout = ({ children }: LayoutProps) => {
   return (
     <div className="row h-100 mx-0">
-      <div className="col-lg-2 h-100 p-0">
+      <div className="col-lg-2 h-100 p-0 shadow-sm">
         <Navbar />
       </div>
-      <div className="col-lg-10">{children}</div>
+      <div className="col-lg-10 d-flex align-items-center justify-content-center">
+        {children}
+      </div>
     </div>
   );
 };

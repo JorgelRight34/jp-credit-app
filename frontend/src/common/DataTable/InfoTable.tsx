@@ -11,7 +11,7 @@ interface InfoTableProps {
  */
 const InfoTable = ({ data }: InfoTableProps) => {
   return (
-    <div className="table-wrapper border rounded-3 shadow-sm">
+    <div className="table-wrapper w-100 border rounded-3 shadow-sm">
       <table className="w-100">
         <tbody>
           {data.map((row, i) => (

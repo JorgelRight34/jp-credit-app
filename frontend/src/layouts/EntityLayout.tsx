@@ -39,8 +39,8 @@ const EntityLayout = ({
 
   return (
     <>
-      <div className="p-lg-5">
-        <div className="bg-white rounded-3 shadow-sm p-3">
+      <div className="px-lg-5">
+        <div className="bg-white entity-layout rounded-3 shadow-sm p-3">
           <div className="d-flex align-items-center border-bottom pb-3 px-3">
             <h3 className="mb-0">{title}</h3>
             <div className="ms-auto">
@@ -67,7 +67,7 @@ const EntityLayout = ({
               )}
             </div>
           </div>
-          <div className="entity-layout p-3">{children}</div>
+          <div className="entity-layout-children p-3">{children}</div>
         </div>
       </div>
     </>

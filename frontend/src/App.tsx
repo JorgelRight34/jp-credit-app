@@ -63,7 +63,10 @@ function App() {
                 <Route path="notes" element={<NotesPage />} />
                 <Route path="notes/:id" element={<NotePage />} />
                 <Route path="profiles" element={<ProfilesPage />} />
-                <Route path="profiles/:username" element={<ProfilePage />} />
+                <Route
+                  path="profiles/:username/:tab?"
+                  element={<ProfilePage />}
+                />
                 <Route path="loans" element={<LoansPage />} />
                 <Route path="loans/:id" element={<LoanPage />} />
                 <Route path="transactions" element={<TransactionsPage />} />

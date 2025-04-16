@@ -26,13 +26,8 @@ const ProfileInfoTable = ({ profile, stats }: ProfileInfoTableProps) => {
           "Teléfono",
           <PhoneLink phoneNumber={profile.officePhone} />,
         ],
-        ["Nombres", profile.firstName, "Apellidos", profile.lastName],
-        [
-          "Dirección",
-          profile.address,
-          "Correo",
-          <a href={`mailto:${profile.email}`}>{profile.email}</a>,
-        ],
+        ["Nombres", profile.firstName, "", ""],
+        ["Apellidos", profile.lastName, "", ""],
         [
           "Nacimiento",
           toFormattedDate(new Date(profile.dateOfBirth)),
@@ -73,6 +68,7 @@ const ProfileInfoTable = ({ profile, stats }: ProfileInfoTableProps) => {
           "",
           "",
         ],
+        ["Préstamos", 0, "Garantías", 0],
       ]}
     />
   );

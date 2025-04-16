@@ -70,7 +70,8 @@
   background-color: #fff;
   margin-top: auto;
   margin-bottom: auto;
-  height: 75dvh;
+  height: 95dvh;
+  width: 75dvw;
   overflow-y: auto;
 }
 
