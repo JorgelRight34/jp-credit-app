@@ -8,4 +8,6 @@ public class UserStatsDto
 {
     public LoanDto? LastLoan { get; set; }
     public TransactionDto? LastTransaction { get; set; }
+    public int LoanCount { get; set; }
+    public int CollateralCount { get; set; }
 }

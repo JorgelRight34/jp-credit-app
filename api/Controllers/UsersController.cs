@@ -148,6 +148,8 @@ namespace api.Controllers
         [HttpDelete("{username}/photo/{photoId}")]
         public async Task<ActionResult> DeletePhoto([FromRoute] string username, [FromRoute] string photoId)
         {
+            if (photoId == null) return BadRequest("Photo public id is missing");
+            
             var user = await userManager.FindByNameAsync(username);
             if (user == null) return BadRequest("User doesn't exist");
 

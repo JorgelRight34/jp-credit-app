@@ -1,34 +1,16 @@
-th, td {
-    padding: 1rem;
-    white-space: nowrap;
+.data-table {
+  border-collapse: collapse;
+  overflow-x: auto;
 }
 
-th {
-    white-space: nowrap;
+.data-table :nth-child(even) {
+  background-color: var(--background-color);
 }
 
-table {
-    border-collapse: collapse;
-    overflow-x: auto;
-}
-
-tr {
-    border-radius: 0.25rem;
-}
-
-tr:nth-child(even) {
-    background-color: var(--background-color);
-}
-
-tr:hover {
-    background-color: rgb(208, 157, 12, 0.5); 
-    color: #fff;
-}
-
-table a {
-    color: var(--secondary-color);
+.data-table a {
+  color: var(--secondary-color);
 }
 
 .table-wrapper {
-    overflow-x: auto;
+  overflow-x: auto;
 }

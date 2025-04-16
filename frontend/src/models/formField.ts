@@ -6,7 +6,7 @@ export interface FormField<TData> {
   label: string;
   type?: string;
   min?: string;
-  required?: true;
+  required?: boolean;
   step?: number;
   rows?: number;
   options?: (string | number)[][];
@@ -18,4 +18,5 @@ export interface FormField<TData> {
   showOnEditFn?: (entity: TData) => ReactNode;
   disabledFn?: (data: any) => boolean;
   multiple?: boolean;
+  defaultValue?: string | number;
 }

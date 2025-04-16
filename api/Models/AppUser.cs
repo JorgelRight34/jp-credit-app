@@ -15,6 +15,7 @@ public class AppUser : IdentityUser
     public string? FirstName { get; set; }
     [Required]
     public string? LastName { get; set; }
+    public string? Profession { get; set; }
 
     // Identification parameters
     [Required]

@@ -35,6 +35,7 @@ export const getFirstAndLastName = (user?: User): string => {
 };
 
 export const toTitleCase = (str: string) => {
+  if (!str) return;
   return `${str[0].toUpperCase()}${str.slice(1)}`;
 };
 
@@ -55,4 +56,15 @@ export const sortDateRows = <TData,>(
   const dateA = new Date(rowA.getValue(columnId));
   const dateB = new Date(rowB.getValue(columnId));
   return dateA.getTime() - dateB.getTime();
+};
+
+export const getAge = (dateOfBirth: Date) => {
+  const today = new Date();
+  let age = today.getFullYear() - dateOfBirth.getFullYear();
+  let month = today.getMonth() - dateOfBirth.getMonth();
+
+  if (month < 0 || (month === 0 && today.getDate() < dateOfBirth.getDate()))
+    age--;
+
+  return age;
 };

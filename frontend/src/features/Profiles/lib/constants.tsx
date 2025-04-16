@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { FormField } from "../../../models/formField";
 import { User } from "../../../models/user";
+import { Country } from "country-state-city";
+import { countryTraductions } from "../../../utils/constants";
 
 export const baseUrl = "users";
 
@@ -17,22 +19,8 @@ export const schema = z.object({
   address: z.string(),
   landline: z.string(),
   officePhone: z.string(),
+  profession: z.string(),
 });
-
-export const profileFormDefaultValues: ProfileFormValues = {
-  username: "",
-  password: "",
-  firstName: "",
-  lastName: "",
-  email: "",
-  gender: "",
-  dateOfBirth: "",
-  maritalStatus: "",
-  dni: "",
-  address: "",
-  landline: "",
-  officePhone: "",
-};
 
 export type ProfileFormValues = z.infer<typeof schema>;
 
@@ -70,6 +58,10 @@ export const profileFormFields: FormField<User>[] = [
     label: "Dirección",
   },
   {
+    name: "profession",
+    label: "Profesión",
+  },
+  {
     name: "landline",
     label: "Teléfono Fijo",
   },
@@ -96,6 +88,16 @@ export const profileFormFields: FormField<User>[] = [
       ["divorced", "Divorciado"],
       ["widow", "Viud@"],
     ],
+  },
+  {
+    name: "nationality",
+    label: "Nacionalidad",
+    type: "select",
+    options: Country.getAllCountries().map((country) => [
+      country.isoCode,
+      countryTraductions.getName(country.isoCode, "es") || "",
+    ]),
+    defaultValue: "DO",
   },
   {
     name: "photo",

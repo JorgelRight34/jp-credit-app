@@ -1,23 +1,32 @@
 import { ReactNode, useMemo } from "react";
 import { Tabs } from "react-bootstrap";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
 
 interface EntityTabsProps {
-  route: string;
   defaultActiveKey: string;
   children: ReactNode;
+  tabKey?: string;
 }
 
-const EntityTabs = ({ route, defaultActiveKey, children }: EntityTabsProps) => {
+const EntityTabs = ({
+  defaultActiveKey,
+  tabKey = "tab",
+  children,
+}: EntityTabsProps) => {
+  const params = useParams();
   const location = useLocation();
-  const activeKey = useMemo(() => {
-    const segments = location.pathname.split("/").filter(Boolean); // removes empty strings
-    return segments[segments.length - 1] || defaultActiveKey;
-  }, [location.pathname, defaultActiveKey]);
+  const activeKey = useMemo(
+    () => params[tabKey] || defaultActiveKey,
+    [location.pathname, defaultActiveKey]
+  );
   const navigate = useNavigate();
 
   const handleOnSelect = (tab: string | null) => {
-    navigate(route + "/" + tab);
+    if (location.pathname.includes(activeKey) && tab) {
+      navigate(location.pathname.replace(activeKey, tab));
+    } else {
+      navigate(location.pathname.replace(activeKey, "") + "/" + tab);
+    }
   };
 
   return (

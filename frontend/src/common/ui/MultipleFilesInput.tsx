@@ -1,19 +1,29 @@
 import React, { useState } from "react";
 import Modal from "./Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCircleXmark } from "@fortawesome/free-solid-svg-icons";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import AccentBtn from "./AccentBtn";
+import FileInputPreview from "./FileInputPreview";
 
 interface MultipleFilesInputProps {
   setFiles: (files: File[] | ((prev: File[]) => File[])) => void;
+  defaultFileSources?: string[];
+  setDefaultFileSources?: (
+    files: string[] | ((prev: string[]) => string[])
+  ) => void;
   files: File[];
   maxLength: number;
+  className?: string;
+  onConfirm?: () => void;
 }
 
 const MultipleFilesInput = ({
   maxLength,
   files,
+  className = "",
+  defaultFileSources = [],
+  setDefaultFileSources,
+  onConfirm,
   setFiles,
 }: MultipleFilesInputProps) => {
   const [showModal, setShowModal] = useState(false);
@@ -39,19 +49,27 @@ const MultipleFilesInput = ({
   };
 
   const removeFile = (index: number) => {
-    setFiles((prev) => [...prev].filter((_, key) => key != index));
+    setFiles((prev) => [...prev].filter((_, key) => key !== index));
+  };
+
+  const removeDefaultFile = (index: number) => {
+    if (!setDefaultFileSources) return;
+
+    setDefaultFileSources((prev) =>
+      [...prev].filter((_, key) => key !== index)
+    );
   };
 
   return (
     <>
-      <button
+      <AccentBtn
         type="button"
-        className="btn btn-accent w-100"
+        className={className}
         onClick={() => setShowModal(true)}
       >
         <FontAwesomeIcon className="me-2" icon={faUpload} />
         Subir Archivo
-      </button>
+      </AccentBtn>
 
       <Modal
         title="Archivos"
@@ -71,36 +89,35 @@ const MultipleFilesInput = ({
             </span>
           </label>
           <div className="space-y-3 flex items-center gap-3 min-h-100 max-h-100 min-w-250 max-w-250">
+            {defaultFileSources.map((src, index) => (
+              <FileInputPreview
+                key={index}
+                className="relative block w-25 h-50"
+                fileName={src}
+                src={src}
+                onChange={(event) => handleOnFileChange(event, index)}
+                onRemove={() => removeDefaultFile(index)}
+              />
+            ))}
             {files.map((file, index) => (
-              <label key={file.name} className="relative block w-25 h-50">
-                <span
-                  className="material-symbols-outlined absolute right-0 top-0 cursor-pointer hover:bg-gray-100 p-1 rounded-full"
-                  onClick={(e) => {
-                    e.preventDefault();
-                    removeFile(index);
-                  }}
-                >
-                  <FontAwesomeIcon size={"lg"} icon={faCircleXmark} />
-                </span>
-
-                <input
-                  type="file"
-                  className="hidden"
-                  onChange={(event: React.ChangeEvent<HTMLInputElement>) =>
-                    handleOnFileChange(event, index)
-                  }
-                />
-
-                <img
-                  className="w-full rounded-lg mb-3 object-cover"
-                  src={URL.createObjectURL(file)}
-                  alt={`Preview ${index}`}
-                />
-              </label>
+              <FileInputPreview
+                key={index}
+                className="relative block w-25 h-50"
+                fileName={file.name}
+                src={URL.createObjectURL(file)}
+                onChange={(event) => handleOnFileChange(event, index)}
+                onRemove={() => removeFile(index)}
+              />
             ))}
           </div>
           <div>
-            <AccentBtn onClick={() => setShowModal(false)} className="w-100">
+            <AccentBtn
+              onClick={() => {
+                setShowModal(false);
+                onConfirm && onConfirm();
+              }}
+              className="w-100"
+            >
               Ok
             </AccentBtn>
           </div>

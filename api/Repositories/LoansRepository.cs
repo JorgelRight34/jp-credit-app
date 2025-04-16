@@ -43,7 +43,7 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
 
     public async Task<IEnumerable<Loan>> GetAllAsync(LoanQuery query)
     {
-        var loans = context.Loans.AsQueryable();
+        var loans = context.Loans.Include(x => x.Client).AsQueryable();
 
         if (query.ClientId != null)
         {

@@ -59,7 +59,10 @@ function App() {
               >
                 <Route path="armotizations" element={<ArmotizationsPage />} />
                 <Route path="collaterals" element={<CollateralsPage />} />
-                <Route path="collaterals/:id" element={<CollateralPage />} />
+                <Route
+                  path="collaterals/:id/:tab?"
+                  element={<CollateralPage />}
+                />
                 <Route path="notes" element={<NotesPage />} />
                 <Route path="notes/:id" element={<NotePage />} />
                 <Route path="profiles" element={<ProfilesPage />} />

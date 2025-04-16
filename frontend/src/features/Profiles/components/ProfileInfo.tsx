@@ -6,14 +6,16 @@ import LoanInfo from "../../Loans/components/LoanInfo";
 import useProfileStats from "../hooks/useProfileStats";
 import useFetchLoan from "../../Loans/hooks/useFetchLoan";
 import { useEffect } from "react";
-import { getFirstAndLastName } from "../../../utils/utils";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { Link } from "react-router";
 
 interface ProfileInfoProps {
   profile: User;
 }
 
 const ProfileInfo = ({ profile }: ProfileInfoProps) => {
-  const { stats } = useProfileStats(profile.username);
+  const { stats, isLoading } = useProfileStats(profile.username);
   const { loan: lastLoan, fetchLoan } = useFetchLoan();
 
   useEffect(() => {
@@ -21,23 +23,34 @@ const ProfileInfo = ({ profile }: ProfileInfoProps) => {
     fetchLoan(stats.lastLoan.id);
   }, [stats]);
 
+  if (isLoading) return <></>;
+
   return (
     <>
       <div className="row mx-0">
         <div className="col-lg-4 d-flex align-items-center">
           <div>
-            <h3 className="text-center mb-3">{getFirstAndLastName(profile)}</h3>
             <ProfileCard profile={profile} />
           </div>
         </div>
-        <div className="col-lg-8">
+        <div className="col-lg-8 d-flex align-items-center">
           <ProfileInfoTable stats={stats} profile={profile} />
         </div>
       </div>
 
       {lastLoan && (
         <div className="row mx-0 mt-5">
-          <h4>Último Préstamo</h4>
+          <div className="row mx-0">
+            <h4>
+              Último Préstamo{" "}
+              <Link
+                className="ms-2 text-accent-secondary"
+                to={`/loans/${lastLoan.id}`}
+              >
+                <FontAwesomeIcon icon={faArrowRight} />
+              </Link>
+            </h4>
+          </div>
           <LoanInfo loan={lastLoan} />
         </div>
       )}

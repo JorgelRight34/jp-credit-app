@@ -10,6 +10,10 @@
   background-color: var(--background-color);
 }
 
+.border-accent-secondary {
+  border: 2px solid var(--secondary-color) !important;
+}
+
 .bg-accent {
   background-color: var(--primary-color);
   color: #fff;
@@ -128,6 +132,25 @@
 .my-modal-content {
   max-height: 80vh;
   overflow-y: auto;
+}
+
+tr:hover {
+  background-color: rgb(208, 157, 12, 0.5);
+  color: #fff;
+}
+
+tr {
+  border-radius: 0.25rem;
+}
+
+th,
+td {
+  padding: 1rem;
+  white-space: nowrap;
+}
+
+th {
+  white-space: nowrap;
 }
 
 @media (max-width: 500px) {

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 using api.Data;
 using api.Helpers;
@@ -19,7 +20,10 @@ public static class ApplicationServiceExtensions
             {
                 options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
                 options.JsonSerializerOptions.DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull;
-                options.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+
+                options.JsonSerializerOptions.Converters.Add(
+                    new JsonStringEnumConverter(JsonNamingPolicy.CamelCase, allowIntegerValues: false)
+                );
             });
         // Learn more about configuring OpenAPI at https://aka.ms/aspnet/openapi
         services.AddOpenApi();
@@ -35,7 +39,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<ITransactionsRepository, TransactionsRepository>();
         services.AddScoped<ILoansRepository, LoansRepository>();
         services.AddScoped<IAdjustmentNotesRepository, AdjustmentNotesRepository>();
-        services.AddScoped<IPhotoService, PhotoService>();
+        services.AddScoped<IFileUploadService, FileUploadService>();
         services.AddScoped<IArmotizationService, ArmotizationService>();
         services.AddScoped<IReportsService, ReportsService>();
 

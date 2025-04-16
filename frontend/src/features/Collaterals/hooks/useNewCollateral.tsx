@@ -27,6 +27,7 @@ const useNewCollateral = (): UseNewCollateralReturn => {
   const dispatch = useDispatch();
 
   const addNewCollateral = async (data: CollateralFormValues) => {
+    console.log(data);
     const response = await api.post("collaterals", {
       ...data,
       agreementType: "car",

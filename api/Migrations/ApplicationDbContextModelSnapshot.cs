@@ -278,6 +278,9 @@ namespace api.Migrations
                     b.Property<int?>("PhotoId")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Profession")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("SecurityStamp")
                         .HasColumnType("TEXT");
 
@@ -311,9 +314,8 @@ namespace api.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AgreementType")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
+                    b.Property<int>("AgreementType")
+                        .HasColumnType("INTEGER");
 
                     b.Property<string>("AppUserId")
                         .IsRequired()
@@ -331,8 +333,14 @@ namespace api.Migrations
                     b.Property<string>("DocumentUrl")
                         .HasColumnType("TEXT");
 
+                    b.Property<DateOnly?>("ExpirationDate")
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("LoanId")
                         .HasColumnType("INTEGER");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("TEXT");
 
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
@@ -351,6 +359,40 @@ namespace api.Migrations
                     b.HasIndex("LoanId");
 
                     b.ToTable("Collaterals");
+                });
+
+            modelBuilder.Entity("api.Models.FileUpload", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER");
+
+                    b.Property<int>("CollateralId")
+                        .HasColumnType("INTEGER");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("FileType")
+                        .HasColumnType("TEXT");
+
+                    b.Property<DateTime?>("LastModified")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("PublicId")
+                        .HasColumnType("TEXT");
+
+                    b.Property<string>("Url")
+                        .HasColumnType("TEXT");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("CollateralId");
+
+                    b.ToTable("FileUploads");
                 });
 
             modelBuilder.Entity("api.Models.Loan", b =>
@@ -596,6 +638,17 @@ namespace api.Migrations
                     b.Navigation("Loan");
                 });
 
+            modelBuilder.Entity("api.Models.FileUpload", b =>
+                {
+                    b.HasOne("api.Models.Collateral", "Collateral")
+                        .WithMany("Files")
+                        .HasForeignKey("CollateralId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Collateral");
+                });
+
             modelBuilder.Entity("api.Models.Loan", b =>
                 {
                     b.HasOne("api.Models.AppUser", "Client")
@@ -662,6 +715,8 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.Collateral", b =>
                 {
+                    b.Navigation("Files");
+
                     b.Navigation("Photos");
                 });
 

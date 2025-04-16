@@ -17,7 +17,6 @@ import { getFullName } from "../../../utils/utils";
 import LoanSearchInput from "../../Loans/components/LoanSearch";
 import EntityTabs from "../../../common/ui/EntityTabs";
 import { Tab } from "react-bootstrap";
-import EntityTab from "../../../common/ui/EntityTab";
 
 const ProfilePage = () => {
   const { username } = useParams();
@@ -39,11 +38,11 @@ const ProfilePage = () => {
         title={getFullName(profile)}
         onEdit={() => setShowModal(true)}
       >
-        <EntityTabs route={`/profiles/${username}`} defaultActiveKey="info">
-          <EntityTab eventKey={"info"} title="Información">
+        <EntityTabs defaultActiveKey="info">
+          <Tab className="p-3" eventKey={"info"} title="Información">
             {profile && <ProfileInfo profile={profile} />}
-          </EntityTab>
-          <EntityTab eventKey={"loans"} title="Préstamos">
+          </Tab>
+          <Tab className="p-3" eventKey={"loans"} title="Préstamos">
             <div className="mb-3">
               <LoanSearchInput fetchData={false} />
             </div>
@@ -51,19 +50,19 @@ const ProfilePage = () => {
               loans={loans}
               navigateCallback={(page: number) => fetchLoans(page)}
             />
-          </EntityTab>
-          <EntityTab eventKey={"collaterals"} title="Garantías">
+          </Tab>
+          <Tab className="p-3" eventKey={"collaterals"} title="Garantías">
             <CollateralsDataTable
               collaterals={collaterals}
               navigateCallback={(page: number) => fetchCollaterals(page)}
             />
-          </EntityTab>
-          <EntityTab eventKey={"transactions"} title="Transacciones">
+          </Tab>
+          <Tab className="p-3" eventKey={"transactions"} title="Transacciones">
             <TransactionsDataTable
               transactions={transactions}
               navigateCallback={(page: number) => fetchTransactions(page)}
             />
-          </EntityTab>
+          </Tab>
         </EntityTabs>
       </EntityLayout>
       <Modal

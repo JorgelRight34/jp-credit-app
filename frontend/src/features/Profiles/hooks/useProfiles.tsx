@@ -3,15 +3,28 @@ import { Role } from "../../../models/role";
 import { baseUrl } from "../lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "../../../App";
+import { useDispatch, useSelector } from "react-redux";
+import { User } from "../../../models/user";
+import {
+  setAdmins,
+  setClients,
+  setGuarantors,
+  setLoanOfficers,
+  setProfiles,
+} from "../profilesSlice";
+import { RootState } from "../../../store";
 
 const useProfiles = (role: Role = "user", page = 1) => {
-  const { data, isError, isLoading } = useQuery({
+  const profiles = useSelector((state: RootState) => state.profiles);
+  const { isError, isLoading } = useQuery({
     queryKey: ["profiles", role],
     queryFn: () => fetchClients(page),
   });
+  const dispatch = useDispatch();
 
   const fetchClients = async (page: number = 1) => {
     const response = await api.get(`${baseUrl}/role/${role}/?page=${page}`);
+    setCorrectProfiles(role, response.data);
     return response.data;
   };
 
@@ -20,11 +33,34 @@ const useProfiles = (role: Role = "user", page = 1) => {
       queryKey: ["profiles", role],
       queryFn: () => fetchClients(page),
     });
+    setCorrectProfiles(role, data);
     return data;
   };
 
+  const setCorrectProfiles = (role: Role, data: User[]) => {
+    switch (role) {
+      case "client":
+        dispatch(setClients(data));
+        break;
+      case "loanOfficer":
+        dispatch(setLoanOfficers(data));
+        break;
+      case "admin":
+        dispatch(setAdmins(data));
+        break;
+      case "user":
+        dispatch(setProfiles(data));
+        break;
+      case "guarantor":
+        dispatch(setGuarantors(data));
+        break;
+      default:
+        dispatch(setClients(data));
+    }
+  };
+
   return {
-    profiles: data,
+    profiles: profiles[`${role}s` as keyof typeof profiles],
     isError,
     isLoading,
     fetchPage,

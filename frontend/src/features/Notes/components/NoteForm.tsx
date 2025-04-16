@@ -4,6 +4,7 @@ import useEditNote from "../hooks/useEditNote";
 import useDeleteNote from "../hooks/useDeleteNote";
 import { Note } from "../../../models/note";
 import EntityForm from "../../../common/EntityForm/EntityForm";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface NoteFormProps {
   defaultValues?: NoteFormValues;
@@ -14,13 +15,12 @@ const NoteForm = ({ edit, defaultValues }: NoteFormProps) => {
   const [onCreate] = useNewNote();
   const [onEdit] = useEditNote();
   const [onDelete] = useDeleteNote();
+  const queryClient = useQueryClient();
 
   const onSubmit = async (data: NoteFormValues) => {
-    if (edit) {
-      await onEdit(data, edit.id);
-      window.location.reload();
-    } else {
-      await onCreate(data);
+    const response = await (edit ? onEdit(data, edit.id) : onCreate(data));
+    if (response) {
+      queryClient.setQueryData(["note", response.id], response);
     }
   };
 
