@@ -1,17 +1,11 @@
-import { useDispatch } from "react-redux";
 import api from "../../../api.tsx";
-import {
-  addAdmin,
-  addClient,
-  addGuarantor,
-  addLoanOfficer,
-  addProfile,
-} from "../profilesSlice.tsx";
 import { baseUrl, ProfileFormValues } from "../lib/constants.tsx";
 import { Role } from "../../../models/role.tsx";
+import { useQueryClient } from "@tanstack/react-query";
+import { User } from "../../../models/user.ts";
 
 const useNewProfile = (role: Role) => {
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const addNewprofile = async (data: ProfileFormValues) => {
     const response = await api.post(`${baseUrl}/register`, {
@@ -19,23 +13,18 @@ const useNewProfile = (role: Role) => {
       roles: [role],
     });
 
-    switch (role) {
-      case "user":
-        dispatch(addProfile(response.data));
-        break;
-      case "loanOfficer":
-        dispatch(addLoanOfficer(response.data));
-        break;
-      case "admin":
-        dispatch(addAdmin(response.data));
-        break;
-      case "guarantor":
-        dispatch(addGuarantor(response.data));
-        break;
-      default:
-        dispatch(addClient(response.data));
-    }
-    dispatch(addProfile(response.data));
+    // Update list
+    console.log(queryClient.getQueryData(["profiles", role]));
+    queryClient.setQueryData<User[]>(["profiles", role], (prev) => [
+      ...(prev || []),
+      response.data,
+    ]);
+
+    // Set individual
+    queryClient.setQueryData<User>(
+      ["profiles", response.data.id],
+      response.data
+    );
 
     return response.data;
   };

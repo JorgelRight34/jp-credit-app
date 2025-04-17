@@ -3,28 +3,16 @@ import { Role } from "../../../models/role";
 import { baseUrl } from "../lib/constants";
 import { useQuery } from "@tanstack/react-query";
 import { queryClient } from "../../../App";
-import { useDispatch, useSelector } from "react-redux";
-import { User } from "../../../models/user";
-import {
-  setAdmins,
-  setClients,
-  setGuarantors,
-  setLoanOfficers,
-  setProfiles,
-} from "../profilesSlice";
-import { RootState } from "../../../store";
 
 const useProfiles = (role: Role = "user", page = 1) => {
-  const profiles = useSelector((state: RootState) => state.profiles);
-  const { isError, isLoading } = useQuery({
+  const { data, isError, isLoading } = useQuery({
     queryKey: ["profiles", role],
     queryFn: () => fetchClients(page),
+    staleTime: 60 * 50 * 1000, // 1 minute before becoming stale
   });
-  const dispatch = useDispatch();
 
   const fetchClients = async (page: number = 1) => {
     const response = await api.get(`${baseUrl}/role/${role}/?page=${page}`);
-    setCorrectProfiles(role, response.data);
     return response.data;
   };
 
@@ -32,35 +20,13 @@ const useProfiles = (role: Role = "user", page = 1) => {
     const data = await queryClient.fetchQuery({
       queryKey: ["profiles", role],
       queryFn: () => fetchClients(page),
+      staleTime: 60 * 1000, // 1 minute before becoming stale
     });
-    setCorrectProfiles(role, data);
     return data;
   };
 
-  const setCorrectProfiles = (role: Role, data: User[]) => {
-    switch (role) {
-      case "client":
-        dispatch(setClients(data));
-        break;
-      case "loanOfficer":
-        dispatch(setLoanOfficers(data));
-        break;
-      case "admin":
-        dispatch(setAdmins(data));
-        break;
-      case "user":
-        dispatch(setProfiles(data));
-        break;
-      case "guarantor":
-        dispatch(setGuarantors(data));
-        break;
-      default:
-        dispatch(setClients(data));
-    }
-  };
-
   return {
-    profiles: profiles[`${role}s` as keyof typeof profiles],
+    profiles: data || [],
     isError,
     isLoading,
     fetchPage,

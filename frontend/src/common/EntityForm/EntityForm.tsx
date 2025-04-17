@@ -122,6 +122,7 @@ const EntityForm = <TData, T>({
           {renderFormFieldInput(formField)}
         </div>
       ))}
+      {console.log(errors)}
     </EntityFormLayout>
   );
 };

@@ -79,6 +79,7 @@ const ProfileForm = ({ role, defaultValues, edit }: ProfileFormProps) => {
                 name: "password",
                 label: "Password",
                 type: "password",
+                required: true,
               },
             ]
           : profileFormFields

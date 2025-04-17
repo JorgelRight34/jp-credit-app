@@ -1,32 +1,23 @@
-import { useDispatch } from "react-redux";
 import { baseUrl, ProfileFormValues } from "../lib/constants.tsx";
 import api from "../../../api.tsx";
-import {
-  updateAdmin,
-  updateClient,
-  updateLoanOfficer,
-} from "../profilesSlice.tsx";
 import { Role } from "../../../models/role.tsx";
+import { useQueryClient } from "@tanstack/react-query";
+import { User } from "../../../models/user.ts";
 
 const useEditProfile = (role: Role) => {
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const editClient = async (data: ProfileFormValues, username: string) => {
     const response = await api.put(`${baseUrl}/${username}`, data);
+    const d = response.data;
 
-    switch (role) {
-      case "user":
-        dispatch(updateClient(response.data));
-        break;
-      case "loanOfficer":
-        dispatch(updateLoanOfficer(response.data));
-        break;
-      case "admin":
-        dispatch(updateAdmin(response.data));
-        break;
-      default:
-        dispatch(updateClient(response.data));
-    }
+    // Update list
+    queryClient.setQueryData<User[]>([role], (prev) =>
+      prev ? prev.map((el) => (el.id === d.username ? d : el)) : [data]
+    );
+
+    // Update individual
+    queryClient.setQueryData<User>([role], d);
 
     return response.data;
   };

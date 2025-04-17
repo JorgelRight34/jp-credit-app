@@ -8,7 +8,7 @@ export const baseUrl = "users";
 
 export const schema = z.object({
   username: z.string(),
-  password: z.string(),
+  password: z.string().optional(),
   firstName: z.string(),
   lastName: z.string(),
   email: z.string(),
