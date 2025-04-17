@@ -35,8 +35,11 @@ export const schema = z.object({
 
 export type CollateralFormValues = z.infer<typeof schema>;
 
-const generateOptions = (record: Record<any, any>) =>
-  Object.keys(record).map((key) => [key, toTitleCase(record[key]) || ""]);
+const generateOptions = (record: Record<string, string>) =>
+  Object.keys(record).map((key) => [
+    key,
+    toTitleCase(record[String(key) as keyof typeof record]) || "",
+  ]);
 
 export const collateralStatusOptions = generateOptions(
   collateralStatusSpanishTranslations
@@ -110,6 +113,9 @@ export const collateralsFormFields: FormField<Collateral>[] = [
     profileRole: "client",
     showOnEditFn: (collateral: Collateral) =>
       getFirstAndLastName(collateral.client) as ReactNode,
+    watch: "loanId",
+    disabledWhen: (value) =>
+      value === "" || value === 0 || value == undefined || value === null,
   },
   {
     name: "loanId",

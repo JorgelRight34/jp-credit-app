@@ -5,6 +5,7 @@ import {
   addClient,
   addGuarantor,
   addLoanOfficer,
+  addProfile,
 } from "../profilesSlice.tsx";
 import { baseUrl, ProfileFormValues } from "../lib/constants.tsx";
 import { Role } from "../../../models/role.tsx";
@@ -20,7 +21,7 @@ const useNewProfile = (role: Role) => {
 
     switch (role) {
       case "user":
-        dispatch(addClient(response.data));
+        dispatch(addProfile(response.data));
         break;
       case "loanOfficer":
         dispatch(addLoanOfficer(response.data));
@@ -34,7 +35,7 @@ const useNewProfile = (role: Role) => {
       default:
         dispatch(addClient(response.data));
     }
-    dispatch(addClient(response.data));
+    dispatch(addProfile(response.data));
 
     return response.data;
   };

@@ -14,6 +14,8 @@ interface EntityFormProps<TData, T> {
   filesMaxLength?: number;
   onSubmit: (data: T) => Promise<void>;
   schema: ZodType<FieldValues, any, any>;
+  watchId?: string;
+  activateOnWatch?: string;
   defaultValues?: Record<string, string | number | undefined | null>;
   rows: number;
   columns: number;
@@ -47,12 +49,14 @@ const EntityForm = <TData, T>({
     control,
     register,
     handleSubmit,
+    watch,
     reset,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
     defaultValues,
   });
+
   const renderFormInputsSlice = (
     start: number,
     end: number,
@@ -70,6 +74,7 @@ const EntityForm = <TData, T>({
   const renderFormFieldInput = (formField: FormField<TData>) => {
     return (
       <FormFieldInput<TData>
+        watch={watch}
         schema={schema}
         key={formField.name}
         className={"mb-3"}

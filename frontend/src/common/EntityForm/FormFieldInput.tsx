@@ -4,13 +4,13 @@ import MultipleFilesInput from "../ui/MultipleFilesInput";
 import FormInput from "./FormInput";
 import ProfilesDataList from "../../features/Profiles/components/ProfilesDataList";
 import { ZodType } from "zod";
-import { schema } from "../../features/Loans/lib/constants";
 
 interface FormFieldInputProps<TData> {
   schema: ZodType<any, any, any>;
   formField: FormField<TData>;
   files?: File[];
   filesMaxLength?: number;
+  watch: any;
   defaultFileSources?: string[];
   setFiles?: (files: File[] | ((prev: File[]) => File[])) => void;
   setDefaultFileSources?: (
@@ -25,6 +25,7 @@ const FormFieldInput = <TData,>({
   formField,
   files,
   edit,
+  watch,
   defaultFileSources,
   setDefaultFileSources,
   filesMaxLength = 10,
@@ -34,6 +35,9 @@ const FormFieldInput = <TData,>({
   ...props
 }: FormFieldInputProps<TData>) => {
   const { showOnNewRow, ...formFieldProps } = formField;
+
+  const watchedValue = formField.watch ? watch(formField.watch) : undefined;
+  const disabled = formField.disabledWhen?.(watchedValue) ?? false;
 
   if (formField.type === "file" && setFiles && files) {
     return (
@@ -48,7 +52,7 @@ const FormFieldInput = <TData,>({
             setFiles={setFiles}
             setDefaultFileSources={setDefaultFileSources}
             defaultFileSources={defaultFileSources}
-            {...{ disabled: formField.disabledFn?.(schema) }}
+            {...{ disabled: disabled }}
             maxLength={filesMaxLength}
           />
         </div>
@@ -69,11 +73,7 @@ const FormFieldInput = <TData,>({
                 ""
               )}
             </label>
-            <select
-              className="form-select"
-              {...props}
-              disabled={formField.disabledFn?.(schema)}
-            >
+            <select className="form-select" {...props} disabled={disabled}>
               {formField.options?.map((option) => (
                 <option key={option[0]} value={option[0]}>
                   {option[1]}
@@ -105,7 +105,7 @@ const FormFieldInput = <TData,>({
               {...props}
               render={({ field }) => (
                 <ProfilesDataList
-                  isDisabled={formField.disabledFn?.(schema)}
+                  isDisabled={disabled}
                   role={formField.profileRole || "client"}
                   error={error}
                   {...field} // This binds react-select to React Hook Form
@@ -133,7 +133,7 @@ const FormFieldInput = <TData,>({
       <FormInput
         options={formField.options}
         defaultValue={formField.defaultValue}
-        disabled={formField.disabledFn?.(schema)}
+        disabled={disabled}
         defaultToToday={formField.defaultToToday}
         {...formFieldProps}
         {...props}

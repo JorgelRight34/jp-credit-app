@@ -9,6 +9,7 @@ import useUploadFile from "../../../hooks/useUploadFile";
 import EntityForm from "../../../common/EntityForm/EntityForm";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 interface ProfileFormProps {
   role: Role;
@@ -46,6 +47,7 @@ const ProfileForm = ({ role, defaultValues, edit }: ProfileFormProps) => {
 
     if (response) {
       queryClient.setQueryData(["profile", response.id], response);
+      toast.success("Cliente agregado exitosamente.");
     }
   };
 

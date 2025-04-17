@@ -40,6 +40,9 @@ const profiles = createSlice({
     setProfiles: (state, action) => {
       state.users = action.payload;
     },
+    addProfile: (state, action) => {
+      state.users = [...state.users, action.payload];
+    },
     addClient: (state, action) => {
       state.clients = [...state.clients, action.payload];
     },
@@ -106,6 +109,7 @@ const profiles = createSlice({
 export const {
   addClient,
   addAdmin,
+  addProfile,
   addGuarantor,
   addLoanOfficer,
   setClients,

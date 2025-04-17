@@ -16,7 +16,9 @@ export interface FormField<TData> {
   defaultToToday?: boolean;
   showOnNewRow?: boolean;
   showOnEditFn?: (entity: TData) => ReactNode;
-  disabledFn?: (data: any) => boolean;
+  disabledFn?: (data: TData) => boolean;
   multiple?: boolean;
   defaultValue?: string | number | null;
+  watch?: keyof TData; // field name to watch
+  disabledWhen?: (watchedValue: unknown) => boolean; // disable condition
 }
