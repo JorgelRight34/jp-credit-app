@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 
 const useLoan = (id: string) => {
   const { data, isError, isLoading } = useQuery({
-    queryKey: ["loan", id],
+    queryKey: ["loans", id],
     queryFn: () => fetchLoan(id),
   });
 

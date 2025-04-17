@@ -2,9 +2,7 @@ import useNewLoan from "../hooks/useNewLoan";
 import { loanFormFields, LoanFormValues, schema } from "../lib/constants";
 import useEditLoan from "../hooks/useEditLoan";
 import { Loan } from "../../../models/loan";
-import { useNavigate } from "react-router";
 import EntityForm from "../../../common/EntityForm/EntityForm";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 interface LoanFormDefaultProps {
@@ -36,12 +34,10 @@ interface LoanFormDefaultProps {
 const LoanForm = ({ defaultValues, edit }: LoanFormDefaultProps) => {
   const [onSubmit] = useNewLoan();
   const [onEdit] = useEditLoan();
-  const queryClient = useQueryClient();
 
   const handleOnSubmit = async (data: LoanFormValues) => {
     const response = await (edit ? onEdit(data, edit.id) : onSubmit(data));
     if (response) {
-      queryClient.setQueryData(["loans", ""], response);
       toast.success(`El préstamo ha sido guardado exitosamente.`);
     }
   };

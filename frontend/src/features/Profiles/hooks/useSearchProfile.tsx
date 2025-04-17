@@ -17,7 +17,7 @@ const useSearchProfile = (role: Role, field: "firstname" | "lastname") => {
 
   const fetchProfiles = async () => {
     const data = await queryClient.fetchQuery({
-      queryKey: ["profiles", query],
+      queryKey: ["profiles", role],
       queryFn: handleFetchProfiles,
     });
     return data;

@@ -1,9 +1,7 @@
 import { useState } from "react";
 import api from "../../../api";
-import { useDispatch, useSelector } from "react-redux";
-import { setLoans } from "../loansSlice";
-import { RootState } from "../../../store";
 import { baseUrl } from "../lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 export interface SearchLoanQuery {
   id: string | number;
@@ -19,8 +17,7 @@ const useSearchLoan = () => {
     endDate: "",
     type: "active",
   });
-  const { loans } = useSelector((state: RootState) => state.loans);
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const search = async (fetchData: boolean = true) => {
     if (query.id && query.id !== "0") {
@@ -30,27 +27,33 @@ const useSearchLoan = () => {
 
     if (!fetchData) return;
     // If item not in memory then fetch it
-    const response = await api.get(
-      `${baseUrl}/?${Object.keys(query)
-        .map((key) => `${key}=${query[key as keyof typeof query]}`)
-        .join("&")}`
-    );
-    dispatch(setLoans(response.data ? response.data : []));
+    const q = Object.keys(query)
+      .map((key) => `${key}=${query[key as keyof typeof query]}`)
+      .join("&");
+    const data = await queryClient.fetchQuery({
+      queryKey: ["loans", q],
+      queryFn: () => searchByQuery(q),
+    });
+    return data;
+  };
+
+  const searchByQuery = async (query: string) => {
+    const response = await api.get(`${baseUrl}/?${query}}`);
+    return response.data;
   };
 
   const searchById = async (id: number) => {
     // Try to find item on memory first
-    if (id == 0) return;
-    const found = loans.find((loan) => loan.id == id);
-    if (found) {
-      dispatch(setLoans([found]));
-      return;
-    }
+    const data = await queryClient.fetchQuery({
+      queryKey: ["loans", id],
+      queryFn: () => fetchLoanById(query.id),
+    });
+    return data;
+  };
 
-    // If item not in memory then fetch it
-    const response = await api.get(`${baseUrl}/${query.id}`);
-    dispatch(setLoans(response.data ? [response.data] : []));
-    return;
+  const fetchLoanById = async (id: number | string) => {
+    const response = await api.get(`${baseUrl}/${id}`);
+    return response.data;
   };
 
   const handleOnChange = (

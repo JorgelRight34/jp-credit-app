@@ -1,12 +1,11 @@
-import { useDispatch } from "react-redux";
 import api from "../../../api";
-import { removeLoan } from "../loansSlice";
 import { baseUrl } from "../lib/constants";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useDeleteLoan = () => {
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
   const navigate = useNavigate();
 
   const deleteLoan = async (id: number) => {
@@ -14,7 +13,7 @@ const useDeleteLoan = () => {
       const numberId = Number(id);
       if (!isNaN(numberId)) {
         await api.delete(`${baseUrl}/${id}`);
-        dispatch(removeLoan({ id: id }));
+        queryClient.setQueryData(["loans", id], undefined)
       } else {
         toast.error("Invalid id for loan");
       }
