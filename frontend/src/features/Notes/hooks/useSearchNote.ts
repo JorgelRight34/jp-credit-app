@@ -1,9 +1,7 @@
 import React, { useState } from "react"
 import api from "../../../api";
 import { baseUrl } from "../lib/constants";
-import { useDispatch, useSelector } from "react-redux";
-import { setNotes } from "../notesSlice";
-import { RootState } from "../../../store";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface UseSearchNoteReturn {
     searchNote: () => void;
@@ -25,21 +23,22 @@ interface UseSearchNoteReturn {
 const useSearchNote = (): UseSearchNoteReturn => {
     const [loanId, setLoanId] = useState(0);
     const [noteId, setNoteId] = useState(0);
-    const { notes } = useSelector((state: RootState) => state.notes);
-    const dispatch = useDispatch();
+    const queryClient = useQueryClient();
 
-    const searchNote = async () => {
-        // Try to find items in memory
-        const found = notes.filter(note => note.id === noteId && note.loanId === loanId)
-        if (found) {
-            dispatch(setNotes(found));
-            return;
-        }
-
+    const search = async (noteId: number, loanId: number) => {
         // If items not in then fetch it
         const response = await api.get(`${baseUrl}/?${loanId ? `loanId=${loanId}` : ''}&${noteId ? `noteId=${noteId}` : ''}`);
-        dispatch(setNotes(response.data));
+        return response.data
     }
+
+    const searchNote = async () => {
+        const data = await queryClient.fetchQuery({
+            queryKey: ["notes", loanId, noteId],
+            queryFn: () => search(noteId, loanId),
+        })
+        return data;
+    }
+
 
     const handleOnLoanIdChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         setLoanId(Number(event.target.value));

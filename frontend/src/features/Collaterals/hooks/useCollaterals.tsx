@@ -1,12 +1,6 @@
 import api from "../../../api";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../../store";
-import { setCollaterals } from "../collateralsSlice";
 import { Collateral } from "../../../models/collateral";
-import { useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../../App";
-
-type UseCollateralsReturn = [Collateral[], (page?: number) => Promise<void>];
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 /**
  * Fetches and manages a list of collaterals with pagination support
@@ -23,8 +17,9 @@ type UseCollateralsReturn = [Collateral[], (page?: number) => Promise<void>];
  */
 
 const useCollaterals = (query: string = "") => {
-  const { collaterals } = useSelector((state: RootState) => state.collaterals);
-  const { data, isLoading, isError, error, refetch } = useQuery({
+  const queryClient = useQueryClient();
+
+  const { data, isLoading, isError, error, refetch } = useQuery<Collateral[]>({
     queryKey: ["collaterals", query],
     queryFn: () => fetchCollaterals(query),
   });
@@ -35,9 +30,10 @@ const useCollaterals = (query: string = "") => {
   };
 
   const fetchPage = async (page: number, query = "") => {
-    const data = await queryClient.fetchQuery({
-      queryKey: ["collaterals", query, page],
+    const data = await queryClient.fetchQuery<Collateral[]>({
+      queryKey: ["collaterals", query],
       queryFn: () => fetchCollaterals(query, page),
+      staleTime: 0, // Force refetch
     });
     return data;
   };

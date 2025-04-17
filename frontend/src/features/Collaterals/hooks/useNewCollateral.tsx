@@ -1,6 +1,4 @@
-import { useDispatch } from "react-redux";
 import api from "../../../api";
-import { addCollateral } from "../collateralsSlice";
 import { CollateralFormValues } from "../lib/constants";
 import { Collateral } from "../../../models/collateral";
 import { useQueryClient } from "@tanstack/react-query";
@@ -32,11 +30,18 @@ const useNewCollateral = (): UseNewCollateralReturn => {
       ...data,
       expirationDate: data.expirationDate || null,
     });
+    const collateral = response.data;
+
+    // Set individual
+    queryClient.setQueryData(["collaterals", collateral.id], collateral);
+
+    // Set plural
     queryClient.setQueryData<Collateral[]>(["collaterals", ""], (prev) => [
       ...(prev || []),
-      response.data,
+      collateral,
     ]);
-    return response.data;
+
+    return collateral;
   };
 
   return [addNewCollateral];

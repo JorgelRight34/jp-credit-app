@@ -1,11 +1,9 @@
 import React, { useState } from "react";
 import api from "../../../api";
-import { useDispatch, useSelector } from "react-redux";
-import { setCollaterals } from "../collateralsSlice";
-import { RootState } from "../../../store";
+import { useQueryClient } from "@tanstack/react-query";
 
 type UseSearchCollateralReturn = {
-  query: number | undefined;
+  query: string;
   handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
   search: () => Promise<void>;
 };
@@ -30,27 +28,24 @@ type UseSearchCollateralReturn = {
  */
 
 const useSearchCollateral = (): UseSearchCollateralReturn => {
-  const [query, setQuery] = useState<number | undefined>();
-  const { collaterals } = useSelector((state: RootState) => state.collaterals);
-  const dispatch = useDispatch();
+  const [query, setQuery] = useState<string>("");
+  const queryClient = useQueryClient();
+
+  const searchCollateral = async (query: string) => {
+    const response = await api.get(`collaterals/?title=${query}`);
+    return response.data;
+  };
 
   const search = async () => {
-    // Try to find item in memory
-    const found = collaterals.find((collateral) => collateral.id === query);
-    if (found) {
-      dispatch(setCollaterals(found));
-      return;
-    }
-
-    // If item not in memory fetch it
-    const response = await api.get(`collaterals/?title=${query}`);
-    dispatch(setCollaterals(response.data));
+    const data = await queryClient.fetchQuery({
+      queryKey: ["collaterals", query],
+      queryFn: () => searchCollateral(query),
+    });
+    queryClient.setQueryData(["collaterals"], data);
   };
 
   const handleOnChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
-    const value = Number(event.target.value);
-    if (isNaN(Number(value))) return;
-    setQuery(value);
+    setQuery(event.target.value);
   };
 
   return { query, handleOnChange, search };

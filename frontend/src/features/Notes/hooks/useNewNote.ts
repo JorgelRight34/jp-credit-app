@@ -1,14 +1,22 @@
-import { useDispatch } from "react-redux";
 import api from "../../../api"
 import { baseUrl, NoteFormValues } from "../lib/constants"
-import { addNote } from "../notesSlice";
+import { useQueryClient } from "@tanstack/react-query";
+import { Note } from "../../../models/note";
 
 const useNewNote = () => {
-    const dispatch = useDispatch();
+    const queryClient = useQueryClient();
 
     const postNewNote = async (data: NoteFormValues) => {
         const response = await api.post(baseUrl, data);
-        dispatch(addNote(response.data));
+        const note = response.data;
+
+        // Set singular
+        queryClient.setQueryData(["notes", note.id], note);
+
+        // Set plurarl
+        queryClient.setQueryData<Note[]>(["notes", ""], (prev) => [...(prev || []), note]);
+
+        return note;
     }
 
     return [postNewNote]

@@ -27,7 +27,7 @@ namespace api.Controllers
         }
 
         [HttpGet("role/{role}")]
-        public async Task<ActionResult<IEnumerable<UserDto>>> GetUsersInRole(
+        public async Task<ActionResult<PaginationResultDto<UserDto>>> GetUsersInRole(
             [FromRoute] string role, [FromQuery] UserQuery? query
         )
         {
@@ -51,7 +51,7 @@ namespace api.Controllers
             var userDto = mapper.Map<UserDto>(user);
             var roles = await userManager.GetRolesAsync(user);
             userDto.Roles = roles.ToList();
-            
+
 
             return Ok(userDto);
         }
@@ -139,8 +139,8 @@ namespace api.Controllers
             var userWithPhoto = await usersRepository.AddUserPhotoAsync(file, user);
 
             return CreatedAtAction(
-                nameof(GetByUsername), 
-                new { username = userWithPhoto.UserName }, 
+                nameof(GetByUsername),
+                new { username = userWithPhoto.UserName },
                 mapper.Map<UserDto>(userWithPhoto)
             );
         }
@@ -149,7 +149,7 @@ namespace api.Controllers
         public async Task<ActionResult> DeletePhoto([FromRoute] string username, [FromRoute] string photoId)
         {
             if (photoId == null) return BadRequest("Photo public id is missing");
-            
+
             var user = await userManager.FindByNameAsync(username);
             if (user == null) return BadRequest("User doesn't exist");
 

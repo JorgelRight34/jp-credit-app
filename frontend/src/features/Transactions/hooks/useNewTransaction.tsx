@@ -1,14 +1,25 @@
-import { useDispatch } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 import api from "../../../api";
-import { addTransaction } from "../transactionsSlice";
 import { TransactionFormValues } from "../lib/utils";
+import { Transaction } from "../../../models/transaction";
 
 const useNewTransaction = () => {
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const addNewTransaction = async (data: TransactionFormValues) => {
     const response = await api.post("transactions", data);
-    dispatch(addTransaction(response.data));
+    const transaction = response.data;
+
+    // Set individual
+    queryClient.setQueryData(["transactions", transaction.id], transaction);
+
+    // Set plurarl
+    queryClient.setQueryData<Transaction[]>(["transactions", ""], (prev) => [
+      ...(prev || []),
+      transaction,
+    ]);
+
+    return transaction;
   };
 
   return [addNewTransaction];

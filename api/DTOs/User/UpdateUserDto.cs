@@ -16,6 +16,7 @@ public class UpdateUserDto
     [Required]
     [EmailAddress]
     public string? Email { get; set; }
+    public string? Nationality { get; set; }
 
     // Identification parameters
     [Required]
@@ -32,7 +33,7 @@ public class UpdateUserDto
     // Contact
     [Required]
     public string? Address { get; set; }
-    public string? Landline { get ; set; }   // Home's phone
+    public string? Landline { get; set; }   // Home's phone
     public string? OfficePhoneNumber { get; set; }
     public string? PhoneNumber { get; set; }
 

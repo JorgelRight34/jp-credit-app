@@ -1,10 +1,10 @@
 import api from "../../../api";
 import { useQuery } from "@tanstack/react-query";
 
-const useTransaction = (id: number) => {
+const useTransaction = (id: string) => {
   const { data, isError, isLoading } = useQuery({
     queryKey: ["transaction", id],
-    queryFn: () => fetchTransaction(id),
+    queryFn: () => fetchTransaction(Number(id)),
   });
 
   const fetchTransaction = async (id: number) => {

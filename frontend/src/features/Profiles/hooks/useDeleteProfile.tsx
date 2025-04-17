@@ -11,13 +11,14 @@ const useDeleteProfile = (role: Role) => {
     const response = await api.delete(`${baseUrl}/${id}`);
 
     // Update list
-    queryClient.setQueryData<User[]>([role], (prev) => [
-      ...(prev || []),
-      response.data,
-    ]);
+    queryClient.setQueryData<User[]>([role], (prev) =>
+      prev?.filter((el) => el.id !== id)
+    );
 
     // Remove individual
     queryClient.setQueryData<User>([role, id], undefined);
+
+    return response.data;
   };
 
   return [deleteClient];

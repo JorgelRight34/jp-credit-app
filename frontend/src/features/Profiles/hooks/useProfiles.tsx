@@ -1,10 +1,11 @@
 import api from "../../../api";
 import { Role } from "../../../models/role";
 import { baseUrl } from "../lib/constants";
-import { useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../../App";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 
 const useProfiles = (role: Role = "user", page = 1) => {
+  const queryClient = useQueryClient();
+
   const { data, isError, isLoading } = useQuery({
     queryKey: ["profiles", role],
     queryFn: () => fetchClients(page),
@@ -16,10 +17,15 @@ const useProfiles = (role: Role = "user", page = 1) => {
   };
 
   const fetchPage = async (page: number) => {
+    // Fetch data with page to be in cache
     const data = await queryClient.fetchQuery({
-      queryKey: ["profiles", role],
+      queryKey: ["profiles", role, page],
       queryFn: () => fetchClients(page),
     });
+
+    // Update profiles
+    queryClient.setQueryData(["profiles", role], data);
+
     return data;
   };
 

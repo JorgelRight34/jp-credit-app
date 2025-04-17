@@ -3,6 +3,7 @@ import { baseUrl } from "../lib/constants";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router";
 import { useQueryClient } from "@tanstack/react-query";
+import { Loan } from "../../../models/loan";
 
 const useDeleteLoan = () => {
   const queryClient = useQueryClient();
@@ -13,7 +14,10 @@ const useDeleteLoan = () => {
       const numberId = Number(id);
       if (!isNaN(numberId)) {
         await api.delete(`${baseUrl}/${id}`);
-        queryClient.setQueryData(["loans", id], undefined)
+        queryClient.setQueryData(["loans", id], undefined);
+        queryClient.setQueryData<Loan[]>(["loans", ""], (prev) =>
+          prev?.filter((el) => el.id !== id)
+        );
       } else {
         toast.error("Invalid id for loan");
       }

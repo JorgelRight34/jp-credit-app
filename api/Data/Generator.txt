@@ -1,0 +1,32 @@
+[
+  '{{repeat(20)}}',
+  (function(){
+    var baseDNI = 30000000000;
+    return {
+      UserName: '{{firstName("female")}}',
+      Email: '{{email()}}',
+      EmailConfirmed: true,
+      PhoneNumber: '{{phone()}}',
+      PhoneNumberConfirmed: true,
+
+      FirstName: '{{firstName()}}',
+      LastName: '{{surname()}}',
+      Profession: '{{company()}}',
+
+      Gender: '{{random("M", "F")}}',
+
+      DateOfBirth: '{{date(new Date(1980, 0, 1), new Date(2005, 0, 1), "YYYY-MM-dd")}}',
+      MaritalStatus: '{{random("Single", "Married", "Divorced", "Widowed")}}',
+      DNI: function() {
+        return (baseDNI++).toString();
+      },
+
+      Address: '{{integer(100, 999)}} {{street()}}, {{city()}}, {{state()}}',
+      Landline: '{{phone()}}',
+      OfficePhone: '{{phone()}}',
+      Nationality: '{{random("Dominicano", "Americano", "Canadiense", "Mexicano", "Colombiano", "Brazilian", "Spanish", "Argentinian")}}',
+
+      PhotoId: null
+    };
+  })()
+]

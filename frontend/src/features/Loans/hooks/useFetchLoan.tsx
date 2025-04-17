@@ -15,7 +15,7 @@ const useFetchLoan = () => {
 
   const fetchLoan = async (id: string | number) => {
     const data = await queryClient.fetchQuery({
-      queryKey: ["loan", id],
+      queryKey: ["loans", id],
       queryFn: () => getLoan(id),
     });
     setLoan(data);

@@ -1,6 +1,6 @@
-import { useDispatch } from "react-redux";
 import api from "../../../api";
-import { removeCollateral } from "../collateralsSlice";
+import { useQueryClient } from "@tanstack/react-query";
+import { Collateral } from "../../../models/collateral";
 
 type UseDeleteCollateralReturn = [(id?: number) => Promise<void>];
 
@@ -18,11 +18,18 @@ type UseDeleteCollateralReturn = [(id?: number) => Promise<void>];
  *   .catch(error => console.error('Deletion failed', error));
  */
 const useDeleteCollateral = (): UseDeleteCollateralReturn => {
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const deleteCollateral = async (id?: number) => {
-    const response = await api.delete(`collaterals/${id}`);
-    dispatch(removeCollateral(response.data));
+    await api.delete(`collaterals/${id}`);
+
+    // Delete individual
+    queryClient.setQueryData(["collaterals", id], undefined);
+
+    // Delete in list
+    queryClient.setQueryData<Collateral[]>(["collaterals"], (prev) =>
+      prev?.filter((el) => el.id !== id)
+    );
   };
 
   return [deleteCollateral];

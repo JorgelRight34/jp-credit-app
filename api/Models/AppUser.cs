@@ -28,6 +28,7 @@ public class AppUser : IdentityUser
     [DNI]
     public string? DNI { get; set; }
     public int? PhotoId { get; set; }
+    public string? Nationality { get; set; }
 
     // Contact
     [Required]

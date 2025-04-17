@@ -12,6 +12,7 @@ public class UserDto
     // Database identification
     public string? Id { get; set; }
     public string? Username { get; set; }
+    public string? Nationality { get; set; }
 
     // Names
     [Required]

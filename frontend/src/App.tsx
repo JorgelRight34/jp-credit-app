@@ -39,7 +39,9 @@ const ArmotizationsPage = lazy(
 );
 const NotFound = lazy(() => import("./pages/NotFound"));
 
-export const queryClient = new QueryClient();
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: 120000, gcTime: 12000 } },
+});
 
 function App() {
   return (

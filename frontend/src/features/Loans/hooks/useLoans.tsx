@@ -1,10 +1,11 @@
 import api from "../../../api";
 import { baseUrl } from "../lib/constants";
-import { useQuery } from "@tanstack/react-query";
-import { queryClient } from "../../../App";
+import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loan } from "../../../models/loan";
 
 const useLoans = (query: string = "", page: number = 1) => {
+  const queryClient = useQueryClient();
+
   const { data, isError, isLoading } = useQuery<Loan[]>({
     queryKey: ["loans", query],
     queryFn: () => fetchLoans(page, query),
@@ -21,6 +22,7 @@ const useLoans = (query: string = "", page: number = 1) => {
     await queryClient.fetchQuery<Loan[]>({
       queryKey: ["loans", query],
       queryFn: () => fetchLoans(page),
+      staleTime: 0, // Force refetch
     });
   };
 

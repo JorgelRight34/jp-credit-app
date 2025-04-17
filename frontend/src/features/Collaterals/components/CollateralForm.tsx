@@ -11,7 +11,6 @@ import { Collateral } from "../../../models/collateral";
 import { useState } from "react";
 import useUploadFile from "../../../hooks/useUploadFile";
 import EntityForm from "../../../common/EntityForm/EntityForm";
-import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "react-toastify";
 
 interface CollateralFormProps {
@@ -33,8 +32,6 @@ const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
   );
   const navigate = useNavigate();
   const { uploadFile, deleteFile } = useUploadFile();
-
-  const queryClient = useQueryClient();
 
   const handleOnSubmit = async (data: CollateralFormValues) => {
     let response = await (edit ? onEdit(data, edit.id) : onSubmit(data));
@@ -65,7 +62,6 @@ const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
     }
 
     if (response) {
-      queryClient.setQueryData(["collateral", String(response.id)], response);
       toast.success("La garantía ha sido guardada exitosamente.");
     }
   };

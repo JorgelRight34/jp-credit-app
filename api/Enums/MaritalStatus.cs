@@ -5,5 +5,6 @@ public enum MaritalStatus
     Married,
     Single,
     Divorced,
-    Widow
+    Widow,
+    Widowed
 }

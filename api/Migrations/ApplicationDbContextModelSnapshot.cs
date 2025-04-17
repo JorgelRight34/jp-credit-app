@@ -255,6 +255,9 @@ namespace api.Migrations
                     b.Property<int>("MaritalStatus")
                         .HasColumnType("INTEGER");
 
+                    b.Property<string>("Nationality")
+                        .HasColumnType("TEXT");
+
                     b.Property<string>("NormalizedEmail")
                         .HasMaxLength(256)
                         .HasColumnType("TEXT");

@@ -101,7 +101,7 @@ public class UsersRepository(
             .FirstOrDefaultAsync(x => x.UserName != null && x.UserName.ToLower() == username.ToLower());
         if (user == null) return null;
 
-        var roles = await userManager.GetRolesAsync(user);;
+        var roles = await userManager.GetRolesAsync(user); ;
 
         return user;
     }
@@ -110,15 +110,15 @@ public class UsersRepository(
     {
         var users = context.Users.AsQueryable();
 
-        users = FilterByQuery(users, query);
+        var result = await FilterByQuery(users, query).ToListAsync();
 
-        return await users.PaginateAsync(query);
+        return result;
     }
 
     public async Task<IEnumerable<AppUser>> GetUsersInRoleAsync(string role, UserQuery? query)
     {
         var users = await userManager.GetUsersInRoleAsync(role);
-        if (query != null) return FilterByQuery(users.AsQueryable(), query);
+        if (query != null) return FilterByQuery(users.AsQueryable(), query).ToList();
 
         return new List<AppUser>();
     }
@@ -187,6 +187,9 @@ public class UsersRepository(
             users = users.Where(x => x.DNI != null && x.DNI.ToLower().Contains(query.DNI.ToLower()));
         }
 
+        var page = query.Page - 1 < 0 ? 0 : query.Page - 1;
+        users = users.Skip(page * query.Limit).Take(query.Limit);
+
         return users;
     }
 
@@ -221,7 +224,7 @@ public class UsersRepository(
             })
             .FirstOrDefaultAsync();
 
-        
+
         var loansCount = await context.Loans.Where(x => x.ClientId == user.Id).CountAsync();
         var collateralsCount = await context.Collaterals.Where(x => x.AppUserId == user.Id).CountAsync();
 

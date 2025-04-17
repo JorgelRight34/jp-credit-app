@@ -1,14 +1,22 @@
-import { useDispatch } from "react-redux";
 import api from "../../../api"
-import { removeTransaction } from "../transactionsSlice";
+import { useQueryClient } from "@tanstack/react-query";
+import { Transaction } from "../../../models/transaction";
 
 const useDeleteTransaction = () => {
-    const dispatch = useDispatch();
+    const queryClient = useQueryClient();
 
-    const deleteTransaction = async (id: string) => {
+    const deleteTransaction = async (id: number) => {
         if (!id) return;
-        await api.delete(`transactions/${id}`);
-        dispatch(removeTransaction({ id: id }));
+        const response = await api.delete(`transactions/${id}`);
+        const transaction = response.data;
+
+        // Set individual
+        queryClient.setQueryData(["transactions", id], transaction);
+
+        // Set plural
+        queryClient.setQueryData<Transaction[]>(["transactions", ""], (prev) => prev?.filter(el => el.id !== id))
+
+        return transaction;
     }
 
     return [deleteTransaction]

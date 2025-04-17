@@ -1,9 +1,6 @@
-import { useState } from "react";
 import api from "../../../api";
 import { Note } from "../../../models/note";
 import { baseUrl } from "../lib/constants";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store";
 import { useQuery } from "@tanstack/react-query";
 
 /**
@@ -25,18 +22,18 @@ import { useQuery } from "@tanstack/react-query";
  * const [note, error] = useNote(someId || undefined);
  */
 type UseNoteReturn = {
-  note: Note | null;
-  error: boolean;
-  fetchNote: (id: string) => Promise<Note>;
+  note: Note | undefined;
+  isError: boolean;
+  isLoading: boolean;
 };
 
-const useNote = (id: string) => {
+const useNote = (id: string): UseNoteReturn => {
   const { data, isError, isLoading } = useQuery({
     queryKey: ["note", id],
-    queryFn: () => fetchNote(id),
+    queryFn: () => fetchNote(Number(id)),
   });
 
-  const fetchNote = async (id: string) => {
+  const fetchNote = async (id: number) => {
     const response = await api.get(`${baseUrl}/${id}`);
     return response.data;
   };

@@ -1,7 +1,7 @@
-import { useDispatch } from "react-redux";
+import { useQueryClient } from "@tanstack/react-query";
 import api from "../../../api";
 import { CollateralFormValues } from "../lib/constants";
-import { updateCollateral } from "../collateralsSlice";
+import { Collateral } from "../../../models/collateral";
 
 type UseEditCollateralReturn = [
   (data: CollateralFormValues, id?: number) => Promise<void>
@@ -23,16 +23,23 @@ type UseEditCollateralReturn = [
  *   .catch(error => console.error('Update failed', error));
  */
 const useEditCollateral = (): UseEditCollateralReturn => {
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const editCollateral = async (data: CollateralFormValues, id?: number) => {
-    console.log(data);
     const response = await api.put(`collaterals/${id}`, {
       ...data,
-      agreementType: "car",
     });
-    dispatch(updateCollateral(response.data));
-    return response.data;
+    const collateral = response.data;
+
+    // Set individual
+    queryClient.setQueryData(["collaterals", id], collateral);
+
+    // Set plural
+    queryClient.setQueryData<Collateral[]>(["collaterals"], (prev) =>
+      prev?.map((el) => (el.id === id ? collateral : el))
+    );
+
+    return collateral;
   };
 
   return [editCollateral];

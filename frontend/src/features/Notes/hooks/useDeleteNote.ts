@@ -1,14 +1,19 @@
-import { useDispatch } from "react-redux";
 import api from "../../../api"
-import { removeNote } from "../notesSlice";
+import { Note } from "../../../models/note";
 import { baseUrl } from "../lib/constants";
+import { useQueryClient } from "@tanstack/react-query";
 
 const useDeleteNote = () => {
-    const dispatch = useDispatch();
+    const queryClient = useQueryClient()
 
     const deleteNote = async (id: number) => {
         await api.delete(`${baseUrl}/${id}`);
-        dispatch(removeNote({ id: id }))
+
+        // Set individual
+        queryClient.setQueryData(["notes", id], undefined);
+
+        // Set plural
+        queryClient.setQueryData<Note[]>(["notes", ""], (prev) => prev?.filter(el => el.id !== id))
     }
 
     return [deleteNote]
