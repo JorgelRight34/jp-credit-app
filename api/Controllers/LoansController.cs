@@ -1,6 +1,7 @@
 using api.Data;
 using api.DTOs;
 using api.DTOs.Loan;
+using api.DTOs.User;
 using api.Interfaces;
 using api.Models;
 using AutoMapper;
@@ -29,6 +30,20 @@ namespace api.Controllers
             return Ok(mapper.Map<LoanDto>(loan));
         }
 
+        [HttpGet("{id:int}/members")]
+        public async Task<ActionResult<LoanMembersDto>> GetLoanMembers([FromRoute] int id)
+        {
+            try
+            {
+                var members = await loansRepository.GetLoanMembers(id);
+                return Ok(members);
+            }
+            catch
+            {
+                return NotFound();
+            }
+        }
+
         [HttpPost]
         public async Task<ActionResult<LoanDto>> Create([FromBody] CreateLoanDto createLoanDto)
         {
@@ -36,7 +51,8 @@ namespace api.Controllers
             if (client == null) return BadRequest("Client doesn't exist");
 
             AppUser? loanOfficer = null;
-            if (createLoanDto.LoanOfficerId != null) {
+            if (createLoanDto.LoanOfficerId != null)
+            {
                 loanOfficer = await userManager.FindByIdAsync(createLoanDto.LoanOfficerId);
                 if (loanOfficer == null) return BadRequest("Loan Officer doesn't exist");
 
@@ -44,7 +60,8 @@ namespace api.Controllers
                 if (!isInRole) return BadRequest("Loan officer is not a loan officer");
             }
 
-            if (createLoanDto.GuarantorId != null) {
+            if (createLoanDto.GuarantorId != null)
+            {
                 var guarantor = await userManager.FindByIdAsync(createLoanDto.GuarantorId);
                 if (guarantor == null) return BadRequest("Loan Officer doesn't exist");
 

@@ -22,7 +22,7 @@ const useTransactions = (query = "", page = 1) => {
     return data;
   };
 
-  return { transactions: data, isError, isLoading, fetchPage };
+  return { transactions: data || [], isError, isLoading, fetchPage };
 };
 
 export default useTransactions;

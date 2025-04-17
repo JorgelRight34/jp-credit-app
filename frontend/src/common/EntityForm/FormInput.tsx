@@ -1,20 +1,17 @@
-import React from "react";
-import { getTodayFormattedDate } from "../../utils/utils";
+import { FormField } from "../../models/formField";
+import { Controller } from "react-hook-form";
+import ProfilesDataList from "../../features/Profiles/components/ProfilesDataList";
+import SelectInput from "./SelectInput";
+import TextareaInput from "./TextareaInput";
+import DefaultInput from "./DefaultInput";
 
-interface FormInputProps {
-  label: string;
-  type?: string;
-  placeholder?: string;
-  name: string;
-  error?: string;
-  required?: boolean;
+interface FormInputProps<T> {
   disabled?: boolean;
-  defaultToToday?: boolean;
-  value?: string;
   showOnEdit?: boolean;
   options?: (string | number)[][];
   defaultValue?: string | number | null;
-  onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  formField: FormField<T>;
+  watchedValue?: number | string;
 }
 
 /**
@@ -32,40 +29,40 @@ interface FormInputProps {
  *  error="Username is required"
  * />
  */
-const FormInput = ({
-  label,
-  name,
+const FormInput = <T,>({
   disabled,
-  type = "text",
-  onChange,
-  error,
-  value,
-  options,
-  defaultValue,
-  defaultToToday = false,
-  required,
-  showOnEdit,
+  watchedValue,
+  formField,
   ...props
-}: FormInputProps) => {
-  return (
-    <>
-      <label className="form-label">
-        {label}
-        {required !== false ? <span className="text-red-500"> *</span> : ""}
-      </label>
-      <input
+}: FormInputProps<T>) => {
+  if (formField.type === "select") {
+    return <SelectInput formField={formField} disabled={disabled} {...props} />;
+  }
+
+  if (formField.profileDataList) {
+    return (
+      <Controller
+        name={formField.name}
         {...props}
-        type={type}
-        name={name}
-        className="form-control"
-        onChange={onChange}
-        required={required}
-        disabled={disabled}
-        value={defaultToToday ? getTodayFormattedDate() : value}
+        render={({ field }) => (
+          <ProfilesDataList
+            isDisabled={disabled}
+            loanId={watchedValue || formField.fixedWatchedValue || undefined}
+            role={formField.profileRole || "client"}
+            {...field} // This binds react-select to React Hook Form
+          />
+        )}
       />
-      {error && <p className="text-danger">{error}</p>}
-    </>
-  );
+    );
+  }
+
+  if (formField.type === "textarea") {
+    return (
+      <TextareaInput formField={formField} disabled={disabled} {...props} />
+    );
+  }
+
+  return <DefaultInput formField={formField} disabled={disabled} {...props} />;
 };
 
 export default FormInput;

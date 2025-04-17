@@ -134,7 +134,7 @@ export const loanFormFields: FormField<Loan>[] = [
     name: "clientId",
     label: "Cliente",
     profileDataList: true,
-    profileRole: "client",
+    profileRole: "user",
     showOnEditFn: (loan: Loan) => getFirstAndLastName(loan.client) as ReactNode,
   },
   {

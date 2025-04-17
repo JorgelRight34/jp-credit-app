@@ -1,77 +1,62 @@
 import AsyncSelect from "react-select/async";
 import { Role } from "../../../models/role";
-import { useState } from "react";
-import api from "../../../api";
-import { User } from "../../../models/user";
-import { SingleValue } from "react-select";
+import useProfileDataList from "../hooks/useProfileDataList";
+import { useEffect } from "react";
+import SelectInput from "../../../common/EntityForm/SelectInput";
 
 interface ProfilesDataListProps {
   role: Role;
-  error?: string;
   isDisabled?: boolean;
-  data?: User[];
-}
-
-interface Option {
-  value: string | number;
-  label: string;
+  loanId?: string | number;
 }
 
 const ProfilesDataList = ({
-  role = "client",
-  error,
-  data,
+  role = "user",
   isDisabled = false,
+  loanId,
   ...props
 }: ProfilesDataListProps) => {
-  const [query, setQuery] = useState<Option | null>(null);
+  const { loadOptions, loadLoanProfiles, options, query, setQuery, error } =
+    useProfileDataList(role);
 
-  const loadOptions = async (inputValue: string): Promise<Option[]> => {
-    if (data)
-      // Return given data
-      return data.map((item) => ({
-        value: item.id,
-        label: `${item.firstName} | ${item.lastName} (${item.label})`,
-      }));
-
-    // Fetch data from the api
-    const response = await api.get(
-      `users/role/${role}/?firstname=${inputValue}&lastname=${inputValue}`
-    );
-
-    return response.data.map((item: User) => ({
-      value: item.id,
-      label: `${item.firstName} | ${item.lastName}`,
-    }));
-  };
+  useEffect(() => {
+    if (loanId) loadLoanProfiles(loanId);
+  }, [loanId]);
 
   return (
     <>
-      <AsyncSelect
-        key={data?.length} // Rerenders each time data (if data is given) changes
-        placeholder="---"
-        defaultOptions
-        onChange={(selectedOption: SingleValue<Option> | null) => {
-          setQuery(selectedOption);
-        }}
-        isDisabled={isDisabled}
-        loadOptions={loadOptions}
-        value={query}
-        {...props}
-        styles={{
-          control: (provided) => ({
-            ...provided,
-            width: "200px",
-          }),
-          menu: (provided) => ({
-            ...provided,
-            width: "300px",
-            zIndex: 10,
-          }),
-        }}
-        required
-      />
-      {error && <p className="text-danger">{error}</p>}
+      {loanId !== null && loanId !== undefined ? (
+        <SelectInput
+          options={options.map((option) => [option.value, option.label])}
+          {...props}
+        />
+      ) : (
+        <AsyncSelect
+          placeholder="---"
+          defaultOptions
+          onChange={(selectedOption) => {
+            setQuery(selectedOption);
+          }}
+          isDisabled={isDisabled}
+          loadOptions={loadOptions}
+          value={query}
+          {...props}
+          styles={{
+            control: (provided) => ({
+              ...provided,
+              width: "200px",
+            }),
+            menu: (provided) => ({
+              ...provided,
+              width: "300px",
+              zIndex: 10,
+            }),
+          }}
+        />
+      )}
+      <span className="text-danger">
+        {error ? "El préstamo no existe." : ""}
+      </span>
     </>
   );
 };

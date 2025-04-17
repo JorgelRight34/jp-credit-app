@@ -9,9 +9,9 @@ import useDeleteCollateral from "../hooks/useDeleteCollateral";
 import { useNavigate } from "react-router";
 import { Collateral } from "../../../models/collateral";
 import { useState } from "react";
-import useUploadFile from "../../../hooks/useUploadFile";
 import EntityForm from "../../../common/EntityForm/EntityForm";
 import { toast } from "react-toastify";
+import useUploadCollateralFiles from "../hooks/useUploadCollateralFiles";
 
 interface CollateralFormProps {
   edit?: Collateral;
@@ -31,39 +31,22 @@ const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
       : []
   );
   const navigate = useNavigate();
-  const { uploadFile, deleteFile } = useUploadFile();
+  const { uploadFiles, deletePhotos } = useUploadCollateralFiles();
 
   const handleOnSubmit = async (data: CollateralFormValues) => {
-    let response = await (edit ? onEdit(data, edit.id) : onSubmit(data));
+    const collateral = await (edit ? onEdit(data, edit.id) : onSubmit(data));
 
-    if (files.length > 0 && response) {
-      response = await uploadFile(
-        `collaterals/${response.id}/photo`,
-        files,
-        "files"
+    if (files.length > 0 && collateral) await uploadFiles(collateral, files);
+
+    const photos = edit?.photos;
+    if (photos && photos?.length > defaultFileSources.length && collateral) {
+      await deletePhotos(
+        collateral,
+        photos.filter((el) => !defaultFileSources.includes(el.url))
       );
     }
 
-    const photos = edit?.photos;
-    const responseId = response?.id;
-    if (
-      photos &&
-      photos.length > 0 &&
-      defaultFileSources.length < photos.length &&
-      response
-    ) {
-      photos
-        .filter((el) => !defaultFileSources.includes(el.url))
-        .forEach(async (p) => {
-          response = await deleteFile(
-            `collaterals/${responseId}/photo/${p.publicId}`
-          );
-        });
-    }
-
-    if (response) {
-      toast.success("La garantía ha sido guardada exitosamente.");
-    }
+    if (collateral) toast.success("La garantía ha sido guardada exitosamente.");
   };
 
   const handleOnDelete = async () => {
@@ -85,9 +68,8 @@ const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
       setFiles={setFiles}
       files={files}
       onSubmit={handleOnSubmit}
-      onDelete={handleOnDelete}
+      onDelete={edit ? handleOnDelete : undefined}
       filesMaxLength={10}
-      allowDelete={edit ? true : false}
       resetValues={edit ? false : true}
     />
   );

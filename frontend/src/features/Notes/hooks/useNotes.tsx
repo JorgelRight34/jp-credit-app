@@ -29,7 +29,7 @@ const useNotes = (query: string = "") => {
     fetchNotes();
   }, []);
 
-  return { notes: data, isError, isLoading, fetchPage };
+  return { notes: data || [], isError, isLoading, fetchPage };
 };
 
 export default useNotes;

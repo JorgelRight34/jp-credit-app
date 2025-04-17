@@ -9,7 +9,7 @@ interface EntityTabLayout {
 
 const EntityTab = ({ title, eventKey, children, ...rest }: EntityTabLayout) => {
   return (
-    <Tab.Pane {...rest} className="p-3" eventKey={eventKey} title={title}>
+    <Tab.Pane {...rest} className="p-5" eventKey={eventKey} title={title}>
       {children}
     </Tab.Pane>
   );

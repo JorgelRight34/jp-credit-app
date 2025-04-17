@@ -7,6 +7,7 @@ export interface FormField<TData> {
   type?: string;
   min?: string;
   required?: boolean;
+  fixedWatchedValue?: number | string;
   step?: number;
   rows?: number;
   options?: (string | number)[][];

@@ -4,7 +4,6 @@ import { FormEventHandler, MouseEventHandler, ReactNode } from "react";
 interface EntityFormLayoutProps {
   children: ReactNode;
   onSubmit: FormEventHandler | ((data: any) => Promise<void>);
-  allowDelete?: boolean;
   onDelete?: MouseEventHandler;
 }
 
@@ -23,7 +22,6 @@ const EntityFormLayout = ({
   children,
   onSubmit,
   onDelete,
-  allowDelete = false,
 }: EntityFormLayoutProps) => {
   return (
     <form
@@ -37,7 +35,7 @@ const EntityFormLayout = ({
         <AccentBtn type="submit" className="w-100">
           Ok
         </AccentBtn>
-        {allowDelete && (
+        {onDelete && (
           <AccentBtn type="button" className="w-100 ms-3" onClick={onDelete}>
             Eliminar
           </AccentBtn>

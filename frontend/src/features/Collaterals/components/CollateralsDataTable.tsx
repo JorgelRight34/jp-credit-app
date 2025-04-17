@@ -6,7 +6,9 @@ import { getFirstAndLastName, toCurrency } from "../../../utils/utils";
 
 interface CollateralsDataTableProps {
   collaterals: Collateral[];
-  navigateCallback?: (page: number) => void | Promise<void>;
+  navigateCallback?: (
+    page: number
+  ) => void | Promise<Collateral[]> | Promise<void>;
 }
 
 const columns: ColumnDef<Collateral>[] = [

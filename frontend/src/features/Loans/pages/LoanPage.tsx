@@ -82,7 +82,7 @@ const LoanPage = () => {
               navigateCallback={(page: number) => fetchNotes(page)}
             />
           </Tab>
-          <Tab className="p-3" eventKey="armotization" title="Armotizacion">
+          <Tab className="p-3" eventKey="armotization" title="Armotización">
             <ArmotizationDataTable armotization={armotization} />
           </Tab>
           <Tab

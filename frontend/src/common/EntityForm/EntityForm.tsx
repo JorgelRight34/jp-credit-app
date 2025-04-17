@@ -7,15 +7,12 @@ import FormFieldInput from "./FormFieldInput";
 import { MouseEventHandler, useMemo } from "react";
 
 interface EntityFormProps<TData, T> {
-  allowDelete?: boolean;
   onDelete?: () => void;
   edit?: TData;
   formFields: FormField<TData>[];
   filesMaxLength?: number;
   onSubmit: (data: T) => Promise<void>;
-  schema: ZodType<FieldValues, any, any>;
-  watchId?: string;
-  activateOnWatch?: string;
+  schema: ZodType<FieldValues>;
   defaultValues?: Record<string, string | number | undefined | null>;
   rows: number;
   columns: number;
@@ -29,7 +26,6 @@ interface EntityFormProps<TData, T> {
 }
 
 const EntityForm = <TData, T>({
-  allowDelete,
   columns,
   rows,
   schema,
@@ -102,9 +98,10 @@ const EntityForm = <TData, T>({
     [formFields]
   );
 
+  const clientId = watch("clientId");
+
   return (
     <EntityFormLayout
-      allowDelete={allowDelete}
       onDelete={onDelete as MouseEventHandler}
       onSubmit={handleSubmit(handleOnSubmit)}
     >
@@ -122,7 +119,8 @@ const EntityForm = <TData, T>({
           {renderFormFieldInput(formField)}
         </div>
       ))}
-      {console.log(errors)}
+      <button onClick={() => console.log(errors)}>Errors</button>
+      <button onClick={() => console.log(clientId)}>Data</button>
     </EntityFormLayout>
   );
 };

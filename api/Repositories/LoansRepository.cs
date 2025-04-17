@@ -2,6 +2,7 @@ using System;
 using api.Data;
 using api.DTOs.Loan;
 using api.DTOs.Transaction;
+using api.DTOs.User;
 using api.Extensions;
 using api.Interfaces;
 using api.Models;
@@ -92,6 +93,19 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
         if (loan == null) return null;
 
         return loan;
+    }
+
+    public async Task<LoanMembersDto> GetLoanMembers(int id)
+    {
+        var members = await context.Loans.Where(x => x.Id == id)
+        .Select(x => new LoanMembersDto
+        {
+            Client = mapper.Map<UserDto>(x.Client),
+            Guarantor = mapper.Map<UserDto>(x.Guarantor),
+            LoanOfficer = mapper.Map<UserDto>(x.LoanOfficer)
+        }).FirstOrDefaultAsync();
+
+        return members ?? throw new InvalidOperationException("Loan members not found.");
     }
 
     public async Task<Loan?> UpdateAsync(UpdateLoanDto updateLoanDto, int id)

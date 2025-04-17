@@ -9,6 +9,7 @@ public interface ILoansRepository
     Task<Loan> CreateAsync(CreateLoanDto createLoanDto);
     Task<Loan?> DeleteAsync(int id);
     Task<IEnumerable<Loan>> GetAllAsync(LoanQuery query);
+    Task<LoanMembersDto> GetLoanMembers(int id);
     Task<Loan?> GetByIdAsync(int id);
     Task<Loan?> UpdateAsync(UpdateLoanDto updateLoanDto, int id);
 }
