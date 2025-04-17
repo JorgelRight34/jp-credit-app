@@ -109,7 +109,8 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
     public async Task<IEnumerable<Transaction>> GetAllAsync(TransactionQuery query)
     {
         var transactions = context.Transactions
-        .AsQueryable();
+            .Include(x => x.Payer)
+            .AsQueryable();
 
         if (query.MinValue > 0)
         {
@@ -144,7 +145,11 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
 
     public async Task<Transaction?> GetByIdAsync(int id)
     {
-        var transaction = await context.Transactions.Include(x => x.Loan).Include(x => x.Payer).FirstOrDefaultAsync(x => x.Id == id);
+        var transaction = await context.Transactions
+            .Include(x => x.Loan)
+            .Include(x => x.Payer)
+            .ThenInclude(x => x!.Photo)
+            .FirstOrDefaultAsync(x => x.Id == id);
         return transaction;
     }
 

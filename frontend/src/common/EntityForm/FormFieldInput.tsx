@@ -62,7 +62,12 @@ const FormFieldInput = <TData,>({
         {formField.type === "select" && (
           <>
             <label className="form-label" htmlFor={formField.name}>
-              {formField.label}
+              {formField.label}{" "}
+              {formField.required !== false ? (
+                <span className="text-red-500"> *</span>
+              ) : (
+                ""
+              )}
             </label>
             <select
               className="form-select"

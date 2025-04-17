@@ -5,5 +5,5 @@ export interface CollateralFile {
   name: string;
   createdAt: string;
   lastModified: string;
-  type: string;
+  fileType: string;
 }

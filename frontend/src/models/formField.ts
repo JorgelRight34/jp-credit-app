@@ -18,5 +18,5 @@ export interface FormField<TData> {
   showOnEditFn?: (entity: TData) => ReactNode;
   disabledFn?: (data: any) => boolean;
   multiple?: boolean;
-  defaultValue?: string | number;
+  defaultValue?: string | number | null;
 }

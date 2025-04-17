@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { FormField } from "../../../models/formField";
 import { Collateral } from "../../../models/collateral";
-import { getFirstAndLastName } from "../../../utils/utils";
+import { getFirstAndLastName, toTitleCase } from "../../../utils/utils";
 import { ReactNode } from "react";
 import {
   collateralAgreementTypeSpanishTranslations,
@@ -20,7 +20,7 @@ export const schema = z.object({
   documentUrl: z.union([z.string(), z.null()]),
   agreementType: z.string(),
   location: z.string(),
-  expirationDate: z.string(),
+  expirationDate: z.string().nullable().default(null),
   clientId: z.union([
     z
       .object({
@@ -36,7 +36,7 @@ export const schema = z.object({
 export type CollateralFormValues = z.infer<typeof schema>;
 
 const generateOptions = (record: Record<any, any>) =>
-  Object.keys(record).map((key) => [key, record[key]]);
+  Object.keys(record).map((key) => [key, toTitleCase(record[key]) || ""]);
 
 export const collateralStatusOptions = generateOptions(
   collateralStatusSpanishTranslations
@@ -100,6 +100,8 @@ export const collateralsFormFields: FormField<Collateral>[] = [
     name: "expirationDate",
     label: "Expiración",
     type: "date",
+    required: false,
+    defaultValue: null,
   },
   {
     name: "clientId",

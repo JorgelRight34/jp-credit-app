@@ -102,13 +102,24 @@ namespace api.Controllers
             return Ok(collateralDto);
         }
 
-        [HttpDelete("{collateralId:int}/photo/{photoId}")]
-        public async Task<ActionResult> DeletePhoto([FromRoute] int collateralId, [FromRoute] string photoId)
+        [HttpDelete("{collateralId:int}/photo/{publicId}")]
+        public async Task<ActionResult> DeletePhoto([FromRoute] int collateralId, [FromRoute] string publicId)
         {
             var collateral = await context.Collaterals.FindAsync(collateralId);
-            if (collateral == null) return BadRequest("Colatteral doesn't exist");
+            if (collateral == null) return BadRequest("Collateral doesn't exist");
 
-            await collateralsRepository.DeleteCollateralPhotoAsync(photoId);
+            await collateralsRepository.DeleteCollateralPhotoAsync(publicId);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{collateralId:int}/files/{publicId}")]
+        public async Task<ActionResult> DeleteFile([FromRoute] int collateralId, [FromRoute] string publicId)
+        {
+            var collateral = await context.Collaterals.FindAsync(collateralId);
+            if (collateral == null) return BadRequest("Collateral doesn't exist");
+
+            await collateralsRepository.DeleteCollateralFileAsync(publicId);
 
             return NoContent();
         }

@@ -28,7 +28,7 @@ const CollateralCard = ({ collateral }: CollateralCardProps) => {
         ) : (
           <img
             className="rounded-lg shadow-sm w-full h-[300px] object-contain mb-3"
-            src={collateral.photos[0].url || "/default-profile-pic.webp"}
+            src={collateral.photos[0]?.url || "/product-placeholder.png"}
           />
         )}
       </div>

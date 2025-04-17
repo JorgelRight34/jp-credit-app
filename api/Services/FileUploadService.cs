@@ -14,7 +14,7 @@ public class FileUploadService : IFileUploadService
 {
     private readonly Cloudinary _cloudinary;
     private readonly ApplicationDbContext _context;
-    private string CloudFolderName { get; set; } = "jp-credit-app";
+    private string CloudFolderName { get; set; } = "jp-credit-app/";
     public FileUploadService(IOptions<CloudinarySettings> config, ApplicationDbContext context)
     {
         var account = new Account(
@@ -46,7 +46,11 @@ public class FileUploadService : IFileUploadService
             };
 
             uploadResult = await _cloudinary.UploadAsync(uploadParams);
+        } else {
+            throw new Exception("File is empty");
         }
+
+        uploadResult.PublicId = uploadResult.PublicId.Replace(CloudFolderName, "");
 
         return uploadResult;
     }
@@ -69,12 +73,14 @@ public class FileUploadService : IFileUploadService
             throw new Exception("File is empty");
         }
 
+        uploadResult.PublicId = uploadResult.PublicId.Replace(CloudFolderName, "");
+
         return uploadResult;
     }
 
     public async Task<DeletionResult> DeletePhotoAsync(string publicId)
     {
-        var deleteParams = new DeletionParams($"jp-credit-app/{publicId}");
+        var deleteParams = new DeletionParams($"{CloudFolderName}{publicId}");
         var result = await _cloudinary.DestroyAsync(deleteParams);
 
         // Delete photo from the database if result is successful
@@ -93,7 +99,11 @@ public class FileUploadService : IFileUploadService
 
     public async Task<DeletionResult> DeleteFileAsync(string publicId)
     {
-        var deleteParams = new DeletionParams($"jp-credit-app/{publicId}");
+        Console.WriteLine($"{CloudFolderName}/{publicId}");
+        var deleteParams = new DeletionParams($"{CloudFolderName}{publicId}")
+        {
+            ResourceType = ResourceType.Raw
+        };
         var result = await _cloudinary.DestroyAsync(deleteParams);
 
         // Delete photo from the database if result is successful

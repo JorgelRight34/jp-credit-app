@@ -24,15 +24,13 @@ type UseCollateralsReturn = [Collateral[], (page?: number) => Promise<void>];
 
 const useCollaterals = (query: string = "") => {
   const { collaterals } = useSelector((state: RootState) => state.collaterals);
-  const { isLoading, isError, error, refetch } = useQuery({
+  const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: ["collaterals", query],
     queryFn: () => fetchCollaterals(query),
   });
-  const dispatch = useDispatch();
 
   const fetchCollaterals = async (query?: string, page: number = 1) => {
     const response = await api.get(`collaterals?page=${page}&${query}`);
-    dispatch(setCollaterals(response.data));
     return response.data;
   };
 
@@ -41,11 +39,17 @@ const useCollaterals = (query: string = "") => {
       queryKey: ["collaterals", query, page],
       queryFn: () => fetchCollaterals(query, page),
     });
-    dispatch(setCollaterals(data));
     return data;
   };
 
-  return { collaterals, isLoading, isError, error, refetch, fetchPage };
+  return {
+    collaterals: data || [],
+    isLoading,
+    isError,
+    error,
+    refetch,
+    fetchPage,
+  };
 };
 
 export default useCollaterals;

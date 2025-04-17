@@ -129,15 +129,27 @@ public class CollateralsRepository(
 
     public async Task DeleteCollateralPhotoAsync(string publicId)
     {
+        var photo = await context.Photos.Where(x => x.PublicId == publicId).FirstOrDefaultAsync();
+        if (photo == null) throw new Exception("Photo not found");
+    
         var result = await fileUploadService.DeletePhotoAsync(publicId);
         if (result.Result != "ok") throw new Exception(result.Result);
+
+        context.Photos.Remove(photo);
+        await context.SaveChangesAsync();
     }
 
     public async Task DeleteCollateralFileAsync(string publicId)
     {
+        var file = await context.FileUploads.Where(x => x.PublicId == publicId).FirstOrDefaultAsync();
+        if (file == null) throw new Exception("File not found");
+
         var result = await fileUploadService.DeleteFileAsync(publicId);
         if (result.Result != "ok") throw new Exception(result.Result);
-    }
+
+        context.FileUploads.Remove(file);
+        await context.SaveChangesAsync();
+    }   
 
     public async Task<Collateral> AddCollateralFileAsync(IFormFile file, Collateral collateral)
     {
@@ -150,7 +162,7 @@ public class CollateralsRepository(
             Url = result.Url.ToString(),
             CollateralId = collateral.Id,
             Name = result.PublicId,
-            FileType = Path.GetExtension(result.PublicId)
+            FileType = Path.GetExtension(result.PublicId).Replace(".", "")
         };
 
         await context.FileUploads.AddAsync(fileUpload);

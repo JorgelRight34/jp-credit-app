@@ -16,7 +16,8 @@ const useUploadFile = () => {
     const data = new FormData();
     files.forEach((f) => data.append(key, f));
 
-    await api.post(url, data);
+    const response = await api.post(url, data);
+    return response.data;
   };
 
   const deleteFile = async (url: string) => {

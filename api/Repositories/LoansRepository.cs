@@ -83,6 +83,7 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
     {
         var loan = await context.Loans
             .Include(x => x.Client)
+            .ThenInclude(x => x.Photo)
             .Include(x => x.LoanOfficer)
             .Include(x => x.Guarantor)
             .Include(x => x.LastPayment)

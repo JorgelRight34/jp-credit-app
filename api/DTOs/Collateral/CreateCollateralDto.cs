@@ -24,5 +24,5 @@ public class CreateCollateralDto
     public string? Location { get; set; }
     [Required]
     public int LoanId { get; set; }
-    public DateOnly ExpirationDate { get; set; }
+    public DateOnly? ExpirationDate { get; set; }
 }

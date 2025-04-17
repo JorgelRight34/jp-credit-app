@@ -13,7 +13,7 @@ interface FormInputProps {
   value?: string;
   showOnEdit?: boolean;
   options?: (string | number)[][];
-  defaultValue?: string | number;
+  defaultValue?: string | number | null;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -52,7 +52,6 @@ const FormInput = ({
       <label className="form-label">
         {label}
         {required !== false ? <span className="text-red-500"> *</span> : ""}
-        {required}
       </label>
       <input
         {...props}

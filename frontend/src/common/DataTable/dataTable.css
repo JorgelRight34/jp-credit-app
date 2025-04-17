@@ -1,13 +1,32 @@
-.data-table {
+th,
+td {
+  padding: 1rem;
+  white-space: nowrap;
+}
+
+th {
+  white-space: nowrap;
+}
+
+table {
   border-collapse: collapse;
   overflow-x: auto;
 }
 
-.data-table :nth-child(even) {
+tr {
+  border-radius: 0.25rem;
+}
+
+tr:nth-child(even) {
   background-color: var(--background-color);
 }
 
-.data-table a {
+tr:hover {
+  background-color: rgb(208, 157, 12, 0.5);
+  color: #fff;
+}
+
+table a {
   color: var(--secondary-color);
 }
 

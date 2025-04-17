@@ -78,7 +78,7 @@ const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
 
   return (
     <EntityForm<Collateral, CollateralFormValues>
-      columns={3}
+      columns={4}
       rows={3}
       formFields={collateralsFormFields}
       schema={schema}
