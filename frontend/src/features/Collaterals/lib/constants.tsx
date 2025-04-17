@@ -1,10 +1,13 @@
 import { z } from "zod";
 import { FormField } from "../../../models/formField";
 import { Collateral } from "../../../models/collateral";
-import { getFirstAndLastName } from "../../../utils/utils";
+import { getFirstAndLastName, toTitleCase } from "../../../utils/utils";
 import { ReactNode } from "react";
-import { CollateralStatus } from "../../../models/collateralStatus";
-import { CollateralCondition } from "../../../models/collateralCondition";
+import {
+  collateralAgreementTypeSpanishTranslations,
+  collateralConditionSpanishTranslations,
+  collateralStatusSpanishTranslations,
+} from "../../../utils/constants";
 
 export const schema = z.object({
   title: z.string(),
@@ -15,6 +18,9 @@ export const schema = z.object({
   status: z.string(),
   // This union is for when editing, the collateral may initially have documentUrl as null
   documentUrl: z.union([z.string(), z.null()]),
+  agreementType: z.string(),
+  location: z.string(),
+  expirationDate: z.string().nullable().default(null),
   clientId: z.union([
     z
       .object({
@@ -29,20 +35,20 @@ export const schema = z.object({
 
 export type CollateralFormValues = z.infer<typeof schema>;
 
-export const collateralStatusOptions: [CollateralStatus, string][] = [
-  [CollateralStatus.PENDING, "Pendiente"],
-  [CollateralStatus.APPROVED, "Aprobado"],
-  [CollateralStatus.REJECTED, "Rechazado"],
-  [CollateralStatus.UNDER_REVIEW, "En revisión"],
-  [CollateralStatus.ACTIVE, "Activo"],
-  [CollateralStatus.INACTIVE, "Inactivo"],
-];
+const generateOptions = (record: Record<any, any>) =>
+  Object.keys(record).map((key) => [key, toTitleCase(record[key]) || ""]);
 
-export const collateralConditionsOptions: [CollateralCondition, string][] = [
-  [CollateralCondition.HIGH_QUALITY, "Alta calidad"],
-  [CollateralCondition.LOW_QUALITY, "Baja calidad"],
-  [CollateralCondition.STABLE, "Estable"],
-];
+export const collateralStatusOptions = generateOptions(
+  collateralStatusSpanishTranslations
+);
+
+export const collateralConditionsOptions = generateOptions(
+  collateralConditionSpanishTranslations
+);
+
+export const collateralAgreementTypeOptions = generateOptions(
+  collateralAgreementTypeSpanishTranslations
+);
 
 export const collateralsFormFields: FormField<Collateral>[] = [
   {
@@ -62,6 +68,7 @@ export const collateralsFormFields: FormField<Collateral>[] = [
   {
     name: "documentUrl",
     label: "Documento",
+    required: false,
   },
   {
     name: "status",
@@ -70,10 +77,31 @@ export const collateralsFormFields: FormField<Collateral>[] = [
     options: collateralStatusOptions,
   },
   {
+    name: "agreementType",
+    label: "Tipo de Acuerdo",
+    type: "select",
+    options: collateralAgreementTypeOptions,
+  },
+  {
     name: "condition",
     label: "Condición",
     type: "select",
-    options: collateralConditionsOptions,
+    options: collateralConditionsOptions.map((option) => [
+      option[0].toLowerCase(),
+      option[1],
+    ]),
+  },
+  {
+    name: "location",
+    label: "Locación",
+    required: false,
+  },
+  {
+    name: "expirationDate",
+    label: "Expiración",
+    type: "date",
+    required: false,
+    defaultValue: null,
   },
   {
     name: "clientId",

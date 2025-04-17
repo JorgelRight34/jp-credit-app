@@ -17,6 +17,7 @@ public class ApplicationDbContext : IdentityDbContext<AppUser>
     public DbSet<Transaction> Transactions { get; set; }
     public DbSet<AdjustmentNote> AdjustmentNotes { get; set; }
     public DbSet<Photo> Photos { get; set; }
+    public DbSet<FileUpload> FileUploads { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

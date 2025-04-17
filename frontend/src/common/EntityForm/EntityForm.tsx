@@ -18,8 +18,12 @@ interface EntityFormProps<TData, T> {
   rows: number;
   columns: number;
   resetValues?: boolean;
+  defaultFileSources?: string[];
   files?: File[];
   setFiles?: (files: File[] | ((prev: File[]) => File[])) => void;
+  setDefaultFileSources?: (
+    files: string[] | ((prev: string[]) => string[])
+  ) => void;
 }
 
 const EntityForm = <TData, T>({
@@ -33,6 +37,8 @@ const EntityForm = <TData, T>({
   resetValues = true,
   files,
   filesMaxLength = 1,
+  defaultFileSources,
+  setDefaultFileSources,
   setFiles,
   onDelete,
   onSubmit,
@@ -57,24 +63,28 @@ const EntityForm = <TData, T>({
       if (formField.showOnNewRow && direction === "col") return;
       if (!formField.showOnNewRow && direction === "row") return;
 
-      return (
-        <FormFieldInput
-          schema={schema}
-          key={formField.name}
-          className={"mb-3"}
-          formField={formField}
-          {...{ control }}
-          {...register(formField.name as keyof typeof register)}
-          files={files}
-          filesMaxLength={filesMaxLength}
-          setFiles={setFiles}
-          edit={edit}
-          error={
-            errors[formField.name as keyof typeof errors]?.message as string
-          }
-        />
-      );
+      return renderFormFieldInput(formField);
     });
+  };
+
+  const renderFormFieldInput = (formField: FormField<TData>) => {
+    return (
+      <FormFieldInput<TData>
+        schema={schema}
+        key={formField.name}
+        className={"mb-3"}
+        formField={formField}
+        defaultFileSources={defaultFileSources}
+        setDefaultFileSources={setDefaultFileSources}
+        {...{ control }}
+        {...register(formField.name as keyof typeof register)}
+        files={files}
+        filesMaxLength={filesMaxLength}
+        setFiles={setFiles}
+        edit={edit}
+        error={errors[formField.name as keyof typeof errors]?.message as string}
+      />
+    );
   };
 
   const handleOnSubmit = async (data: FieldValues) => {
@@ -104,20 +114,7 @@ const EntityForm = <TData, T>({
       </div>
       {rowFormFields.map((formField, index) => (
         <div className="row mx-0" key={index}>
-          <FormFieldInput
-            schema={schema}
-            className={"mb-3"}
-            formField={formField}
-            {...{ control }}
-            {...register(formField.name as keyof typeof register)}
-            files={files}
-            filesMaxLength={filesMaxLength}
-            setFiles={setFiles}
-            edit={edit}
-            error={
-              errors[formField.name as keyof typeof errors]?.message as string
-            }
-          />
+          {renderFormFieldInput(formField)}
         </div>
       ))}
     </EntityFormLayout>

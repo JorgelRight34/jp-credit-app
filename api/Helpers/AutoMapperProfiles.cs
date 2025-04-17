@@ -2,6 +2,7 @@ using System;
 using api.DTOs;
 using api.DTOs.AdjustmentNote;
 using api.DTOs.Collateral;
+using api.DTOs.FileUpload;
 using api.DTOs.Loan;
 using api.DTOs.Transaction;
 using api.DTOs.User;
@@ -29,6 +30,9 @@ public class AutoMapperProfiles : Profile
         .ForMember(d => d.ClientId, o => o.MapFrom(s => s.AppUserId))
         .ForMember(d => d.Client, o => o.MapFrom(s => s.AppUser));
         CreateMap<UpdateCollateralDto, Collateral>();
+
+        // File uploads
+        CreateMap<FileUpload, FileUploadDto>();
 
         // Transactions
         CreateMap<CreateTransactionDto, Transaction>();

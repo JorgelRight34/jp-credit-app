@@ -13,7 +13,7 @@ public class Collateral
     public string? Title { get; set; }
     public string? Description { get; set; }
     [Required]
-    public string? AgreementType { get; set; }
+    public CollateralAgreementType AgreementType { get; set; }
     public decimal Value { get; set; }
     [Required]
     public CollateralCondition Condition { get; set; } = CollateralCondition.Stable;
@@ -25,6 +25,8 @@ public class Collateral
     [Required]
     public int LoanId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public DateOnly? ExpirationDate { get; set; }
+    public string? Location { get; set; }
 
     // Navigation Properties
     [ForeignKey("AppUserId")]
@@ -32,4 +34,5 @@ public class Collateral
     [ForeignKey("LoanId")]
     public Loan? Loan { get; set; }
     public List<Photo> Photos { get; set; } = [];
+    public List<FileUpload> Files { get; set; } = [];
 }

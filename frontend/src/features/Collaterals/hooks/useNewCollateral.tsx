@@ -3,6 +3,7 @@ import api from "../../../api";
 import { addCollateral } from "../collateralsSlice";
 import { CollateralFormValues } from "../lib/constants";
 import { Collateral } from "../../../models/collateral";
+import { useQueryClient } from "@tanstack/react-query";
 
 type UseNewCollateralReturn = [
   (data: CollateralFormValues) => Promise<Collateral>
@@ -24,14 +25,17 @@ type UseNewCollateralReturn = [
  *   .catch(error => console.error('Creation failed', error));
  */
 const useNewCollateral = (): UseNewCollateralReturn => {
-  const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
   const addNewCollateral = async (data: CollateralFormValues) => {
     const response = await api.post("collaterals", {
       ...data,
-      agreementType: "car",
+      expirationDate: data.expirationDate || null,
     });
-    dispatch(addCollateral(response.data));
+    queryClient.setQueryData<Collateral[]>(["collaterals", ""], (prev) => [
+      ...(prev || []),
+      response.data,
+    ]);
     return response.data;
   };
 

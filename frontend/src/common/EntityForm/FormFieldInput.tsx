@@ -11,7 +11,11 @@ interface FormFieldInputProps<TData> {
   formField: FormField<TData>;
   files?: File[];
   filesMaxLength?: number;
+  defaultFileSources?: string[];
   setFiles?: (files: File[] | ((prev: File[]) => File[])) => void;
+  setDefaultFileSources?: (
+    files: string[] | ((prev: string[]) => string[])
+  ) => void;
   className?: string;
   error?: string;
   edit?: TData;
@@ -21,6 +25,8 @@ const FormFieldInput = <TData,>({
   formField,
   files,
   edit,
+  defaultFileSources,
+  setDefaultFileSources,
   filesMaxLength = 10,
   setFiles,
   className = "",
@@ -32,11 +38,16 @@ const FormFieldInput = <TData,>({
   if (formField.type === "file" && setFiles && files) {
     return (
       <div className={className}>
-        <label className="form-label">Archivos ({files.length})</label>
+        <label className="form-label">
+          Archivos ({files.length + (defaultFileSources?.length || 0)})
+        </label>
         <div>
           <MultipleFilesInput
+            className="w-full"
             files={files}
             setFiles={setFiles}
+            setDefaultFileSources={setDefaultFileSources}
+            defaultFileSources={defaultFileSources}
             {...{ disabled: formField.disabledFn?.(schema) }}
             maxLength={filesMaxLength}
           />
@@ -51,7 +62,12 @@ const FormFieldInput = <TData,>({
         {formField.type === "select" && (
           <>
             <label className="form-label" htmlFor={formField.name}>
-              {formField.label}
+              {formField.label}{" "}
+              {formField.required !== false ? (
+                <span className="text-red-500"> *</span>
+              ) : (
+                ""
+              )}
             </label>
             <select
               className="form-select"
@@ -115,6 +131,8 @@ const FormFieldInput = <TData,>({
   return (
     <div className={className}>
       <FormInput
+        options={formField.options}
+        defaultValue={formField.defaultValue}
         disabled={formField.disabledFn?.(schema)}
         defaultToToday={formField.defaultToToday}
         {...formFieldProps}

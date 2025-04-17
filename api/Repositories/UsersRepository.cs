@@ -19,7 +19,7 @@ public class UsersRepository(
     UserManager<AppUser> userManager,
     RoleManager<IdentityRole> roleManager,
     IMapper mapper,
-    IPhotoService photoService
+    IFileUploadService fileUploadService
 ) : IUsersRepository
 {
     public async Task<AppUser?> CreateAsync(RegisterDto registerDto)
@@ -125,7 +125,7 @@ public class UsersRepository(
 
     public async Task<AppUser> AddUserPhotoAsync(IFormFile file, AppUser user)
     {
-        var result = await photoService.AddPhotoAsync(file);
+        var result = await fileUploadService.AddPhotoAsync(file);
 
         var photo = new Photo
         {
@@ -134,7 +134,7 @@ public class UsersRepository(
         };
 
         // Delete previous user photo
-        if (user.Photo != null) await photoService.DeletePhotoAsync(user.Photo.PublicId!);
+        if (user.Photo != null) await fileUploadService.DeletePhotoAsync(user.Photo.PublicId!);
 
         user.Photo = photo;
 
@@ -146,7 +146,7 @@ public class UsersRepository(
 
     public async Task DeleteUserPhotoAsync(string publicId)
     {
-        var result = await photoService.DeletePhotoAsync($"jp-credit-app/{publicId}");
+        var result = await fileUploadService.DeletePhotoAsync(publicId);
         if (result.Result != "ok") throw new Exception(result.Result);
     }
 
@@ -221,10 +221,16 @@ public class UsersRepository(
             })
             .FirstOrDefaultAsync();
 
+        
+        var loansCount = await context.Loans.Where(x => x.ClientId == user.Id).CountAsync();
+        var collateralsCount = await context.Collaterals.Where(x => x.AppUserId == user.Id).CountAsync();
+
         var stats = new UserStatsDto
         {
             LastLoan = mapper.Map<LoanDto>(loan),
-            LastTransaction = mapper.Map<TransactionDto>(transaction)
+            LastTransaction = mapper.Map<TransactionDto>(transaction),
+            LoanCount = loansCount,
+            CollateralCount = collateralsCount
         };
 
         return stats;

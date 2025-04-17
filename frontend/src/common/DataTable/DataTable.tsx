@@ -1,4 +1,4 @@
-import { ReactEventHandler, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import "./dataTable.css";
 import DataTableNavigation from "./DataTableNavigation";
 import {
@@ -16,6 +16,7 @@ import { faSort } from "@fortawesome/free-solid-svg-icons";
 interface DataTableProps<TData> {
   data: TData[];
   columns: ColumnDef<TData>[];
+  className?: string;
   onRowClick?: (row: TData) => void;
   navigateCallback?: (page: number) => void;
 }
@@ -30,6 +31,7 @@ interface DataTableProps<TData> {
 const DataTable = <TData,>({
   data,
   columns,
+  className = "data-table",
   onRowClick,
   navigateCallback,
 }: DataTableProps<TData>) => {
@@ -61,12 +63,12 @@ const DataTable = <TData,>({
   return (
     <div className="border rounded-3 shadow-sm">
       <div className="table-wrapper">
-        <table className="w-100">
+        <table className={`${className} w-100`}>
           {/* Header */}
           <thead className="rounded-3">
             {/* Get all header groups from table */}
             {table.getHeaderGroups().map((headerGroup) => (
-              <tr key={headerGroup.id}>
+              <tr key={headerGroup.id} className="cursor-pointer">
                 {headerGroup.headers.map((header) => (
                   <th key={header.id}>
                     <div
@@ -98,7 +100,6 @@ const DataTable = <TData,>({
                 onClick={
                   onRowClick
                     ? (event: React.MouseEvent) => {
-                        console.log("hey");
                         event.stopPropagation();
                         onRowClick(row.original);
                       }

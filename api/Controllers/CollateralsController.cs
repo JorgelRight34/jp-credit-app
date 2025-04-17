@@ -1,3 +1,4 @@
+using System.Text.Json;
 using api.Data;
 using api.DTOs.Collateral;
 using api.Interfaces;
@@ -70,24 +71,55 @@ namespace api.Controllers
         public async Task<ActionResult<CollateralDto>> CreatePhoto([FromForm] List<IFormFile> files, [FromRoute] int id)
         {
             var collateral = await context.Collaterals.FindAsync(id);
-            if (collateral == null) return BadRequest("Collateral doesn't exist");
+            if (collateral == null) return BadRequest("Collateral doesn't exist.");
+
+            if (files.Count == 0) return BadRequest("Files are empty.");
 
             foreach (var file in files)
             {
-                var collateralWithPhoto = await collateralsRepository.AddCollateralPhotoAsync(file, collateral);
+                collateral = await collateralsRepository.AddCollateralPhotoAsync(file, collateral);
             }
             var collateralDto = mapper.Map<CollateralDto>(collateral);
 
-            return CreatedAtAction(nameof(GetById), new { id = collateralDto.Id }, collateralDto);
+            return Ok(collateralDto);
         }
 
-        [HttpDelete("{collateralId:int}/photo/{photoId}")]
-        public async Task<ActionResult> DeletePhoto([FromRoute] int collateralId, [FromRoute] string photoId)
+        [HttpPost("{id:int}/files")]
+        public async Task<ActionResult<CollateralDto>> CreateFile([FromForm] List<IFormFile> files, [FromRoute] int id)
+        {
+            var collateral = await collateralsRepository.GetByIdAsync(id);
+            if (collateral == null) return BadRequest("Collateral doesn't exist.");
+
+            if (files.Count == 0) return BadRequest("Files are empty.");
+
+            foreach (var file in files)
+            {
+                collateral = await collateralsRepository.AddCollateralFileAsync(file, collateral);
+                
+            }
+            var collateralDto = mapper.Map<CollateralDto>(collateral);
+
+            return Ok(collateralDto);
+        }
+
+        [HttpDelete("{collateralId:int}/photo/{publicId}")]
+        public async Task<ActionResult> DeletePhoto([FromRoute] int collateralId, [FromRoute] string publicId)
         {
             var collateral = await context.Collaterals.FindAsync(collateralId);
-            if (collateral == null) return BadRequest("Colatteral doesn't exist");
+            if (collateral == null) return BadRequest("Collateral doesn't exist");
 
-            await collateralsRepository.DeleteCollateralPhotoAsync(photoId);
+            await collateralsRepository.DeleteCollateralPhotoAsync(publicId);
+
+            return NoContent();
+        }
+
+        [HttpDelete("{collateralId:int}/files/{publicId}")]
+        public async Task<ActionResult> DeleteFile([FromRoute] int collateralId, [FromRoute] string publicId)
+        {
+            var collateral = await context.Collaterals.FindAsync(collateralId);
+            if (collateral == null) return BadRequest("Collateral doesn't exist");
+
+            await collateralsRepository.DeleteCollateralFileAsync(publicId);
 
             return NoContent();
         }

@@ -9,18 +9,22 @@ const useUploadFile = () => {
     if (uploadedFile) setFile(uploadedFile);
   };
 
-  const uploadFile = async (url: string, files: File[] = []) => {
-    console.log(files);
+  const uploadFile = async (url: string, files: File[] = [], key = "file") => {
     if (files.length === 0) return;
     if (file) files.push(file);
 
     const data = new FormData();
-    files.forEach((fil) => data.append("file", fil));
+    files.forEach((f) => data.append(key, f));
 
-    await api.post(url, data);
+    const response = await api.post(url, data);
+    return response.data;
   };
 
-  return { handleOnFileChange, uploadFile };
+  const deleteFile = async (url: string) => {
+    await api.delete(url);
+  };
+
+  return { handleOnFileChange, uploadFile, deleteFile };
 };
 
 export default useUploadFile;

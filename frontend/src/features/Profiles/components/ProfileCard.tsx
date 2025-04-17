@@ -2,6 +2,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { User } from "../../../models/user";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
+import { getFirstAndLastName, toTitleCase } from "../../../utils/utils";
+import { roleSpanishTranslations } from "../../../utils/constants";
+import { Role } from "../../../models/role";
 
 interface ProfileCardProps {
   profile: User;
@@ -9,20 +12,22 @@ interface ProfileCardProps {
 
 const ProfileCard = ({ profile }: ProfileCardProps) => {
   return (
-    <div>
+    <div className="border-accent-secondary rounded p-3 shadow-sm">
+      <h3 className="text-center mb-3">{getFirstAndLastName(profile)}</h3>
       <img
-        className="img-fluid border rounded-lg shadow-sm w-full h-full object-cover mb-3"
+        className="rounded-lg shadow-sm w-full h-[300px] object-cover mb-3"
         src={profile.photo?.url || "/default-profile-pic.webp"}
+        alt={`Foto de ${profile.username}`}
       />
-      <div className="mx-auto">
-        <div className="d-flex align-items-center mb-3">
+      <div className="d-flex flex-column">
+        <span className="mb-3 mx-auto">
           <FontAwesomeIcon className="me-2" icon={faEnvelope} />
-          <h6 className="mb-0">{profile.email}</h6>
-        </div>
-        <div className="d-flex align-items-center">
+          <span className="mb-0">{profile.email}</span>
+        </span>
+        <span className=" mx-auto">
           <FontAwesomeIcon className="me-2" icon={faLocationDot} />
-          <h6 className="mb-0">{profile.address}</h6>
-        </div>
+          <span className="mb-0">{profile.address}</span>
+        </span>
       </div>
     </div>
   );

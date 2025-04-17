@@ -3,6 +3,7 @@ import EntityFormLayout from "../../../common/EntityForm/EntityFormLayout";
 import {
   schema,
   transactionFormFields,
+  TransactionFormValues,
   transactionTypesOptions,
 } from "../lib/utils";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -14,6 +15,7 @@ import { useEffect, useMemo } from "react";
 import TransactionFormDetails from "./TransactionFormDetails";
 import useFetchLoan from "../../Loans/hooks/useFetchLoan";
 import { Loan } from "../../../models/loan";
+import { toast } from "react-toastify";
 
 interface TransactionFormProps {
   fixedLoan?: Loan;
@@ -51,13 +53,18 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
       : [];
   }, [loan]);
 
+  const handleOnSubmit = async (data: TransactionFormValues) => {
+    await onSubmit(data);
+    toast.success("¡La transacción se ha creado exitosamente!");
+  };
+
   useEffect(() => {
     if (loanId && loanId !== 0) fetchLoan(loanId);
   }, [loanId]);
 
   return (
     <>
-      <EntityFormLayout onSubmit={handleSubmit(onSubmit)}>
+      <EntityFormLayout onSubmit={handleSubmit(handleOnSubmit)}>
         <div className="row p-3 mx-0">
           {/* First column */}
           <div className="col-lg-4">

@@ -26,11 +26,13 @@ const useEditCollateral = (): UseEditCollateralReturn => {
   const dispatch = useDispatch();
 
   const editCollateral = async (data: CollateralFormValues, id?: number) => {
+    console.log(data);
     const response = await api.put(`collaterals/${id}`, {
       ...data,
       agreementType: "car",
     });
     dispatch(updateCollateral(response.data));
+    return response.data;
   };
 
   return [editCollateral];

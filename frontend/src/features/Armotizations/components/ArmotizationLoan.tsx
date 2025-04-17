@@ -1,3 +1,4 @@
+import { useState } from "react";
 import useLoanArmotization from "../hooks/useLoanArmotization";
 import ArmotizationDataTable from "./ArmotizationDataTable";
 
@@ -24,12 +25,16 @@ interface ArmotizationLoanProps {
  * <ArmotizationLoan setLoanId={(id) => setSelectedLoanId(id)} />
  */
 const ArmotizationLoan = ({ setLoanId }: ArmotizationLoanProps) => {
-  const { armotization, fetchArmotization, handleOnChange } =
-    useLoanArmotization();
+  const [armotizationId, setArmotizationId] = useState<number | undefined>();
+  const { armotization, fetchArmotization } = useLoanArmotization();
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setLoanId(Number(event.target.value));
-    handleOnChange(event);
+
+    const value = Number(event.target.value);
+    if (isNaN(value)) return;
+
+    setArmotizationId(value);
   };
 
   return (
@@ -46,7 +51,7 @@ const ArmotizationLoan = ({ setLoanId }: ArmotizationLoanProps) => {
         <div className="col-lg-2">
           <button
             className="btn btn-accent w-100 ms-3"
-            onClick={fetchArmotization}
+            onClick={() => armotizationId && fetchArmotization(armotizationId)}
           >
             Ok
           </button>

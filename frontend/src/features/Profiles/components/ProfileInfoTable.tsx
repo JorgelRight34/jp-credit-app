@@ -26,8 +26,10 @@ const ProfileInfoTable = ({ profile, stats }: ProfileInfoTableProps) => {
           "Teléfono",
           <PhoneLink phoneNumber={profile.officePhone} />,
         ],
-        ["Nombres", profile.firstName, "", ""],
-        ["Apellidos", profile.lastName, "", ""],
+        ["Nombres", profile.firstName, "Apellidos", profile.lastName],
+        ["Profesión", "ING", "", ""],
+        ["Edad", profile.age, "", ""],
+        ["Nacionalidad", profile.lastName, "", ""],
         [
           "Nacimiento",
           toFormattedDate(new Date(profile.dateOfBirth)),
@@ -54,21 +56,7 @@ const ProfileInfoTable = ({ profile, stats }: ProfileInfoTableProps) => {
           "Último Pago",
           stats?.lastTransaction?.id?.toString() || "---",
         ],
-        [
-          "Roles",
-          <span className="text-wrap">
-            {toTitleCase(
-              profile.roles
-                ?.map(
-                  (role) => roleSpanishTranslations[role.toLowerCase() as Role]
-                )
-                .join(", ") || "---"
-            )}
-          </span>,
-          "",
-          "",
-        ],
-        ["Préstamos", 0, "Garantías", 0],
+        ["Préstamos", stats.loanCount, "Garantías", stats.collateralCount],
       ]}
     />
   );

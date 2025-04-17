@@ -11,6 +11,8 @@ import { Collateral } from "../../../models/collateral";
 import { useState } from "react";
 import useUploadFile from "../../../hooks/useUploadFile";
 import EntityForm from "../../../common/EntityForm/EntityForm";
+import { useQueryClient } from "@tanstack/react-query";
+import { toast } from "react-toastify";
 
 interface CollateralFormProps {
   edit?: Collateral;
@@ -22,20 +24,49 @@ const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
   const [onEdit] = useEditCollateral();
   const [onDelete] = useDeleteCollateral();
   const [files, setFiles] = useState<File[]>([]);
+  const [defaultFileSources, setDefaultFileSources] = useState(
+    edit
+      ? edit.photos.length > 0
+        ? edit.photos.map((photo) => photo.url)
+        : []
+      : []
+  );
   const navigate = useNavigate();
-  const { uploadFile } = useUploadFile();
+  const { uploadFile, deleteFile } = useUploadFile();
+
+  const queryClient = useQueryClient();
 
   const handleOnSubmit = async (data: CollateralFormValues) => {
-    let response;
-    if (edit) {
-      response = await onEdit(data, edit.id);
-      navigate(0);
-    } else {
-      response = await onSubmit(data);
+    let response = await (edit ? onEdit(data, edit.id) : onSubmit(data));
+
+    if (files.length > 0 && response) {
+      response = await uploadFile(
+        `collaterals/${response.id}/photo`,
+        files,
+        "files"
+      );
     }
 
-    if (files.length > 0 && response?.id) {
-      await uploadFile(`collaterals/${response.id}/photo`, files);
+    const photos = edit?.photos;
+    const responseId = response?.id;
+    if (
+      photos &&
+      photos.length > 0 &&
+      defaultFileSources.length < photos.length &&
+      response
+    ) {
+      photos
+        .filter((el) => !defaultFileSources.includes(el.url))
+        .forEach(async (p) => {
+          response = await deleteFile(
+            `collaterals/${responseId}/photo/${p.publicId}`
+          );
+        });
+    }
+
+    if (response) {
+      queryClient.setQueryData(["collateral", String(response.id)], response);
+      toast.success("La garantía ha sido guardada exitosamente.");
     }
   };
 
@@ -47,19 +78,21 @@ const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
 
   return (
     <EntityForm<Collateral, CollateralFormValues>
-      columns={3}
+      columns={4}
       rows={3}
       formFields={collateralsFormFields}
       schema={schema}
       edit={edit}
       defaultValues={defaultValues}
+      defaultFileSources={defaultFileSources}
+      setDefaultFileSources={setDefaultFileSources}
       setFiles={setFiles}
       files={files}
       onSubmit={handleOnSubmit}
       onDelete={handleOnDelete}
       filesMaxLength={10}
       allowDelete={edit ? true : false}
-      resetValues={edit ? true : false}
+      resetValues={edit ? false : true}
     />
   );
 };

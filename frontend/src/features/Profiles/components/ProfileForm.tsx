@@ -1,9 +1,4 @@
-import {
-  ProfileFormValues,
-  profileFormFields,
-  schema,
-  profileFormDefaultValues,
-} from "../lib/constants";
+import { ProfileFormValues, profileFormFields, schema } from "../lib/constants";
 import useNewProfile from "../hooks/useNewProfile";
 import useEditProfile from "../hooks/useEditProfile";
 import useDeleteProfile from "../hooks/useDeleteProfile";
@@ -13,6 +8,7 @@ import { useState } from "react";
 import useUploadFile from "../../../hooks/useUploadFile";
 import EntityForm from "../../../common/EntityForm/EntityForm";
 import { useNavigate } from "react-router";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface ProfileFormProps {
   role: Role;
@@ -20,31 +16,43 @@ interface ProfileFormProps {
   defaultValues?: ProfileFormValues;
 }
 
-const ProfileForm = ({
-  role,
-  defaultValues = profileFormDefaultValues,
-  edit,
-}: ProfileFormProps) => {
+const ProfileForm = ({ role, defaultValues, edit }: ProfileFormProps) => {
   const [onSubmit] = useNewProfile(role);
   const [onEdit] = useEditProfile(role);
   const [deleteProfile] = useDeleteProfile(role);
   const [files, setFiles] = useState<File[]>([]);
-  const { uploadFile } = useUploadFile();
+  const [defaultFileSources, setDefaultFileSources] = useState(
+    edit ? (edit.photo?.url ? [edit.photo.url] : []) : []
+  );
+  const { uploadFile, deleteFile } = useUploadFile();
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
 
   const handleOnSubmit = async (data: ProfileFormValues) => {
-    let response;
-    if (edit) {
-      response = await onEdit(data, edit.username);
-      navigate(0);
-    } else {
-      response = await onSubmit(data);
+    let response = edit
+      ? await onEdit(data, edit.username)
+      : await onSubmit(data);
+
+    if (files.length) {
+      response = await uploadFile(`users/${response.username}/photo`, files);
+      if (!edit) setFiles([]);
     }
 
-    if (files.length > 0) {
-      alert("uploading file");
-      await uploadFile(`users/${response.username}/photo`, files);
-      setFiles([]);
+    if (edit?.photo?.url && defaultFileSources.length === 0) {
+      response = await deleteFile(
+        `users/${response.username}/photo/${edit.photo.publicId}`
+      );
+    }
+
+    if (response) {
+      queryClient.setQueryData(["profile", response.id], response);
+    }
+  };
+
+  const handleOnDelete = async () => {
+    if (edit) {
+      await deleteProfile(edit.username);
+      navigate(`/profiles/${edit.roles?.[0] || ""}`);
     }
   };
 
@@ -54,11 +62,13 @@ const ProfileForm = ({
       filesMaxLength={1}
       files={files}
       setFiles={setFiles}
-      columns={3}
+      columns={4}
       rows={4}
       allowDelete={edit ? true : false}
-      onDelete={edit ? () => deleteProfile(edit.username) : () => {}}
+      onDelete={handleOnDelete}
       defaultValues={defaultValues}
+      defaultFileSources={defaultFileSources}
+      setDefaultFileSources={setDefaultFileSources}
       formFields={
         role === "admin"
           ? [

@@ -1,4 +1,5 @@
 using System;
+using System.Text.Json;
 using api.Data;
 using api.DTOs.Collateral;
 using api.Extensions;
@@ -13,7 +14,7 @@ namespace api.Repositories;
 public class CollateralsRepository(
     ApplicationDbContext context,
     IMapper mapper,
-    IPhotoService photoService
+    IFileUploadService fileUploadService
 ) : ICollateralsRepository
 {
     public async Task<Collateral> CreateAsync(CreateCollateralDto createCollateralDto)
@@ -88,7 +89,10 @@ public class CollateralsRepository(
     {
         var collateral = await context.Collaterals
         .Include(x => x.AppUser)
+        .ThenInclude(x => x!.Photo)
         .Include(x => x.Loan)
+        .Include(x => x.Photos)
+        .Include(x => x.Files)
         .FirstOrDefaultAsync(x => x.Id == id);
         if (collateral == null) return null;
 
@@ -97,23 +101,23 @@ public class CollateralsRepository(
 
     public async Task<Collateral?> UpdateAsync(UpdateCollateralDto updateCollateralDto, int id)
     {
-        var collateral = await context.Collaterals.FindAsync(id);
+        var collateral = await GetByIdAsync(id);
         if (collateral == null) return null;
 
         mapper.Map(updateCollateralDto, collateral);
 
         await context.SaveChangesAsync();
-
         return collateral;
     }
 
     public async Task<Collateral> AddCollateralPhotoAsync(IFormFile file, Collateral collateral)
     {
-        var result = await photoService.AddPhotoAsync(file);
+        var result = await fileUploadService.AddPhotoAsync(file);
 
         var photo = new Photo
         {
             Url = result.SecureUrl.AbsoluteUri,
+            CollateralId = collateral.Id,
             PublicId = result.PublicId
         };
 
@@ -125,7 +129,45 @@ public class CollateralsRepository(
 
     public async Task DeleteCollateralPhotoAsync(string publicId)
     {
-        var result = await photoService.DeletePhotoAsync(publicId);
+        var photo = await context.Photos.Where(x => x.PublicId == publicId).FirstOrDefaultAsync();
+        if (photo == null) throw new Exception("Photo not found");
+    
+        var result = await fileUploadService.DeletePhotoAsync(publicId);
         if (result.Result != "ok") throw new Exception(result.Result);
+
+        context.Photos.Remove(photo);
+        await context.SaveChangesAsync();
+    }
+
+    public async Task DeleteCollateralFileAsync(string publicId)
+    {
+        var file = await context.FileUploads.Where(x => x.PublicId == publicId).FirstOrDefaultAsync();
+        if (file == null) throw new Exception("File not found");
+
+        var result = await fileUploadService.DeleteFileAsync(publicId);
+        if (result.Result != "ok") throw new Exception(result.Result);
+
+        context.FileUploads.Remove(file);
+        await context.SaveChangesAsync();
+    }   
+
+    public async Task<Collateral> AddCollateralFileAsync(IFormFile file, Collateral collateral)
+    {
+        var result = await fileUploadService.AddFileAsync(file);
+        if (result.Error != null) throw new Exception(result.Error.Message);
+
+        var fileUpload = new FileUpload
+        {
+            PublicId = result.PublicId,
+            Url = result.Url.ToString(),
+            CollateralId = collateral.Id,
+            Name = result.PublicId,
+            FileType = Path.GetExtension(result.PublicId).Replace(".", "")
+        };
+
+        await context.FileUploads.AddAsync(fileUpload);
+        await context.SaveChangesAsync();
+
+        return collateral;
     }
 }

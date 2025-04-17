@@ -28,6 +28,7 @@ const useLoans = (query: string = "", page: number = 1) => {
       queryFn: () => fetchLoans(page),
     });
     dispatch(setLoans(data));
+    return data;
   };
 
   return { loans, isError, isLoading, fetchPage };

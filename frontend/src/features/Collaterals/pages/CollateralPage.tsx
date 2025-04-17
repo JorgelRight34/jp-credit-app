@@ -9,6 +9,9 @@ import NotFound from "../../../pages/NotFound";
 import LoanInfo from "../../Loans/components/LoanInfo";
 import ProfileInfo from "../../Profiles/components/ProfileInfo";
 import CollateralInfo from "../components/CollateralInfo";
+import EntityTabs from "../../../common/ui/EntityTabs";
+import CollateralFilesExplorer from "../components/CollateralFilesExplorer";
+import TabTitle from "../../../common/TabTitle";
 
 const CollateralPage = () => {
   const { id } = useParams();
@@ -22,17 +25,38 @@ const CollateralPage = () => {
   return (
     <>
       <EntityLayout title={`Garantía`} onEdit={() => setShowModal(true)}>
-        <Tabs>
-          <Tab eventKey="collateral" title="Garantía" className="p-3">
+        <EntityTabs defaultActiveKey="info">
+          <Tab eventKey="info" title="Garantía" className="p-3">
             <CollateralInfo collateral={collateral} />
           </Tab>
-          <Tab eventKey={"loan"} title="Préstamo" className="p-3">
+          <Tab
+            eventKey={"loan"}
+            title={
+              <TabTitle
+                title="Préstamo"
+                path={`/loans/${collateral.loan.id}`}
+              />
+            }
+            className="p-3"
+          >
             <LoanInfo loan={collateral.loan} />
           </Tab>
-          <Tab eventKey="client" title="Cliente" className="p-3">
+          <Tab
+            eventKey="client"
+            title={
+              <TabTitle
+                title="Cliente"
+                path={`/profiles/${collateral.client.username}`}
+              />
+            }
+            className="p-3"
+          >
             <ProfileInfo profile={collateral.client} />
           </Tab>
-        </Tabs>
+          <Tab eventKey={"files"} title="Archivos" className="p-3">
+            <CollateralFilesExplorer collateral={collateral} />
+          </Tab>
+        </EntityTabs>
       </EntityLayout>
       <Modal
         title="Editar Garantía"

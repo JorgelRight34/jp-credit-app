@@ -7,7 +7,7 @@ export enum CollateralCondition {
   ILLIQUID = "illiquid",
   LOW_RISK = "lowRisk",
   HIGH_RISK = "highRisk",
-  EASILY_RECOVERABLE = "easily recoverable",
+  EASILY_RECOVERABLE = "easilyRecoverable",
   VOLATILE = "volatile",
   SECURE = "secure",
   UNDERVALUED = "undervalued",

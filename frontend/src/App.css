@@ -10,6 +10,10 @@
   background-color: var(--background-color);
 }
 
+.border-accent-secondary {
+  border: 2px solid var(--secondary-color) !important;
+}
+
 .bg-accent {
   background-color: var(--primary-color);
   color: #fff;
@@ -66,12 +70,22 @@
   z-index: -1;
 }
 
+.link-reset {
+  color: inherit;
+  text-decoration: none;
+}
+
 .entity-layout {
   background-color: #fff;
   margin-top: auto;
   margin-bottom: auto;
   height: 95dvh;
   width: 75dvw;
+  overflow-y: auto;
+}
+
+.entity-layout-children {
+  max-height: 83dvh;
   overflow-y: auto;
 }
 
@@ -128,6 +142,25 @@
 .my-modal-content {
   max-height: 80vh;
   overflow-y: auto;
+}
+
+tr:hover {
+  background-color: rgb(208, 157, 12, 0.5);
+  color: #fff;
+}
+
+tr {
+  border-radius: 0.25rem;
+}
+
+th,
+td {
+  padding: 1rem;
+  white-space: nowrap;
+}
+
+th {
+  white-space: nowrap;
 }
 
 @media (max-width: 500px) {

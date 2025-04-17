@@ -18,6 +18,9 @@ import Modal from "../../../common/ui/Modal";
 import LoanForm from "../components/LoanForm";
 import AccentBtn from "../../../common/ui/AccentBtn";
 import TransactionForm from "../../Transactions/components/TransactionForm";
+import TabTitle from "../../../common/TabTitle";
+import ArmotizationDataTable from "../../Armotizations/components/ArmotizationDataTable";
+import useLoanArmotization from "../../Armotizations/hooks/useLoanArmotization";
 
 const LoanPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -29,6 +32,7 @@ const LoanPage = () => {
   );
   const { transactions, fetchPage: fetchTransactions } = useTransactions();
   const { notes, fetchPage: fetchNotes } = useNotes(`loanId=${id}`);
+  const { armotization } = useLoanArmotization(Number(id));
   const [onDelete] = useDeleteLoan();
 
   const handleOnDelete = async () => {
@@ -58,15 +62,6 @@ const LoanPage = () => {
           <Tab className="p-3" eventKey="info" title="Información">
             <LoanInformation loan={loan} />
           </Tab>
-          <Tab className="p-3" eventKey="client" title="Cliente">
-            {loan.client && <ProfileInfo profile={loan.client} />}
-          </Tab>
-          <Tab className="p-3" eventKey="loanOfficer" title="Agente">
-            {loan.loanOfficer && <ProfileInfo profile={loan.loanOfficer} />}
-          </Tab>
-          <Tab className="p-3" eventKey="guarantor" title="Garante">
-            {loan.guarantor && <ProfileInfo profile={loan.guarantor} />}
-          </Tab>
           <Tab className="p-3" eventKey="collaterals" title="Garantías">
             <CollateralsDataTable
               collaterals={collaterals}
@@ -86,6 +81,45 @@ const LoanPage = () => {
               notes={notes}
               navigateCallback={(page: number) => fetchNotes(page)}
             />
+          </Tab>
+          <Tab className="p-3" eventKey="armotization" title="Armotizacion">
+            <ArmotizationDataTable armotization={armotization} />
+          </Tab>
+          <Tab
+            className="p-3"
+            eventKey="client"
+            title={
+              <TabTitle
+                title="Cliente"
+                path={`/profiles/${loan.client.username}`}
+              />
+            }
+          >
+            {loan.client && <ProfileInfo profile={loan.client} />}
+          </Tab>
+          <Tab
+            className="p-3"
+            eventKey="loanOfficer"
+            title={
+              <TabTitle
+                title="Agente"
+                path={`/profiles/${loan.loanOfficer.username}`}
+              />
+            }
+          >
+            {loan.loanOfficer && <ProfileInfo profile={loan.loanOfficer} />}
+          </Tab>
+          <Tab
+            className="p-3"
+            eventKey="guarantor"
+            title={
+              <TabTitle
+                title="Garante"
+                path={`/profiles/${loan.guarantor.username}`}
+              />
+            }
+          >
+            {loan.guarantor && <ProfileInfo profile={loan.guarantor} />}
           </Tab>
         </Tabs>
       </EntityLayout>

@@ -1,4 +1,6 @@
+import { CollateralAgreementType } from "./collateralAgreementType";
 import { CollateralCondition } from "./collateralCondition";
+import { CollateralFile } from "./collateralFile";
 import { CollateralStatus } from "./collateralStatus";
 import { Loan } from "./loan";
 import { Photo } from "./photo";
@@ -13,8 +15,14 @@ export interface Collateral {
   documentUrl: string;
   clientId: string;
   condition: CollateralCondition;
+  createdAt: string;
   status: CollateralStatus;
   client: User;
   loanId: number;
   loan: Loan;
+  photos: Photo[];
+  agreementType: CollateralAgreementType;
+  location?: string;
+  expirationDate?: string;
+  files: CollateralFile[];
 }

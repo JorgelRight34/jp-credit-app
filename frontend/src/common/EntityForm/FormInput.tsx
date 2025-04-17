@@ -12,6 +12,8 @@ interface FormInputProps {
   defaultToToday?: boolean;
   value?: string;
   showOnEdit?: boolean;
+  options?: (string | number)[][];
+  defaultValue?: string | number | null;
   onChange?: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -38,6 +40,8 @@ const FormInput = ({
   onChange,
   error,
   value,
+  options,
+  defaultValue,
   defaultToToday = false,
   required,
   showOnEdit,
@@ -45,7 +49,10 @@ const FormInput = ({
 }: FormInputProps) => {
   return (
     <>
-      <label className="form-label">{label}</label>
+      <label className="form-label">
+        {label}
+        {required !== false ? <span className="text-red-500"> *</span> : ""}
+      </label>
       <input
         {...props}
         type={type}

@@ -1,47 +1,41 @@
-import { Dispatch, SetStateAction, useState } from "react"
-import { ArmotizationPayment } from "../../../models/armotizationPayment"
+import { useEffect, useState } from "react";
+import { ArmotizationPayment } from "../../../models/armotizationPayment";
 import api from "../../../api";
 import { baseUrl } from "../lib/constants";
 
 interface UseLoanArmotizationReturn {
-    armotization: ArmotizationPayment[];
-    setArmotizationId: Dispatch<SetStateAction<number | undefined>>;
-    fetchArmotization: () => void;
-    handleOnChange: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  armotization: ArmotizationPayment[];
+  fetchArmotization: (loanId: number) => void;
 }
 
 /**
  * Hook to manage loan amortization by loan ID.
  *
  * @returns {
-*   armotization: fetched data,
-*   setArmotizationId: set loan ID manually,
-*   fetchArmotization: fetch data from API,
-*   handleOnChange: input handler for loan ID
-* }
-*
-* @example
-* const { armotization, fetchArmotization, handleOnChange } = useLoanArmotization();
-*/
+ *   armotization: fetched data,
+ *   setArmotizationId: set loan ID manually,
+ *   fetchArmotization: fetch data from API,
+ *   handleOnChange: input handler for loan ID
+ * }
+ *
+ * @example
+ * const { armotization, fetchArmotization } = useLoanArmotization();
+ */
 
-const useLoanArmotization = (): UseLoanArmotizationReturn => {
-    const [armotization, setArmotization] = useState<ArmotizationPayment[]>([]);
-    const [armotizationId, setArmotizationId] = useState<number | undefined>();
+const useLoanArmotization = (loanId?: number): UseLoanArmotizationReturn => {
+  const [armotization, setArmotization] = useState<ArmotizationPayment[]>([]);
 
-    const fetchArmotization = async () => {
-        if (!armotizationId) return;
-        const response = await api.get(`${baseUrl}/loans/${armotizationId}`);
-        setArmotization(response.data);
-    }
+  const fetchArmotization = async (loanId: number) => {
+    if (!loanId) return;
+    const response = await api.get(`${baseUrl}/loans/${loanId}`);
+    setArmotization(response.data);
+  };
 
-    const handleOnChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        const value = Number(event.target.value);
-        if (isNaN(value)) return;
+  useEffect(() => {
+    if (loanId) fetchArmotization(loanId);
+  }, [loanId]);
 
-        setArmotizationId(value);
-    }
-
-    return { armotization, setArmotizationId, fetchArmotization, handleOnChange }
-}
+  return { armotization, fetchArmotization };
+};
 
 export default useLoanArmotization;
