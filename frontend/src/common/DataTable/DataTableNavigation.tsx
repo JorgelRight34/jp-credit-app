@@ -35,7 +35,7 @@ const DataTableNavigation = <TData,>({
     <div className="d-flex align-items-center p-3 justify-content-center">
       <span className="text-muted">
         Mostrando {table.getRowModel().rows.length} de {total} resultados de la
-        página {table.getState().pagination.pageIndex}.
+        página {table.getState().pagination.pageIndex + 1}.
       </span>
       <div className="ms-auto">
         <button

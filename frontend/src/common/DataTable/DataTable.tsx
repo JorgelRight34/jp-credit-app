@@ -63,7 +63,7 @@ const DataTable = <TData,>({
   }, [pagination]);
 
   return (
-    <div className="border rounded-3 shadow-sm">
+    <div className="border rounded-3 shadow-sm h-full">
       <div className="table-wrapper">
         <table className={`${className} w-100`}>
           {/* Header */}

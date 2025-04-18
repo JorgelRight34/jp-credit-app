@@ -3,6 +3,7 @@ import { User } from "../../../models/user";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { faLocationDot } from "@fortawesome/free-solid-svg-icons";
 import { getFirstAndLastName } from "../../../utils/utils";
+import ImageWithLightBox from "../../../common/ImageWithLightBox";
 
 interface ProfileCardProps {
   profile: User;
@@ -14,10 +15,11 @@ const ProfileCard = ({ profile }: ProfileCardProps) => {
       {/* Heading */}
       <h3 className="text-center mb-3">{getFirstAndLastName(profile)}</h3>
       {/* Image */}
-      <img
+      <ImageWithLightBox
         className="rounded-lg shadow-sm w-full h-[300px] object-cover mb-3"
         src={profile.photo?.url || "/default-profile-pic.webp"}
         alt={`Foto de ${profile.username}`}
+        image={profile.photo}
       />
       {/* Contact */}
       <div className="flex flex-col">

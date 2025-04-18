@@ -1,5 +1,5 @@
+import { ApiFile } from "./apiFile";
 import { MaritalStatus } from "./maritalStatus";
-import { Photo } from "./photo";
 import { Role } from "./role";
 
 export interface User {
@@ -18,6 +18,6 @@ export interface User {
   landline: string;
   officePhone: string;
   roles?: Role[];
-  photo?: Photo;
+  photo?: ApiFile;
   label?: string;
 }

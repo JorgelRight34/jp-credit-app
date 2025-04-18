@@ -31,7 +31,7 @@ const FileExplorer = ({
       enableSorting: true,
       cell: ({ row }) => (
         <div className="d-flex align-items-center">
-          <DocumentIcon type={row.original.fileType?.replace(".", "")} />
+          <DocumentIcon type={row.original.fileType?.replace(".", "") || ""} />
           <span className="ms-2 me-3">
             {row.original.name} {row.original.fileType?.replace(".", "")}
           </span>
@@ -59,7 +59,7 @@ const FileExplorer = ({
       cell: ({ row }) =>
         row.original.lastModified
           ? "---"
-          : toFormattedDate(new Date(row.original.lastModified)),
+          : toFormattedDate(new Date(row.original.lastModified || "")),
     },
     {
       accessorKey: "createdAt",
@@ -68,7 +68,7 @@ const FileExplorer = ({
       cell: ({ row }) =>
         row.original.lastModified
           ? "---"
-          : toFormattedDate(new Date(row.original.lastModified)),
+          : toFormattedDate(new Date(row.original.lastModified || "")),
     },
     ...extraColumns,
   ];

@@ -3,13 +3,9 @@ import { User } from "../../../models/user";
 import InfoTable from "../../../common/DataTable/InfoTable";
 import PhoneLink from "../../../common/ui/PhoneLink";
 import { toFormattedDate, toTitleCase } from "../../../utils/utils";
-import {
-  maritalStatusSpanishTranslations,
-  roleSpanishTranslations,
-} from "../../../utils/constants";
+import { maritalStatusSpanishTranslations } from "../../../utils/constants";
 import { MaritalStatus } from "../../../models/maritalStatus";
 import { ProfileStats } from "../../../models/profileStats";
-import { Role } from "../../../models/role";
 
 interface ProfileInfoTableProps {
   profile: User;

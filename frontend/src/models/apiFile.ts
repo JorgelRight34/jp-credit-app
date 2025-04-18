@@ -1,9 +1,9 @@
 export interface ApiFile {
-  publicId: string;
+  publicId?: string;
   url: string;
-  id: number;
-  name: string;
-  createdAt: string;
-  lastModified: string;
-  fileType: string;
+  id?: number;
+  name?: string;
+  createdAt?: string;
+  lastModified?: string;
+  fileType?: string;
 }

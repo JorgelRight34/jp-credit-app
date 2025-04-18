@@ -111,23 +111,33 @@ const MultipleFilesInput = ({
         show={showModal}
         onHide={() => setShowModal(false)}
       >
-        <div className="p-3">
-          <label>
+        <div className="p-3 mb-3 h-full">
+          <label
+            className={
+              tableFiles.length >= maxLength
+                ? "cursor-not-allowed opacity-50"
+                : ""
+            }
+          >
             <input
               type="file"
               className="d-none"
               onChange={handleOnFileChange}
             />
-            <span className="btn btn-accent">
+            <span className={`btn btn-accent cursor-not-allowed`}>
               <FontAwesomeIcon className="me-2" icon={faUpload} />
               Subir Archivo {tableFiles.length}
-              {tableFiles.length >= maxLength
-                ? "(Límite de archivos alcanzado, elimine uno)"
-                : ""}
             </span>
+            {tableFiles.length >= maxLength && (
+              <span className="ms-3">
+                Límite de archivos alcanzado, elimine uno
+              </span>
+            )}
           </label>
-          <div className="space-y-3 flex justify-center min-h-100 max-h-100 min-w-250 max-w-250">
-            <FileExplorer extraColumns={extraColumns} files={tableFiles} />
+          <div className="py-5 min-h-100 max-h-100 min-w-250 max-w-250">
+            <div className="w-full h-full">
+              <FileExplorer extraColumns={extraColumns} files={tableFiles} />
+            </div>
           </div>
           <div>
             <AccentBtn

@@ -26,7 +26,6 @@ const DefaultInput = <TData,>({
             : formField.defaultValue || undefined
         }
       />
-      {formField.showOnEdit ? "true" : "false"}
     </>
   );
 };

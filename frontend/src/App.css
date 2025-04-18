@@ -38,6 +38,10 @@
   color: #fff;
 }
 
+.cursor-not-allowed {
+  cursor: not-allowed  !important;
+}
+
 .nav-link:hover {
   position: relative;
   color: #fff !important;
@@ -48,6 +52,12 @@
   cursor: pointer;
 }
 
+.side-navbar .nav-link-active {
+  position: relative;
+  color: #fff !important;
+  z-index: 1;
+}
+
 .side-navbar .nav-link:hover::before {
   position: absolute;
   inset: 0;
@@ -56,12 +66,6 @@
   opacity: 0.7;
   border-radius: 0.5rem;
   z-index: -1;
-}
-
-.side-navbar .nav-link-active {
-  position: relative;
-  color: #fff !important;
-  z-index: 1;
 }
 
 .nav-link-active::before {
