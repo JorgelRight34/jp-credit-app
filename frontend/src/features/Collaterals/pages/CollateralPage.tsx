@@ -1,4 +1,4 @@
-import { Tab, Tabs } from "react-bootstrap";
+import { Tab } from "react-bootstrap";
 import EntityLayout from "../../../layouts/EntityLayout";
 import CollateralForm from "../components/CollateralForm";
 import { useParams } from "react-router";
@@ -67,6 +67,8 @@ const CollateralPage = () => {
           edit={collateral}
           defaultValues={{
             ...collateral,
+            location: collateral.location || "",
+            expirationDate: collateral.expirationDate || "",
             status: collateral.status.toLowerCase(),
             condition: collateral.condition.toLowerCase(),
           }}

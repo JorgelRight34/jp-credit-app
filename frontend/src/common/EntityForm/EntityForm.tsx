@@ -5,6 +5,7 @@ import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormFieldInput from "./FormFieldInput";
 import { MouseEventHandler, useMemo } from "react";
+import { ApiFile } from "../../models/apiFile";
 
 interface EntityFormProps<TData, T> {
   onDelete?: () => void;
@@ -17,11 +18,11 @@ interface EntityFormProps<TData, T> {
   rows: number;
   columns: number;
   resetValues?: boolean;
-  defaultFileSources?: string[];
+  defaultFileSources?: ApiFile[];
   files?: File[];
   setFiles?: (files: File[] | ((prev: File[]) => File[])) => void;
   setDefaultFileSources?: (
-    files: string[] | ((prev: string[]) => string[])
+    files: ApiFile[] | ((prev: ApiFile[]) => ApiFile[])
   ) => void;
 }
 

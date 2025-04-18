@@ -3,6 +3,7 @@ import { FormField } from "../../models/formField";
 import MultipleFilesInput from "../ui/MultipleFilesInput";
 import FormInput from "./FormInput";
 import { ZodType } from "zod";
+import { ApiFile } from "../../models/apiFile";
 
 interface FormFieldInputProps<TData> {
   schema: ZodType<FieldValues>;
@@ -10,10 +11,10 @@ interface FormFieldInputProps<TData> {
   files?: File[];
   filesMaxLength?: number;
   watch: (name: keyof TData) => TData[keyof TData];
-  defaultFileSources?: string[];
+  defaultFileSources?: ApiFile[];
   setFiles?: (files: File[] | ((prev: File[]) => File[])) => void;
   setDefaultFileSources?: (
-    files: string[] | ((prev: string[]) => string[])
+    files: ApiFile[] | ((prev: ApiFile[]) => ApiFile[])
   ) => void;
   className?: string;
   error?: string;
@@ -46,6 +47,8 @@ const FormFieldInput = <TData,>({
   const watchedValue = formField.watch ? watch(formField.watch) : undefined;
   const disabled = formField.disabledWhen?.(watchedValue) ?? false;
   const isFileInput = formField.type === "file" && files && setFiles;
+
+  if (!formField.showOnEdit && edit) return <></>;
 
   if (formField.profileDataList && edit) {
     return (

@@ -1,4 +1,4 @@
-export interface CollateralFile {
+export interface ApiFile {
   publicId: string;
   url: string;
   id: number;

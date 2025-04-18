@@ -7,6 +7,7 @@ const useUploadFile = () => {
   const handleOnFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const uploadedFile = event.target?.files?.[0];
     if (uploadedFile) setFile(uploadedFile);
+    return uploadedFile || undefined;
   };
 
   const uploadFile = async (url: string, files: File[] = [], key = "file") => {

@@ -17,14 +17,12 @@ interface AccentBtnProps extends ComponentPropsWithoutRef<"button"> {
 const AccentBtn = ({
   children,
   className,
-  onClick,
   type = "button",
   ...props
 }: AccentBtnProps) => {
   return (
     <button
       className={`btn btn-accent shadow-sm ${className}`}
-      onClick={onClick}
       type={type}
       {...props}
     >

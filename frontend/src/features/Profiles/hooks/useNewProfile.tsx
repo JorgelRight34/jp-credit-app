@@ -14,7 +14,6 @@ const useNewProfile = (role: Role) => {
     });
 
     // Update list
-    console.log(queryClient.getQueryData(["profiles", role]));
     queryClient.setQueryData<User[]>(["profiles", role], (prev) => [
       ...(prev || []),
       response.data,
@@ -22,7 +21,7 @@ const useNewProfile = (role: Role) => {
 
     // Set individual
     queryClient.setQueryData<User>(
-      ["profiles", response.data.id],
+      ["profiles", response.data.username],
       response.data
     );
 

@@ -40,6 +40,7 @@ const DataTable = <TData,>({
     pageSize: 10,
   });
   const [sorting, setSorting] = useState<SortingState>([]);
+  const [firstRender, setFirstRender] = useState(true);
   const table = useReactTable({
     data,
     columns,
@@ -55,7 +56,8 @@ const DataTable = <TData,>({
   });
 
   useEffect(() => {
-    if (!navigateCallback) return;
+    if (!navigateCallback || firstRender) return;
+    setFirstRender(false);
     const fetchMore = async () => navigateCallback(pagination.pageIndex + 1);
     fetchMore();
   }, [pagination]);

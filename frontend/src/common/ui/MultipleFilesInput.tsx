@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import Modal from "./Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
 import AccentBtn from "./AccentBtn";
-import FileInputPreview from "./FileInputPreview";
+import FileExplorer from "./FileExplorer";
+import { ApiFile } from "../../models/apiFile";
+import { ColumnDef } from "@tanstack/react-table";
+import { toast } from "react-toastify";
 
 interface MultipleFilesInputProps {
   setFiles: (files: File[] | ((prev: File[]) => File[])) => void;
-  defaultFileSources?: string[];
+  defaultFileSources?: ApiFile[];
   setDefaultFileSources?: (
-    files: string[] | ((prev: string[]) => string[])
+    files: ApiFile[] | ((prev: ApiFile[]) => ApiFile[])
   ) => void;
   files: File[];
   maxLength: number;
@@ -27,6 +30,38 @@ const MultipleFilesInput = ({
   setFiles,
 }: MultipleFilesInputProps) => {
   const [showModal, setShowModal] = useState(false);
+  const tableFiles = useMemo(
+    () => [
+      ...defaultFileSources,
+      ...files.map((file) => ({
+        publicId: "---",
+        url: URL.createObjectURL(file),
+        id: 1,
+        name: file.name,
+        createdAt: "",
+        lastModified: "",
+        fileType: file.type,
+      })),
+    ],
+    [files, defaultFileSources]
+  );
+
+  const extraColumns: ColumnDef<ApiFile>[] = [
+    {
+      header: "Opciones",
+      cell: ({ row }) => (
+        <AccentBtn
+          onClick={(event) => {
+            event.stopPropagation();
+            if (row.original.createdAt !== "---") removeDefaultFile(row.index);
+            else removeFile(row.index);
+          }}
+        >
+          Borrar
+        </AccentBtn>
+      ),
+    },
+  ];
 
   const handleOnFileChange = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -36,8 +71,8 @@ const MultipleFilesInput = ({
     event.target.value = "";
     if (!uploadedFile) return;
 
-    if (files.length === maxLength) {
-      setFiles((prev) => prev.splice(-1, 0, uploadedFile));
+    if (tableFiles.length >= maxLength) {
+      toast.error(`Solo ${maxLength} archivos son permitidos.`);
       return;
     }
 
@@ -68,7 +103,7 @@ const MultipleFilesInput = ({
         onClick={() => setShowModal(true)}
       >
         <FontAwesomeIcon className="me-2" icon={faUpload} />
-        Subir Archivo
+        Subir Archivo{" "}
       </AccentBtn>
 
       <Modal
@@ -85,36 +120,20 @@ const MultipleFilesInput = ({
             />
             <span className="btn btn-accent">
               <FontAwesomeIcon className="me-2" icon={faUpload} />
-              Subir Archivo
+              Subir Archivo {tableFiles.length}
+              {tableFiles.length >= maxLength
+                ? "(Límite de archivos alcanzado, elimine uno)"
+                : ""}
             </span>
           </label>
-          <div className="space-y-3 flex items-center gap-3 min-h-100 max-h-100 min-w-250 max-w-250">
-            {defaultFileSources.map((src, index) => (
-              <FileInputPreview
-                key={index}
-                className="relative block w-25 h-50"
-                fileName={src}
-                src={src}
-                onChange={(event) => handleOnFileChange(event, index)}
-                onRemove={() => removeDefaultFile(index)}
-              />
-            ))}
-            {files.map((file, index) => (
-              <FileInputPreview
-                key={index}
-                className="relative block w-25 h-50"
-                fileName={file.name}
-                src={URL.createObjectURL(file)}
-                onChange={(event) => handleOnFileChange(event, index)}
-                onRemove={() => removeFile(index)}
-              />
-            ))}
+          <div className="space-y-3 flex justify-center min-h-100 max-h-100 min-w-250 max-w-250">
+            <FileExplorer extraColumns={extraColumns} files={tableFiles} />
           </div>
           <div>
             <AccentBtn
               onClick={() => {
                 setShowModal(false);
-                onConfirm && onConfirm();
+                if (onConfirm) onConfirm();
               }}
               className="w-100"
             >

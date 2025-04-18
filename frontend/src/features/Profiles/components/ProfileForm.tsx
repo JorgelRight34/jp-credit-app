@@ -23,7 +23,7 @@ const ProfileForm = ({ role, defaultValues, edit }: ProfileFormProps) => {
   const [deleteProfile] = useDeleteProfile(role);
   const [files, setFiles] = useState<File[]>([]);
   const [defaultFileSources, setDefaultFileSources] = useState(
-    edit ? (edit.photo?.url ? [edit.photo.url] : []) : []
+    edit ? (edit.photo ? [edit.photo] : []) : []
   );
   const { uploadFile, deleteFile } = useUploadFile();
   const navigate = useNavigate();
@@ -40,13 +40,13 @@ const ProfileForm = ({ role, defaultValues, edit }: ProfileFormProps) => {
     }
 
     if (edit?.photo?.url && defaultFileSources.length === 0) {
-      response = await deleteFile(
+      await deleteFile(
         `users/${response.username}/photo/${edit.photo.publicId}`
       );
     }
 
     if (response) {
-      queryClient.setQueryData(["profile", response.id], response);
+      queryClient.setQueryData(["profiles", response.username], response);
       toast.success("Cliente agregado exitosamente.");
     }
   };
@@ -66,13 +66,12 @@ const ProfileForm = ({ role, defaultValues, edit }: ProfileFormProps) => {
       setFiles={setFiles}
       columns={4}
       rows={4}
-      allowDelete={edit ? true : false}
       onDelete={handleOnDelete}
       defaultValues={defaultValues}
       defaultFileSources={defaultFileSources}
       setDefaultFileSources={setDefaultFileSources}
       formFields={
-        role === "admin"
+        role === "admin" && !edit
           ? [
               ...profileFormFields,
               {
@@ -80,6 +79,7 @@ const ProfileForm = ({ role, defaultValues, edit }: ProfileFormProps) => {
                 label: "Password",
                 type: "password",
                 required: true,
+                showOnEdit: false,
               },
             ]
           : profileFormFields

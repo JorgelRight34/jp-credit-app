@@ -1,3 +1,4 @@
+import { toast } from "react-toastify";
 import useUploadFile from "../../../hooks/useUploadFile";
 import { useQueryClient } from "@tanstack/react-query";
 
@@ -12,13 +13,20 @@ const NewCollateralFileBtn = ({ collateralId }: NewCollateralFileBtnProps) => {
   const handleUploadFile = async (
     event: React.ChangeEvent<HTMLInputElement>
   ) => {
-    handleOnFileChange(event);
+    const file = await handleOnFileChange(event);
+    if (!file) toast.error("El archivo no pudo cargarse. Intente de nuevo.");
+
+    if (!file) return;
+
     const response = await uploadFile(
       `/collaterals/${collateralId}/files`,
-      [],
+      [file],
       "files"
     );
-    queryClient.setQueryData(["collateral", String(collateralId)], response);
+
+    console.log(`updating at key ${["collaterals", collateralId]}`);
+    queryClient.setQueryData(["collaterals", collateralId], response);
+    toast.success("Archivo subido correctamentes!");
   };
 
   return (

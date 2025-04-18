@@ -1,6 +1,6 @@
 import { CollateralAgreementType } from "./collateralAgreementType";
 import { CollateralCondition } from "./collateralCondition";
-import { CollateralFile } from "./collateralFile";
+import { CollateralFile } from "./apiFile";
 import { CollateralStatus } from "./collateralStatus";
 import { Loan } from "./loan";
 import { Photo } from "./photo";

@@ -44,6 +44,7 @@ namespace api.Controllers
             if (!roleExists) return BadRequest("Role doesn't exist");
 
             var user = await userManager.FindByNameAsync(username);
+            if (user == null) return NotFound();
 
             var result = await userManager.AddToRoleAsync(user, role);
             if (!result.Succeeded) return BadRequest("User doesn't exist");

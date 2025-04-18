@@ -24,11 +24,7 @@ const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
   const [onDelete] = useDeleteCollateral();
   const [files, setFiles] = useState<File[]>([]);
   const [defaultFileSources, setDefaultFileSources] = useState(
-    edit
-      ? edit.photos.length > 0
-        ? edit.photos.map((photo) => photo.url)
-        : []
-      : []
+    edit?.photos || []
   );
   const navigate = useNavigate();
   const { uploadFiles, deletePhotos } = useUploadCollateralFiles();
@@ -42,7 +38,9 @@ const CollateralForm = ({ defaultValues, edit }: CollateralFormProps) => {
     if (photos && photos?.length > defaultFileSources.length && collateral) {
       await deletePhotos(
         collateral,
-        photos.filter((el) => !defaultFileSources.includes(el.url))
+        photos.filter(
+          (el) => !defaultFileSources.map((f) => f.url).includes(el.url)
+        )
       );
     }
 

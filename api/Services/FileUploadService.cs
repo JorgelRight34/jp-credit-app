@@ -46,7 +46,9 @@ public class FileUploadService : IFileUploadService
             };
 
             uploadResult = await _cloudinary.UploadAsync(uploadParams);
-        } else {
+        }
+        else
+        {
             throw new Exception("File is empty");
         }
 
@@ -69,7 +71,9 @@ public class FileUploadService : IFileUploadService
                 PublicId = Path.GetFileNameWithoutExtension(file.FileName),
             };
             uploadResult = await _cloudinary.UploadAsync(uploadParams);
-        } else {
+        }
+        else
+        {
             throw new Exception("File is empty");
         }
 
@@ -80,6 +84,7 @@ public class FileUploadService : IFileUploadService
 
     public async Task<DeletionResult> DeletePhotoAsync(string publicId)
     {
+        Console.WriteLine($"{publicId}");   // When deleting photos don't need to provide cloud folder name
         var deleteParams = new DeletionParams($"{CloudFolderName}{publicId}");
         var result = await _cloudinary.DestroyAsync(deleteParams);
 

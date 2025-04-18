@@ -1,13 +1,13 @@
 import { toast } from "react-toastify";
 import AccentBtn from "../../../common/ui/AccentBtn";
 import useUploadFile from "../../../hooks/useUploadFile";
-import { CollateralFile } from "../../../models/collateralFile";
+import { ApiFile } from "../../../models/apiFile";
 import { useQueryClient } from "@tanstack/react-query";
 import { Collateral } from "../../../models/collateral";
 
 interface DeleteCollateralFileBtnProps {
   collateral: Collateral;
-  file: CollateralFile;
+  file: ApiFile;
 }
 
 const DeleteCollateralFileBtn = ({
@@ -21,7 +21,7 @@ const DeleteCollateralFileBtn = ({
     await deleteFile(`/collaterals/${collateral.id}/files/${file.publicId}`);
 
     toast.success("El archivo ha sido eliminado");
-    queryClient.setQueryData(["collateral", String(collateral.id)], {
+    queryClient.setQueryData(["collaterals", collateral.id], {
       ...collateral,
       files: collateral.files.filter((f) => f.publicId !== file.publicId),
     });
