@@ -42,6 +42,7 @@ const useProfileDataList = (role: Role = "user") => {
 
     const loadLoanProfiles = async (loanId: number | string) => {
         setOptions([])  // Reset after changing loanId to prevent having the previous options
+        setError(false);
         try {
             const data = await queryClient.fetchQuery({
                 queryKey: ["loans", "members", loanId],

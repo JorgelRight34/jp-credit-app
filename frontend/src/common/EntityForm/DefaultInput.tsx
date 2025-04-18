@@ -16,7 +16,6 @@ const DefaultInput = <TData,>({
       <input
         {...props}
         type={formField.type}
-        name={formField.name}
         className="form-control"
         required={formField.required}
         disabled={disabled}

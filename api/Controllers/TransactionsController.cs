@@ -1,6 +1,7 @@
 using System.Text;
 using api.Data;
 using api.DTOs.Transaction;
+using api.DTOS.Transaction;
 using api.Interfaces;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -30,6 +31,15 @@ namespace api.Controllers
             if (transaction == null) return NotFound();
 
             return Ok(mapper.Map<TransactionDto>(transaction));
+        }
+
+        [HttpGet("{id:int}/stats")]
+        public async Task<ActionResult<TransactionStatsDto>> GetTransactionStats([FromRoute] int id)
+        {
+            var stats = await transactionsRepository.GetTransactionStats(id);
+            if (stats == null) return NotFound();
+
+            return Ok(stats);
         }
 
         [HttpPost]

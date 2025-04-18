@@ -1,6 +1,7 @@
 using System;
 using api.Data;
 using api.DTOs.Transaction;
+using api.DTOS.Transaction;
 using api.Enums;
 using api.Extensions;
 using api.Interfaces;
@@ -34,12 +35,14 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
             transaction.PenaltyFee = penaltyFee;
         }
 
+        /*
         // Check if payment is less than what has to be paid
-        if (createTransactionDto.Value < loan.PaymentValue) 
+        if (createTransactionDto.Value < loan.PaymentValue)
         {
             // If payment doesn't cover the whole (A) then record it as delinquency (atraso)
             transaction.Delinquency = loan.PaymentValue - createTransactionDto.Value;
         }
+        */
 
         // Get periodly interest 
         var periodlyInterest = loan.AnnualInterestRate / loan.PaymentFrequency;
@@ -147,8 +150,9 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
     {
         var transaction = await context.Transactions
             .Include(x => x.Loan)
+                .ThenInclude(x => x!.Transactions)
             .Include(x => x.Payer)
-            .ThenInclude(x => x!.Photo)
+                .ThenInclude(x => x!.Photo)
             .FirstOrDefaultAsync(x => x.Id == id);
         return transaction;
     }
@@ -160,6 +164,28 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
             .ToListAsync();
 
         return transactions;
+    }
+
+    public async Task<TransactionStatsDto?> GetTransactionStats(int id)
+    {
+        var transaction = await context.Transactions.FindAsync(id);
+        if (transaction == null) return null;
+
+        var lastTransaction = await context.Transactions
+            .Where(x => x.Date < transaction.Date)
+            .OrderByDescending(x => x.Date)
+            .FirstOrDefaultAsync();
+
+        var nextTransaction = await context.Transactions
+            .Where(x => x.Date >= transaction.Date)
+            .OrderBy(x => x.Date)
+            .FirstOrDefaultAsync();
+
+        return new TransactionStatsDto
+        {
+            LastTransaction = mapper.Map<TransactionDto>(lastTransaction),
+            NextTransaction = mapper.Map<TransactionDto>(nextTransaction)
+        };
     }
 
     public async Task<IEnumerable<Transaction>> GetUserTransactions(string userId)

@@ -51,7 +51,7 @@ const LoanForm = ({ defaultValues, edit }: LoanFormDefaultProps) => {
       columns={4}
       rows={3}
       edit={edit}
-      resetValues={edit ? true : false}
+      resetValues={edit ? false : true}
     />
   );
 };

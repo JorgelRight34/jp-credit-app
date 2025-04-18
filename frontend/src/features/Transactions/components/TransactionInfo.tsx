@@ -1,32 +1,34 @@
-import InfoTable from "../../../common/DataTable/InfoTable";
 import { Transaction } from "../../../models/transaction";
-import { getFullName, toCurrency, toFormattedDate } from "../../../utils/utils";
+import useTransactionStats from "../hooks/useTransactionStats";
+import TransactionInfoTable from "./TransactionInfoTable";
+import TransactionPreviewCard from "./TransactionPreviewCard";
 
 interface TransactionInfoProps {
   transaction: Transaction;
 }
 
 const TransactionInfo = ({ transaction }: TransactionInfoProps) => {
+  const { stats } = useTransactionStats(transaction.id);
+
   return (
     <>
-      <InfoTable
-        data={[
-          ["Id", transaction.id, "Préstamo", transaction.loanId],
-          ["Cliente", getFullName(transaction.payer), "", ""],
-          [
-            "Capital",
-            toCurrency(transaction.capitalValue),
-            "Intereses",
-            toCurrency(transaction.interestValue),
-          ],
-          [
-            "Mora",
-            toCurrency(transaction.delinquency),
-            "Fecha",
-            toFormattedDate(new Date(transaction.date)),
-          ],
-        ]}
-      />
+      <div className="row mx-0">
+        <div className="col-lg-4">
+          <TransactionPreviewCard
+            title="Ultima Transacción"
+            className="mb-3"
+            transaction={stats?.lastTransaction}
+          />
+          <TransactionPreviewCard
+            title="Próxima Transacción"
+            className="mb-3"
+            transaction={stats?.nextTransaction}
+          />
+        </div>
+        <div className="col-lg-8">
+          <TransactionInfoTable transaction={transaction} />
+        </div>
+      </div>
     </>
   );
 };

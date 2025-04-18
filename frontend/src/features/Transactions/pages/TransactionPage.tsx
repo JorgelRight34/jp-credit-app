@@ -8,10 +8,11 @@ import LoanInfo from "../../Loans/components/LoanInfo";
 import TransactionInfo from "../components/TransactionInfo";
 import useDeleteTransaction from "../hooks/useDeleteTransaction";
 import TabTitle from "../../../common/TabTitle";
+import TransactionsDataTable from "../components/TransactionsDataTable";
 
 const TransactionPage = () => {
   const { id } = useParams();
-  const { transaction, isError, isLoading } = useTransaction(Number(id));
+  const { transaction, isError, isLoading } = useTransaction(id || "");
   const [onDelete] = useDeleteTransaction();
   const navigate = useNavigate();
 
@@ -20,9 +21,10 @@ const TransactionPage = () => {
       onDelete(id).then(() => navigate("/transactions"));
     }
   };
+
   if (isError) return <NotFound />;
 
-  if (isLoading) return <></>;
+  if (isLoading || !transaction) return <></>;
 
   return (
     <EntityLayout title={`Transacción #${id}`} onDelete={handleOnDelete}>
@@ -50,6 +52,13 @@ const TransactionPage = () => {
           className="p-3"
         >
           <LoanInfo loan={transaction.loan} />
+        </Tab>
+        <Tab eventKey={"loanTransactions"} title="Transacciones del Préstamo">
+          <TransactionsDataTable
+            transactions={
+              transaction.loan.transactions?.filter((el) => el) || []
+            }
+          />
         </Tab>
       </Tabs>
     </EntityLayout>

@@ -47,9 +47,6 @@ api.interceptors.response.use(
           break;
         case "ERR_BAD_REQUEST":
           switch (error.response?.status) {
-            case 404:
-              toast.error("No encontrado.");
-              break;
             case 400:
               toast.error("Mala solicitud.");
               break;

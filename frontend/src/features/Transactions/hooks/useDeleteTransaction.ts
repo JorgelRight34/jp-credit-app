@@ -5,16 +5,16 @@ import { Transaction } from "../../../models/transaction";
 const useDeleteTransaction = () => {
     const queryClient = useQueryClient();
 
-    const deleteTransaction = async (id: number) => {
+    const deleteTransaction = async (id: number | string) => {
         if (!id) return;
         const response = await api.delete(`transactions/${id}`);
         const transaction = response.data;
 
         // Set individual
-        queryClient.setQueryData(["transactions", id], transaction);
+        queryClient.setQueryData(["transactions", transaction.id], transaction);
 
         // Set plural
-        queryClient.setQueryData<Transaction[]>(["transactions", ""], (prev) => prev?.filter(el => el.id !== id))
+        queryClient.setQueryData<Transaction[]>(["transactions", ""], (prev) => prev?.filter(el => el.id !== transaction.id))
 
         return transaction;
     }

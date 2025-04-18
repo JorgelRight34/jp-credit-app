@@ -9,6 +9,7 @@ import { toast } from "react-toastify";
 import { Transaction } from "../../../models/transaction";
 import EntityForm from "../../../common/EntityForm/EntityForm";
 import { FormField } from "../../../models/formField";
+import TransactionFormDetails from "./TransactionFormDetails";
 
 interface TransactionFormProps {
   fixedLoan?: Loan;
@@ -21,7 +22,13 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
     {
       name: "value",
       label: "Monto",
+      type: "number",
       step: 0.001,
+    },
+    {
+      name: "test",
+      label: "Test",
+      type: "number",
     },
     {
       name: "date",
@@ -43,8 +50,7 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
       name: "loanId",
       label: "Id Préstamo",
       type: "number",
-      defaultValue: String(fixedLoan?.id),
-      min: "1",
+      defaultValue: String(fixedLoan?.id) || null,
     },
     {
       name: "type",
@@ -67,6 +73,12 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
         formFields={transactionFormFields}
         schema={schema}
         onSubmit={handleOnSubmit}
+        extraInfo={(watch) => (
+          <TransactionFormDetails
+            amount={watch("amount")}
+            loanId={watch("loanId")}
+          />
+        )}
       />
     </>
   );

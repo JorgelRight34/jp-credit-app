@@ -10,7 +10,7 @@ public static class LoanExtensions
     {
         loan.PaymentValue = (decimal)Financial.Pmt(
             (double)(loan.AnnualInterestRate / loan.PaymentFrequency),
-            loan.NumberOfPayments,
+            1,
             (double)-balance
         );
 

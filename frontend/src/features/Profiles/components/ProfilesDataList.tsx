@@ -27,6 +27,8 @@ const ProfilesDataList = ({
     <>
       {loanId !== null && loanId !== undefined ? (
         <SelectInput
+          defaultValue={options[0]?.value}
+          firstOption={["", "---"]}
           options={options.map((option) => [option.value, option.label])}
           {...props}
         />

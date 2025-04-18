@@ -9,6 +9,7 @@ export const schema = z.object({
     .object({ value: z.string(), label: z.string() })
     .transform((val) => val.value), z.string()]),
   date: z.string().default(new Date().toISOString()),
+  test: z.string().transform(val => Number(val))
 });
 
 export type TransactionFormValues = z.infer<typeof schema>;

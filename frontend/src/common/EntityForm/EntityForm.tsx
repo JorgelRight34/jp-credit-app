@@ -4,7 +4,7 @@ import EntityFormLayout from "./EntityFormLayout";
 import { FieldValues, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormFieldInput from "./FormFieldInput";
-import { MouseEventHandler, useMemo } from "react";
+import { MouseEventHandler, ReactNode, useMemo } from "react";
 import { ApiFile } from "../../models/apiFile";
 
 interface EntityFormProps<TData, T> {
@@ -24,6 +24,7 @@ interface EntityFormProps<TData, T> {
   setDefaultFileSources?: (
     files: ApiFile[] | ((prev: ApiFile[]) => ApiFile[])
   ) => void;
+  extraInfo: (watch: any) => ReactNode;
 }
 
 const EntityForm = <TData, T>({
@@ -33,6 +34,7 @@ const EntityForm = <TData, T>({
   formFields,
   defaultValues,
   edit,
+  extraInfo,
   resetValues = true,
   files,
   filesMaxLength = 1,
@@ -99,8 +101,6 @@ const EntityForm = <TData, T>({
     [formFields]
   );
 
-  const clientId = watch("clientId");
-
   return (
     <EntityFormLayout
       onDelete={onDelete as MouseEventHandler}
@@ -120,8 +120,7 @@ const EntityForm = <TData, T>({
           {renderFormFieldInput(formField)}
         </div>
       ))}
-      <button onClick={() => console.log(errors)}>Errors</button>
-      <button onClick={() => console.log(clientId)}>Data</button>
+      {extraInfo(watch)}
     </EntityFormLayout>
   );
 };

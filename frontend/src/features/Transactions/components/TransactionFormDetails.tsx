@@ -1,25 +1,38 @@
 import { useMemo } from "react";
-import { Loan } from "../../../models/loan";
 import { toCurrency, toFormattedDate } from "../../../utils/utils";
+import useLoan from "../../Loans/hooks/useLoan";
 
 interface TransactionFormDetailsProps {
-  loan: Loan;
+  loanId: number;
   amount: number;
 }
 
 const TransactionFormDetails = ({
   amount,
-  loan,
+  loanId,
 }: TransactionFormDetailsProps) => {
+  const { loan, isLoading, isError } = useLoan(loanId);
+
   const totalDeliquency = useMemo(() => {
-    return loan.transactions?.reduce(
+    return loan?.transactions?.reduce(
       (prev, curr) => curr.delinquency + prev,
       0
     );
   }, [loan]);
   const penaltyFee = useMemo(() => {
-    return loan.transactions?.reduce((prev, curr) => curr.penaltyFee + prev, 0);
+    return loan?.transactions?.reduce(
+      (prev, curr) => curr.penaltyFee + prev,
+      0
+    );
   }, [loan]);
+
+  if (isLoading) return <h1>Loading...</h1>;
+
+  if ((isError || !loan) && loanId) {
+    return <h6 className="text-danger">El préstamo #{loanId} no existe</h6>;
+  }
+
+  if (!loanId || !loan) return <></>;
 
   return (
     <>
