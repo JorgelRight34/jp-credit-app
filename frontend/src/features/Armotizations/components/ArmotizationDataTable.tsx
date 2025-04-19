@@ -1,10 +1,13 @@
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../../common/DataTable/DataTable";
 import { ArmotizationPayment } from "../../../models/armotizationPayment";
-import { toCurrency } from "../../../utils/utils";
+import { toCurrency, toTitleCase } from "../../../utils/utils";
+import { getSpanishMonthYearAfterAddingDays } from "../../../utils/constants";
 
 interface ArmotizationDataTableProps {
   armotization: ArmotizationPayment[];
+  paymentFrequencyPerYear?: number;
+  startDate?: Date;
 }
 
 /**
@@ -16,9 +19,23 @@ interface ArmotizationDataTableProps {
  */
 const ArmotizationDataTable = ({
   armotization,
+  startDate,
+  paymentFrequencyPerYear,
 }: ArmotizationDataTableProps) => {
   const columns: ColumnDef<ArmotizationPayment>[] = [
-    { accessorKey: "number", header: "#" },
+    {
+      accessorKey: "number",
+      header: "#",
+      cell: ({ row }) => {
+        if (!startDate || !paymentFrequencyPerYear) return row.original.number;
+        return toTitleCase(
+          getSpanishMonthYearAfterAddingDays(
+            startDate,
+            (365 / paymentFrequencyPerYear) * row.original.number
+          )
+        ); // Format in Spanish
+      },
+    },
     {
       header: "Intereses",
       cell: ({ row }) => toCurrency(row.original.interestValue),

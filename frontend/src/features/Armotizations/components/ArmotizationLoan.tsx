@@ -1,6 +1,7 @@
 import { useState } from "react";
 import useLoanArmotization from "../hooks/useLoanArmotization";
 import ArmotizationDataTable from "./ArmotizationDataTable";
+import useFetchLoan from "../../Loans/hooks/useFetchLoan";
 
 interface ArmotizationLoanProps {
   setLoanId: (id: number) => void;
@@ -27,14 +28,16 @@ interface ArmotizationLoanProps {
 const ArmotizationLoan = ({ setLoanId }: ArmotizationLoanProps) => {
   const [armotizationId, setArmotizationId] = useState<number | undefined>();
   const { armotization, fetchArmotization } = useLoanArmotization();
+  const { loan, fetchLoan } = useFetchLoan();
 
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setLoanId(Number(event.target.value));
-
+  const handleChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     const value = Number(event.target.value);
     if (isNaN(value)) return;
 
+    setLoanId(value);
     setArmotizationId(value);
+
+    await fetchLoan(value);
   };
 
   return (
@@ -58,7 +61,11 @@ const ArmotizationLoan = ({ setLoanId }: ArmotizationLoanProps) => {
         </div>
       </div>
       <div>
-        <ArmotizationDataTable armotization={armotization || []} />
+        <ArmotizationDataTable
+          startDate={loan?.startDate ? new Date(loan?.startDate) : undefined}
+          paymentFrequencyPerYear={loan?.paymentFrequency}
+          armotization={armotization || []}
+        />
       </div>
     </>
   );

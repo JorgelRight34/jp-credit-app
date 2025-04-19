@@ -52,6 +52,10 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         {
             throw new InvalidOperationException("Payment must cover at least the interest due");
         }
+        if (createTransactionDto.Value > loan.DisbursedAmount)
+        {
+            throw new InvalidOperationException("Payment can't be greater than loan amount");
+        }
 
         // Update entities
         loan.AccruedInterest += interests;
@@ -67,7 +71,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         // Calculate the new payment value (A)
         var numberOfPayments = loan.NumberOfPayments - 1;
         if (numberOfPayments != 0) loan.NumberOfPayments = numberOfPayments;
-        loan.CalculatePaymentValue(loan.PrincipalBalance);  // Ojo con el principal balnce = 0
+        loan.CalculatePaymentValue(loan.PrincipalBalance);  // Ojo con el principal balance = 0
 
         await context.Transactions.AddAsync(transaction);
         await SaveChanges();

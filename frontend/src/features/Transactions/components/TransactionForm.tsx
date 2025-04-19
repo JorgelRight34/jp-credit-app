@@ -53,6 +53,12 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
       type: "select",
       options: transactionTypesOptions,
     },
+    {
+      name: "penaltyRate",
+      label: "Penalidad (1-100)%",
+      type: "number",
+      step: 0.01,
+    },
   ];
 
   const handleOnSubmit = async (data: TransactionFormValues) => {

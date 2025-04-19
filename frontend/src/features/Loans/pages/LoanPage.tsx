@@ -86,7 +86,11 @@ const LoanPage = () => {
             />
           </Tab>
           <Tab className="p-3" eventKey="armotization" title="Armotización">
-            <ArmotizationDataTable armotization={armotization} />
+            <ArmotizationDataTable
+              startDate={new Date(loan.startDate)}
+              paymentFrequencyPerYear={loan.paymentFrequency}
+              armotization={armotization}
+            />
           </Tab>
           <Tab
             className="p-3"

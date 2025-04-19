@@ -1,6 +1,7 @@
 import { BrowserRouter, Route, Routes } from "react-router";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "@fortawesome/fontawesome-free/css/all.min.css";
+import "animate.css";
 import "./App.css";
 import { Provider } from "react-redux";
 import store from "./store";

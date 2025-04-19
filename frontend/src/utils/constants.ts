@@ -99,3 +99,15 @@ export const transactionTypesFullNames: Record<TransactionType, string> = {
   [TransactionType.NC]: "Nota de Crédito",
   [TransactionType.ND]: "Nota de Débito",
 }
+
+export const getSpanishMonthYearAfterAddingDays = (startDate: Date, daysToAdd: number) => {
+  const dateCopy = new Date(startDate); // Create a copy to avoid mutating the original
+  dateCopy.setDate(dateCopy.getDate() + daysToAdd); // Add days (modifies dateCopy)
+
+  const options: Intl.DateTimeFormatOptions = {
+    month: 'long',  // "enero", "febrero", etc.
+    year: 'numeric' // 2024, 2025, etc.
+  };
+
+  return dateCopy.toLocaleDateString('es-ES', options); // Format in Spanish
+}
