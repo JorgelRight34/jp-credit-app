@@ -72,7 +72,7 @@ export const schema = z
     ]),
     status: z.string(),
   })
-  .refine((data) => new Date(data.deliveryDate) > new Date(data.startDate), {
+  .refine((data) => new Date(data.deliveryDate) >= new Date(data.startDate), {
     message: "La fecha final debe ser mayor a la inicial",
     path: ["deliveryDate"],
   });
@@ -96,7 +96,7 @@ export const loanFormFields: FormField<Loan>[] = [
   },
   {
     name: "annualInterestRate",
-    label: "Tasa Interés Anual",
+    label: "Tasa Interés Anual (1-100)",
     type: "number",
     min: "0",
     step: 0.001,
@@ -112,6 +112,7 @@ export const loanFormFields: FormField<Loan>[] = [
     name: "paymentFrequency",
     label: "Frecuencia de Pago",
     type: "select",
+    defaultValue: null,
     options: [
       [12, "Mensual"],
       [1, "Anual"],
@@ -128,11 +129,13 @@ export const loanFormFields: FormField<Loan>[] = [
   {
     name: "deliveryDate",
     label: "Fecha de Entrega",
+    defaultValue: null,
     type: "date",
   },
   {
     name: "clientId",
     label: "Cliente",
+    defaultValue: null,
     profileDataList: true,
     profileRole: "user",
     showOnEditFn: (loan: Loan) => getFirstAndLastName(loan.client) as ReactNode,
@@ -140,6 +143,7 @@ export const loanFormFields: FormField<Loan>[] = [
   {
     name: "loanOfficerId",
     label: "Agente",
+    defaultValue: null,
     profileDataList: true,
     profileRole: "loanOfficer",
     showOnEditFn: (loan: Loan) =>
@@ -148,6 +152,7 @@ export const loanFormFields: FormField<Loan>[] = [
   {
     name: "guarantorId",
     label: "Garante",
+    defaultValue: null,
     profileDataList: true,
     profileRole: "guarantor",
     showOnEditFn: (loan: Loan) =>
@@ -156,6 +161,7 @@ export const loanFormFields: FormField<Loan>[] = [
   {
     name: "status",
     label: "Estado",
+    defaultValue: null,
     type: "select",
     options: [
       ["active", "Activo"],
@@ -170,6 +176,7 @@ export const loanFormFields: FormField<Loan>[] = [
   {
     name: "description",
     label: "Descripción",
+    defaultValue: null,
     type: "textarea",
     rows: 2,
     showOnNewRow: true,

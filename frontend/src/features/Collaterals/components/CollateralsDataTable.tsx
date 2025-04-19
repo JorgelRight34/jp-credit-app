@@ -1,8 +1,9 @@
 import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../../common/DataTable/DataTable";
 import { Collateral } from "../../../models/collateral";
-import { NavLink, useNavigate } from "react-router";
-import { getFirstAndLastName, toCurrency } from "../../../utils/utils";
+import { useNavigate } from "react-router";
+import { toCurrency } from "../../../utils/utils";
+import LinkToProfile from "../../Profiles/components/LinkToProfile";
 
 interface CollateralsDataTableProps {
   collaterals: Collateral[];
@@ -25,12 +26,10 @@ const columns: ColumnDef<Collateral>[] = [
     header: "Cliente",
     enableSorting: true,
     cell: ({ row }) => (
-      <NavLink
-        to={`/profiles/${row.original.clientId}`}
+      <LinkToProfile
+        profile={row.original.owner}
         onClick={(event: React.MouseEvent) => event.stopPropagation()}
-      >
-        {getFirstAndLastName(row.original.client)}
-      </NavLink>
+      />
     ),
   },
 ];

@@ -23,7 +23,7 @@ public class CollateralDto
     public CollateralStatus? Status { get; set; }
     public string? DocumentUrl { get; set; }
     [Required]
-    public string? ClientId { get; set; }
+    public string? OwnerId { get; set; }
     [Required]
     public int LoanId { get; set; }
     public DateTime? CreatedAt { get; set; }
@@ -32,6 +32,6 @@ public class CollateralDto
 
     public List<PhotoDto> Photos { get; set; } = [];
     public List<FileUploadDto> Files { get; set; } = [];
-    public UserDto? Client { get; set; }
+    public UserDto? Owner { get; set; }
     public LoanDto? Loan { get; set; }
 }

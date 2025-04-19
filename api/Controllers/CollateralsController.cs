@@ -34,7 +34,7 @@ namespace api.Controllers
         [HttpPost]
         public async Task<ActionResult<CollateralDto>> Create([FromBody] CreateCollateralDto createCollateralDto)
         {
-            var user = await context.Users.FindAsync(createCollateralDto.ClientId);
+            var user = await context.Users.FindAsync(createCollateralDto.OwnerId);
             if (user == null) return BadRequest("User doesn't exist");
 
             var loan = await context.Loans.FindAsync(createCollateralDto.LoanId);
@@ -95,7 +95,7 @@ namespace api.Controllers
             foreach (var file in files)
             {
                 collateral = await collateralsRepository.AddCollateralFileAsync(file, collateral);
-                
+
             }
             var collateralDto = mapper.Map<CollateralDto>(collateral);
 

@@ -19,8 +19,8 @@ public class CreateCollateralDto
     public CollateralStatus Status { get; set; } = CollateralStatus.Active;
     public string? DocumentUrl { get; set; }
     [Required]
-    public string? ClientId { get; set; }
-    
+    public string? OwnerId { get; set; }
+
     public string? Location { get; set; }
     [Required]
     public int LoanId { get; set; }

@@ -1,13 +1,13 @@
-import { NavLink, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
 import DataTable from "../../../common/DataTable/DataTable";
 import { Loan } from "../../../models/loan";
 import {
-  getFirstAndLastName,
   sortDateRows,
   toCurrency,
   toFormattedDate,
 } from "../../../utils/utils";
 import { ColumnDef } from "@tanstack/react-table";
+import LinkToProfile from "../../Profiles/components/LinkToProfile";
 
 interface LoansDataTable {
   loans: Loan[];
@@ -23,12 +23,10 @@ const columns: ColumnDef<Loan>[] = [
     cell: ({ row }) => {
       const client = row.original.client;
       return client ? (
-        <NavLink
-          to={`/profiles/${client.username}`}
+        <LinkToProfile
+          profile={row.original.client}
           onClick={(event: React.MouseEvent) => event.stopPropagation()}
-        >
-          {getFirstAndLastName(client)}
-        </NavLink>
+        />
       ) : (
         "---"
       );
@@ -65,7 +63,7 @@ const columns: ColumnDef<Loan>[] = [
     sortingFn: sortDateRows,
     cell: ({ row }) => {
       const lastPayment = row.original.lastPayment;
-      return lastPayment ? toFormattedDate(new Date(lastPayment.date)) : "---";
+      return lastPayment ? toFormattedDate(lastPayment.date) : "---";
     },
   },
   {
@@ -78,7 +76,7 @@ const columns: ColumnDef<Loan>[] = [
     accessorKey: "createdAt",
     header: "Fecha Inicio",
     enableSorting: true,
-    cell: ({ row }) => toFormattedDate(new Date(row.original.createdAt)),
+    cell: ({ row }) => toFormattedDate(row.original.createdAt),
   },
 ];
 

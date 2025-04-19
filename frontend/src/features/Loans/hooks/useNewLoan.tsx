@@ -7,7 +7,10 @@ const useNewLoan = () => {
   const queryClient = useQueryClient();
 
   const postNewLoan = async (data: LoanFormValues) => {
-    const response = await api.post(baseUrl, data);
+    const response = await api.post(baseUrl, {
+      ...data,
+      annualInterestRate: data.annualInterestRate / 100,
+    });
     const loan = response.data;
 
     // Update list

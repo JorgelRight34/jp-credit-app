@@ -7,6 +7,7 @@ import { Role } from "../models/role";
 import countries from "i18n-iso-countries";
 import "i18n-iso-countries/langs/es.json";
 import esLocale from "i18n-iso-countries/langs/es.json";
+import { TransactionType } from "../models/transactionType";
 
 countries.registerLocale(esLocale);
 
@@ -91,3 +92,10 @@ export const collateralAgreementTypeSpanishTranslations: Record<
   [CollateralAgreementType.CreditLine]: "Línea de crédito",
   [CollateralAgreementType.AgriculturalLoan]: "Préstamo agrícola",
 };
+
+export const transactionTypesFullNames: Record<TransactionType, string> = {
+  [TransactionType.DS]: "Desembolso",
+  [TransactionType.PC]: "Pago Cuota",
+  [TransactionType.NC]: "Nota de Crédito",
+  [TransactionType.ND]: "Nota de Débito",
+}

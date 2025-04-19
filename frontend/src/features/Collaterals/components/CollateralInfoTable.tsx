@@ -1,15 +1,12 @@
 import { Link } from "react-router";
 import InfoTable from "../../../common/DataTable/InfoTable";
-import {
-  getFullName,
-  toFormattedDate,
-  toTitleCase,
-} from "../../../utils/utils";
+import { toFormattedDate, toTitleCase } from "../../../utils/utils";
 import { Collateral } from "../../../models/collateral";
 import {
   collateralConditionSpanishTranslations,
   collateralStatusSpanishTranslations,
 } from "../../../utils/constants";
+import LinkToProfile from "../../Profiles/components/LinkToProfile";
 
 interface CollateralInfoTableProps {
   collateral: Collateral;
@@ -23,12 +20,7 @@ const CollateralInfoTable = ({ collateral }: CollateralInfoTableProps) => {
         ["Título", collateral.title],
         [
           "Cliente",
-          <Link
-            className="text-accent-secondary"
-            to={`/profiles/${collateral.client.username}`}
-          >
-            {getFullName(collateral.client)}
-          </Link>,
+          <LinkToProfile profile={collateral.owner} fullName={true} />,
         ],
         [
           "Préstamo",
@@ -49,7 +41,7 @@ const CollateralInfoTable = ({ collateral }: CollateralInfoTableProps) => {
             collateralConditionSpanishTranslations[collateral.condition]
           ),
         ],
-        ["Fecha", toFormattedDate(new Date(collateral.createdAt))],
+        ["Fecha", toFormattedDate(collateral.createdAt)],
       ]}
     />
   );

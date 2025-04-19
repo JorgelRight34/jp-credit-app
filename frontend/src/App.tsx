@@ -73,7 +73,7 @@ function App() {
                   element={<ProfilePage />}
                 />
                 <Route path="loans" element={<LoansPage />} />
-                <Route path="loans/:id" element={<LoanPage />} />
+                <Route path="loans/:id/:tab?" element={<LoanPage />} />
                 <Route path="transactions" element={<TransactionsPage />} />
                 <Route path="transactions/:id" element={<TransactionPage />} />
               </Route>

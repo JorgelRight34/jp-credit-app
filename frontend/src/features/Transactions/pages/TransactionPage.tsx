@@ -8,7 +8,7 @@ import LoanInfo from "../../Loans/components/LoanInfo";
 import TransactionInfo from "../components/TransactionInfo";
 import useDeleteTransaction from "../hooks/useDeleteTransaction";
 import TabTitle from "../../../common/TabTitle";
-import TransactionsDataTable from "../components/TransactionsDataTable";
+import TransactionsOfLoanDataTable from "../components/TransactionsOfLoanDataTable";
 
 const TransactionPage = () => {
   const { id } = useParams();
@@ -54,11 +54,7 @@ const TransactionPage = () => {
           <LoanInfo loan={transaction.loan} />
         </Tab>
         <Tab eventKey={"loanTransactions"} title="Transacciones del Préstamo">
-          <TransactionsDataTable
-            transactions={
-              transaction.loan.transactions?.filter((el) => el) || []
-            }
-          />
+          <TransactionsOfLoanDataTable transaction={transaction} />
         </Tab>
       </Tabs>
     </EntityLayout>

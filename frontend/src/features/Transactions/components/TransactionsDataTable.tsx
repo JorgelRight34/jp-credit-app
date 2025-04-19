@@ -2,12 +2,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import DataTable from "../../../common/DataTable/DataTable";
 import { Transaction } from "../../../models/transaction";
 import {
-  getFirstAndLastName,
   sortDateRows,
   toCurrency,
   toFormattedDate,
 } from "../../../utils/utils";
-import { NavLink, useNavigate } from "react-router";
+import { useNavigate } from "react-router";
+import LinkToProfile from "../../Profiles/components/LinkToProfile";
+import LinkToLoan from "../../Loans/components/LinkToLoan";
 
 interface TransactionsDataTableProps {
   transactions: Transaction[];
@@ -38,21 +39,17 @@ const columns: ColumnDef<Transaction>[] = [
     accessorKey: "loanId",
     header: "Préstamo",
     cell: ({ row }) => (
-      <NavLink to={`/loans/${row.original.loanId}`}>
-        {row.original.loanId}
-      </NavLink>
+      <LinkToLoan id={row.original.loanId}>{row.original.loanId}</LinkToLoan>
     ),
   },
   {
     accessorKey: "payerId",
     header: "Cliente",
     cell: ({ row }) => (
-      <NavLink
-        to={`/profiles/${row.original.payer.username}`}
+      <LinkToProfile
+        profile={row.original.payer}
         onClick={(event: React.MouseEvent) => event.stopPropagation()}
-      >
-        {getFirstAndLastName(row.original.payer)}
-      </NavLink>
+      />
     ),
   },
   {
@@ -60,7 +57,7 @@ const columns: ColumnDef<Transaction>[] = [
     header: "Fecha",
     enableSorting: true,
     sortingFn: sortDateRows,
-    cell: ({ row }) => toFormattedDate(new Date(row.original.date)),
+    cell: ({ row }) => toFormattedDate(row.original.date),
   },
 ];
 

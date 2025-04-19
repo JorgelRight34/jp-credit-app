@@ -7,4 +7,5 @@ public class TransactionStatsDto
 {
     public TransactionDto? LastTransaction { get; set; }
     public TransactionDto? NextTransaction { get; set; }
+    public DateOnly? NextTransactionDate { get; set; }
 }

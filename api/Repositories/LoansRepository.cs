@@ -21,7 +21,8 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
         var loan = mapper.Map<Loan>(createLoanDto);
         loan.PrincipalBalance = loan.DisbursedAmount;
         loan.AccruedInterest = 0;
-        var days = (int)(createLoanDto.PaymentFrequency / 12) * 30;
+
+        var days = (int)(365.0 / (double)createLoanDto.PaymentFrequency);
         loan.NextPaymentDate = createLoanDto.StartDate.AddDays(days);
         loan.CalculatePaymentValue(loan.DisbursedAmount);
 

@@ -320,10 +320,6 @@ namespace api.Migrations
                     b.Property<int>("AgreementType")
                         .HasColumnType("INTEGER");
 
-                    b.Property<string>("AppUserId")
-                        .IsRequired()
-                        .HasColumnType("TEXT");
-
                     b.Property<int>("Condition")
                         .HasColumnType("INTEGER");
 
@@ -345,6 +341,10 @@ namespace api.Migrations
                     b.Property<string>("Location")
                         .HasColumnType("TEXT");
 
+                    b.Property<string>("OwnerId")
+                        .IsRequired()
+                        .HasColumnType("TEXT");
+
                     b.Property<int>("Status")
                         .HasColumnType("INTEGER");
 
@@ -357,9 +357,9 @@ namespace api.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AppUserId");
-
                     b.HasIndex("LoanId");
+
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Collaterals");
                 });
@@ -624,21 +624,21 @@ namespace api.Migrations
 
             modelBuilder.Entity("api.Models.Collateral", b =>
                 {
-                    b.HasOne("api.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("api.Models.Loan", "Loan")
                         .WithMany("Collaterals")
                         .HasForeignKey("LoanId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("AppUser");
+                    b.HasOne("api.Models.AppUser", "Owner")
+                        .WithMany()
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Loan");
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("api.Models.FileUpload", b =>

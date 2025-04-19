@@ -4,6 +4,7 @@ import useEditLoan from "../hooks/useEditLoan";
 import { Loan } from "../../../models/loan";
 import EntityForm from "../../../common/EntityForm/EntityForm";
 import { toast } from "react-toastify";
+import LoanFormDetails from "./LoanFormDetails";
 
 interface LoanFormDefaultProps {
   defaultValues?: LoanFormValues;
@@ -48,10 +49,19 @@ const LoanForm = ({ defaultValues, edit }: LoanFormDefaultProps) => {
       formFields={loanFormFields}
       defaultValues={defaultValues}
       schema={schema}
-      columns={4}
-      rows={3}
+      columns={5}
+      rows={2}
       edit={edit}
       resetValues={edit ? false : true}
+      extraInfo={(watch) => (
+        <LoanFormDetails
+          className="w-75 mx-auto shadow-sm mb-3"
+          amount={watch("disbursedAmount")}
+          nPer={watch("numberOfPayments")}
+          annualInterestRate={watch("annualInterestRate") / 100}
+          paymentFrequency={watch("paymentFrequency")}
+        />
+      )}
     />
   );
 };

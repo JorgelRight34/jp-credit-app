@@ -21,7 +21,7 @@ public class Collateral
     public CollateralStatus Status { get; set; } = CollateralStatus.Active;
     public string? DocumentUrl { get; set; }
     [Required]
-    public string? AppUserId { get; set; }
+    public string? OwnerId { get; set; }
     [Required]
     public int LoanId { get; set; }
     public DateTime CreatedAt { get; set; } = DateTime.Now;
@@ -29,8 +29,8 @@ public class Collateral
     public string? Location { get; set; }
 
     // Navigation Properties
-    [ForeignKey("AppUserId")]
-    public AppUser? AppUser { get; set; }
+    [ForeignKey("OwnerId")]
+    public AppUser? Owner { get; set; }
     [ForeignKey("LoanId")]
     public Loan? Loan { get; set; }
     public List<Photo> Photos { get; set; } = [];

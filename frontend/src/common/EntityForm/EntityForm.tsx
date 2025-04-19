@@ -1,13 +1,13 @@
 import { ZodType } from "zod";
 import { FormField } from "../../models/formField";
 import EntityFormLayout from "./EntityFormLayout";
-import { FieldValues, useForm } from "react-hook-form";
+import { FieldValues, useForm, UseFormWatch } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import FormFieldInput from "./FormFieldInput";
 import { MouseEventHandler, ReactNode, useMemo } from "react";
 import { ApiFile } from "../../models/apiFile";
 
-interface EntityFormProps<TData, T> {
+interface EntityFormProps<TData, T extends FieldValues> {
   onDelete?: () => void;
   edit?: TData;
   formFields: FormField<TData>[];
@@ -24,10 +24,11 @@ interface EntityFormProps<TData, T> {
   setDefaultFileSources?: (
     files: ApiFile[] | ((prev: ApiFile[]) => ApiFile[])
   ) => void;
-  extraInfo: (watch: any) => ReactNode;
+  extraInfo?: (watch: UseFormWatch<FieldValues>) => ReactNode;
+  extraInfoRenderDirection?: "col-start" | "col-end" | "row-start" | "row-end";
 }
 
-const EntityForm = <TData, T>({
+const EntityForm = <TData, T extends FieldValues>({
   columns,
   rows,
   schema,
@@ -120,7 +121,7 @@ const EntityForm = <TData, T>({
           {renderFormFieldInput(formField)}
         </div>
       ))}
-      {extraInfo(watch)}
+      {extraInfo && extraInfo(watch)}
     </EntityFormLayout>
   );
 };

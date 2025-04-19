@@ -26,11 +26,6 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
       step: 0.001,
     },
     {
-      name: "test",
-      label: "Test",
-      type: "number",
-    },
-    {
       name: "date",
       label: "Fecha",
       defaultToToday: true,
@@ -68,14 +63,15 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
   return (
     <>
       <EntityForm<Transaction, TransactionFormValues>
-        columns={2}
-        rows={3}
+        columns={3}
+        rows={2}
         formFields={transactionFormFields}
         schema={schema}
         onSubmit={handleOnSubmit}
         extraInfo={(watch) => (
           <TransactionFormDetails
-            amount={watch("amount")}
+            className="mb-3"
+            amount={watch("value") || 0}
             loanId={watch("loanId")}
           />
         )}

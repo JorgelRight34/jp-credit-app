@@ -1,15 +1,18 @@
 import { useMemo } from "react";
-import { toCurrency, toFormattedDate } from "../../../utils/utils";
+import { toCurrency } from "../../../utils/utils";
 import useLoan from "../../Loans/hooks/useLoan";
+import FinancialCard from "../../../common/ui/FinancialCard";
 
 interface TransactionFormDetailsProps {
   loanId: number;
   amount: number;
+  className?: string;
 }
 
 const TransactionFormDetails = ({
   amount,
   loanId,
+  className = "",
 }: TransactionFormDetailsProps) => {
   const { loan, isLoading, isError } = useLoan(loanId);
 
@@ -19,12 +22,29 @@ const TransactionFormDetails = ({
       0
     );
   }, [loan]);
+
   const penaltyFee = useMemo(() => {
+    // Total penalty fee between all payments
     return loan?.transactions?.reduce(
       (prev, curr) => curr.penaltyFee + prev,
       0
     );
   }, [loan]);
+
+  const interests = useMemo(() => {
+    if (!loan) return 0;
+    return (
+      loan.principalBalance * (loan.annualInterestRate / loan.paymentFrequency)
+    );
+  }, [loan]);
+
+  const capital = useMemo(() => {
+    if (!loan) return 0;
+    return (
+      amount -
+      loan.principalBalance * (loan.annualInterestRate / loan.paymentFrequency)
+    );
+  }, [amount, loan]);
 
   if (isLoading) return <h1>Loading...</h1>;
 
@@ -35,79 +55,32 @@ const TransactionFormDetails = ({
   if (!loanId || !loan) return <></>;
 
   return (
-    <>
-      <h6>Detalles</h6>
-      <div className="row mx-0 mb-3">
-        <div className="col-lg-4">
-          {/* Annual interest */}
-          <div className="mb-3">
-            <label className="form-label">Pago No.</label>
-            <p>
-              {loan.transactions?.length ? loan.transactions.length + 1 : 1}
-            </p>
-          </div>
-          {/* Annual interest */}
-          <div className="mb-3">
-            <label className="form-label">Tasa de Interes</label>
-            <p>{loan.annualInterestRate}</p>
-          </div>
-        </div>
-        <div className="col-lg-4">
-          {/* Payment value (cuota) */}
-          <div className="mb-3">
-            <label className="form-label">Cuota</label>
-            <p>{toCurrency(loan.paymentValue)}</p>
-          </div>
-          {/* Capital */}
-          <div className="mb-3">
-            <label className="form-label">Tasa de Interes</label>
-            <p>{amount - amount * loan.annualInterestRate}</p>
-          </div>
-        </div>
-        <div className="col-lg-4">
-          {/* Deliquency */}
-          <div className="mb-3">
-            <label className="form-label">Total Atraso</label>
-            <p>{toCurrency(totalDeliquency)}</p>
-          </div>
-        </div>
+    <div className={`row mx-0 ${className}`}>
+      <div className="col-lg-6">
+        <FinancialCard
+          title={`Prestamo #${loanId}`}
+          subheading="Cuota"
+          heading={toCurrency(loan.paymentValue)}
+          headers={[
+            ["Atraso", toCurrency(loan.paymentValue)],
+            ["Interés Anual", `${loan.annualInterestRate * 100}%`],
+            ["Mora", toCurrency(totalDeliquency || 0)],
+          ]}
+        />
       </div>
-      <h6>Montos Pagados</h6>
-      <div className="row mx-0">
-        <div className="col-lg-4">
-          {/* Capital */}
-          <div className="mb-3">
-            <label className="form-label">Capital</label>
-            <p>{toCurrency(loan.disbursedAmount - loan.principalBalance)}</p>
-          </div>
-        </div>
-        <div className="col-lg-4">
-          {/* Last PAYMENT */}
-          <div className="mb-3">
-            <label className="form-label">Ultimo Pago</label>
-            {loan.lastPayment ? (
-              <p>{toFormattedDate(new Date(loan.lastPayment?.date))}</p>
-            ) : (
-              <p>---</p>
-            )}
-          </div>
-        </div>
-        <div className="col-lg-4">
-          {/* Interest */}
-          <div className="mb-3">
-            <label className="form-label">Interes</label>
-            <p>{toCurrency(loan.accruedInterest)}</p>
-          </div>
-        </div>
-        <div className="col-lg-4">
-          {/* Penalty fee */}
-          <div className="mb-3">
-            <label className="form-label">Mora</label>
-            {loan.lastPayment ? <p>{toCurrency(penaltyFee)}</p> : <p>---</p>}
-          </div>
-        </div>
+      <div className="col-lg-6">
+        <FinancialCard
+          title={`Prevista del Pago`}
+          subheading="Monto"
+          heading={toCurrency(amount)}
+          headers={[
+            ["Capital", toCurrency(capital)],
+            ["Intereses", toCurrency(interests)],
+            ["Mora", toCurrency(penaltyFee || 0)],
+          ]}
+        />
       </div>
-    </>
+    </div>
   );
 };
 

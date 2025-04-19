@@ -1,4 +1,4 @@
-import { Tab, Tabs } from "react-bootstrap";
+import { Tab } from "react-bootstrap";
 import EntityLayout from "../../../layouts/EntityLayout";
 import LoanInformation from "../components/LoanInfo";
 import useLoan from "../hooks/useLoan";
@@ -21,6 +21,7 @@ import TransactionForm from "../../Transactions/components/TransactionForm";
 import TabTitle from "../../../common/TabTitle";
 import ArmotizationDataTable from "../../Armotizations/components/ArmotizationDataTable";
 import useLoanArmotization from "../../Armotizations/hooks/useLoanArmotization";
+import EntityTabs from "../../../common/ui/EntityTabs";
 
 const LoanPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -30,7 +31,9 @@ const LoanPage = () => {
   const { collaterals, fetchPage: fetchCollateralPage } = useCollaterals(
     `loanId=${id}`
   );
-  const { transactions, fetchPage: fetchTransactions } = useTransactions();
+  const { transactions, fetchPage: fetchTransactions } = useTransactions(
+    Number(id)
+  );
   const { notes, fetchPage: fetchNotes } = useNotes(`loanId=${id}`);
   const { armotization } = useLoanArmotization(Number(id));
   const [onDelete] = useDeleteLoan();
@@ -44,7 +47,7 @@ const LoanPage = () => {
 
   if (isError) return <NotFound />;
 
-  if (isLoading) return <>...</>;
+  if (isLoading || !loan) return <>...</>;
 
   return (
     <>
@@ -58,7 +61,7 @@ const LoanPage = () => {
         onDelete={handleOnDelete}
         onEdit={() => setShowEditModal(true)}
       >
-        <Tabs>
+        <EntityTabs defaultActiveKey="info">
           <Tab className="p-3" eventKey="info" title="Información">
             <LoanInformation loan={loan} />
           </Tab>
@@ -103,7 +106,7 @@ const LoanPage = () => {
             title={
               <TabTitle
                 title="Agente"
-                path={`/profiles/${loan.loanOfficer.username}`}
+                path={`/profiles/${loan.loanOfficer?.username}`}
               />
             }
           >
@@ -115,13 +118,13 @@ const LoanPage = () => {
             title={
               <TabTitle
                 title="Garante"
-                path={`/profiles/${loan.guarantor.username}`}
+                path={`/profiles/${loan.guarantor?.username}`}
               />
             }
           >
             {loan.guarantor && <ProfileInfo profile={loan.guarantor} />}
           </Tab>
-        </Tabs>
+        </EntityTabs>
       </EntityLayout>
       <Modal
         title="Editar Préstamo"

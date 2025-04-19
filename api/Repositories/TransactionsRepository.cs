@@ -20,7 +20,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
 
         // Calculate capital value and interest value
         var loan = await context.Loans.FindAsync(createTransactionDto.LoanId);
-        if (loan == null) throw new Exception("Loan doesn't exist");
+        if (loan == null) throw new InvalidOperationException("Loan doesn't exist");
 
         // Get payment dates
         var payday = loan.NextPaymentDate;
@@ -35,21 +35,23 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
             transaction.PenaltyFee = penaltyFee;
         }
 
-        /*
         // Check if payment is less than what has to be paid
         if (createTransactionDto.Value < loan.PaymentValue)
         {
             // If payment doesn't cover the whole (A) then record it as delinquency (atraso)
             transaction.Delinquency = loan.PaymentValue - createTransactionDto.Value;
         }
-        */
 
         // Get periodly interest 
-        var periodlyInterest = loan.AnnualInterestRate / loan.PaymentFrequency;
+        var periodlyInterest = loan.AnnualInterestRate / loan.PaymentFrequency; // Payment frequency is always based in years
         // Get interests I = balance * periodly interest
         var interests = principalBalance * periodlyInterest;
         // Get capital, capital = P - I
         var capital = createTransactionDto.Value - interests;
+        if (createTransactionDto.Value < interests)
+        {
+            throw new InvalidOperationException("Payment must cover at least the interest due");
+        }
 
         // Update entities
         loan.AccruedInterest += interests;
@@ -58,13 +60,14 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         transaction.CapitalValue = capital;
         if (loan.PrincipalBalance == 0) loan.Status = LoanStatus.PaidOff;   // If loan is completed then set to paid off
 
-        // Update next payment date
-        var days = (int)(loan.PaymentFrequency / 12) * 30;
-        loan.NextPaymentDate = loan.NextPaymentDate.AddDays(days);
+        // Days between payments = 365 / PaymentFrequency
+        int days = (int)(365.0 / (double)loan.PaymentFrequency);
+        loan.NextPaymentDate = loan.NextPaymentDate.AddDays(days);  // Update payment
 
         // Calculate the new payment value (A)
-        loan.NumberOfPayments -= 1;
-        loan.CalculatePaymentValue(loan.PrincipalBalance);
+        var numberOfPayments = loan.NumberOfPayments - 1;
+        if (numberOfPayments != 0) loan.NumberOfPayments = numberOfPayments;
+        loan.CalculatePaymentValue(loan.PrincipalBalance);  // Ojo con el principal balnce = 0
 
         await context.Transactions.AddAsync(transaction);
         await SaveChanges();
@@ -150,7 +153,6 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
     {
         var transaction = await context.Transactions
             .Include(x => x.Loan)
-                .ThenInclude(x => x!.Transactions)
             .Include(x => x.Payer)
                 .ThenInclude(x => x!.Photo)
             .FirstOrDefaultAsync(x => x.Id == id);
@@ -180,6 +182,18 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
             .Where(x => x.Date >= transaction.Date)
             .OrderBy(x => x.Date)
             .FirstOrDefaultAsync();
+
+        if (nextTransaction == null)
+        {
+            var loan = await context.Loans.FindAsync(transaction.LoanId);
+            if (loan == null) throw new Exception("A transaction can'be without loan");
+
+            return new TransactionStatsDto
+            {
+                LastTransaction = mapper.Map<TransactionDto>(lastTransaction),
+                NextTransactionDate = loan.NextPaymentDate,
+            };
+        }
 
         return new TransactionStatsDto
         {

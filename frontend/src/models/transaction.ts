@@ -1,4 +1,5 @@
 import { Loan } from "./loan";
+import { TransactionType } from "./transactionType";
 import { User } from "./user";
 
 export interface Transaction {
@@ -12,4 +13,5 @@ export interface Transaction {
   date: Date | string;
   payer: User;
   loan: Loan;
+  type: TransactionType;
 }

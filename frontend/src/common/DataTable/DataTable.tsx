@@ -56,7 +56,11 @@ const DataTable = <TData,>({
   });
 
   useEffect(() => {
-    if (!navigateCallback || firstRender) return;
+    if (navigateCallback === undefined) return;
+    if (firstRender) {
+      setFirstRender(false);
+      return;
+    }
     setFirstRender(false);
     const fetchMore = async () => navigateCallback(pagination.pageIndex + 1);
     fetchMore();

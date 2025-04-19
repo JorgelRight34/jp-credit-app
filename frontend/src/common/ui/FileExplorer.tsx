@@ -58,8 +58,8 @@ const FileExplorer = ({
       enableSorting: true,
       cell: ({ row }) =>
         row.original.lastModified
-          ? "---"
-          : toFormattedDate(new Date(row.original.lastModified || "")),
+          ? toFormattedDate(row.original.lastModified)
+          : "---",
     },
     {
       accessorKey: "createdAt",
@@ -67,8 +67,8 @@ const FileExplorer = ({
       enableSorting: true,
       cell: ({ row }) =>
         row.original.lastModified
-          ? "---"
-          : toFormattedDate(new Date(row.original.lastModified || "")),
+          ? toFormattedDate(row.original.lastModified)
+          : "---",
     },
     ...extraColumns,
   ];

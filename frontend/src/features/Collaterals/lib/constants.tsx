@@ -21,7 +21,7 @@ export const schema = z.object({
   agreementType: z.string(),
   location: z.string(),
   expirationDate: z.string().nullable().default(null),
-  clientId: z.union([
+  ownerId: z.union([
     z
       .object({
         label: z.string(),
@@ -107,12 +107,12 @@ export const collateralsFormFields: FormField<Collateral>[] = [
     defaultValue: null,
   },
   {
-    name: "clientId",
+    name: "ownerId",
     label: "Cliente",
     profileDataList: true,
     profileRole: "client",
     showOnEditFn: (collateral: Collateral) =>
-      getFirstAndLastName(collateral.client) as ReactNode,
+      getFirstAndLastName(collateral.owner) as ReactNode,
     watch: "loanId",
     disabledWhen: (value) =>
       value === "" || value === 0 || value == undefined || value === null,

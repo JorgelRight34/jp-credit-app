@@ -226,7 +226,7 @@ public class UsersRepository(
 
 
         var loansCount = await context.Loans.Where(x => x.ClientId == user.Id).CountAsync();
-        var collateralsCount = await context.Collaterals.Where(x => x.AppUserId == user.Id).CountAsync();
+        var collateralsCount = await context.Collaterals.Where(x => x.OwnerId == user.Id).CountAsync();
 
         var stats = new UserStatsDto
         {

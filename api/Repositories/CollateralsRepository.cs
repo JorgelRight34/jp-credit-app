@@ -40,7 +40,7 @@ public class CollateralsRepository(
 
     public async Task<IEnumerable<Collateral>> GetAllAsync(CollateralQuery query)
     {
-        var collaterals = context.Collaterals.AsQueryable();
+        var collaterals = context.Collaterals.Include(x => x.Owner).AsQueryable();
 
         if (query.MinValue > 0)
         {
@@ -74,7 +74,7 @@ public class CollateralsRepository(
         if (!String.IsNullOrEmpty(query.Username))
         {
             var clientId = await context.Users.Where(x => x.UserName == query.Username).Select(x => x.Id).FirstOrDefaultAsync();
-            collaterals = collaterals.Where(x => x.AppUserId == clientId);
+            collaterals = collaterals.Where(x => x.OwnerId == clientId);
         }
 
         if (query.LoanId != null && query.LoanId != 0)
@@ -88,7 +88,7 @@ public class CollateralsRepository(
     public async Task<Collateral?> GetByIdAsync(int id)
     {
         var collateral = await context.Collaterals
-        .Include(x => x.AppUser)
+        .Include(x => x.Owner)
         .ThenInclude(x => x!.Photo)
         .Include(x => x.Loan)
         .Include(x => x.Photos)
@@ -131,7 +131,7 @@ public class CollateralsRepository(
     {
         var photo = await context.Photos.Where(x => x.PublicId == publicId).FirstOrDefaultAsync();
         if (photo == null) throw new Exception("Photo not found");
-    
+
         var result = await fileUploadService.DeletePhotoAsync(publicId);
         if (result.Result != "ok") throw new Exception(result.Result);
 
@@ -149,7 +149,7 @@ public class CollateralsRepository(
 
         context.FileUploads.Remove(file);
         await context.SaveChangesAsync();
-    }   
+    }
 
     public async Task<Collateral> AddCollateralFileAsync(IFormFile file, Collateral collateral)
     {

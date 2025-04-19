@@ -11,7 +11,11 @@ export const toCurrency = (money: number | undefined): string | number => {
   return formattedAmount;
 };
 
-export const toFormattedDate = (date: Date): string => {
+export const toFormattedDate = (date: string | Date): string => {
+  if (!(date instanceof Date)) date = new Date(date);
+
+  if (isNaN(date.getTime())) return "---";
+
   try {
     const formattedDate = new Intl.DateTimeFormat("fr-FR").format(date);
     return formattedDate;
@@ -61,10 +65,35 @@ export const sortDateRows = <TData,>(
 export const getAge = (dateOfBirth: Date) => {
   const today = new Date();
   let age = today.getFullYear() - dateOfBirth.getFullYear();
-  let month = today.getMonth() - dateOfBirth.getMonth();
+  const month = today.getMonth() - dateOfBirth.getMonth();
 
   if (month < 0 || (month === 0 && today.getDate() < dateOfBirth.getDate()))
     age--;
 
   return age;
+};
+
+export const getPmt = (
+  annualInterestRate: number,
+  paymentFrequency: number,
+  nPer: number,
+  amount: number
+) => {
+  const r = annualInterestRate / paymentFrequency; // Interest rate per period
+  const n = nPer; // Total number of payments
+
+  if (r === 0) return amount / n; // No interest
+
+  // PMT formula
+  const pmt = (r * amount) / (1 - Math.pow(1 + r, -n));
+  return Number(pmt.toFixed(2));
+};
+
+export const getTotalInterest = (
+  pmt: number,
+  paymentFrequency: number,
+  amount: number
+) => {
+  const total = pmt * paymentFrequency - amount;
+  return total;
 };
