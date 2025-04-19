@@ -36,7 +36,9 @@ const FormInput = <T,>({
   ...props
 }: FormInputProps<T>) => {
   if (formField.type === "select") {
-    return <SelectInput formField={formField} disabled={disabled} {...props} />;
+    return (
+      <SelectInput<T> formField={formField} disabled={disabled} {...props} />
+    );
   }
 
   if (formField.profileDataList) {
@@ -47,7 +49,11 @@ const FormInput = <T,>({
         render={({ field }) => (
           <ProfilesDataList
             isDisabled={disabled}
-            loanId={watchedValue || formField.fixedWatchedValue || undefined}
+            loanId={
+              formField.watchedValue === "loanId"
+                ? watchedValue || formField.fixedWatchedValue || undefined
+                : undefined
+            }
             role={formField.profileRole || "client"}
             {...field} // This binds react-select to React Hook Form
           />

@@ -16,10 +16,12 @@ export interface FormField<TData> {
   showOnEdit?: boolean;
   defaultToToday?: boolean;
   showOnNewRow?: boolean;
+  show?: boolean;
   showOnEditFn?: (entity: TData) => ReactNode;
   disabledFn?: (data: TData) => boolean;
   multiple?: boolean;
   defaultValue?: string | number | null;
-  watch?: keyof TData; // field name to watch
-  disabledWhen?: (watchedValue: unknown) => boolean; // disable condition
+  watchedValue?: keyof TData; // field name to watch
+  disabledWhen?: (watch: (fieldName: keyof TData) => unknown) => boolean; // disable condition
+  validationFn?: (watchedValue: unknown) => boolean;
 }

@@ -5,6 +5,9 @@ import TransactionsDataTable from "../components/TransactionsDataTable";
 import Modal from "../../../common/ui/Modal";
 import { useState } from "react";
 import TransactionForm from "../components/TransactionForm";
+import IncomesDataTable from "../components/IncomesDataTable";
+import OutcomesDataTable from "../components/OutcomesDataTable";
+import FeesDataTable from "../components/FeesDataTable";
 
 const TransactionsPage = () => {
   const { transactions, fetchPage } = useTransactions();
@@ -13,12 +16,21 @@ const TransactionsPage = () => {
   return (
     <>
       <EntityLayout title="Transacciones" onAddNew={() => setShowModal(true)}>
-        <Tabs>
-          <Tab eventKey="transactions" title="Transacciones" className="p-3">
+        <Tabs defaultActiveKey="all">
+          <Tab eventKey="all" title="Transacciones" className="p-3">
             <TransactionsDataTable
               transactions={transactions}
               navigateCallback={(page: number) => fetchPage(page)}
             />
+          </Tab>
+          <Tab eventKey="incomes" className="p-3" title="Ingresos">
+            <IncomesDataTable />
+          </Tab>
+          <Tab eventKey="outcomes" className="p-3" title="Egresos">
+            <OutcomesDataTable />
+          </Tab>
+          <Tab eventKey="cuotas" className="p-3" title="Cuotas">
+            <FeesDataTable />
           </Tab>
         </Tabs>
       </EntityLayout>

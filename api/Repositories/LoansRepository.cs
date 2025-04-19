@@ -46,35 +46,7 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
     public async Task<IEnumerable<Loan>> GetAllAsync(LoanQuery query)
     {
         var loans = context.Loans.Include(x => x.Client).AsQueryable();
-
-        if (query.ClientId != null)
-        {
-            loans = loans.Where(x => x.ClientId == query.ClientId);
-        }
-
-        if (query.Username != null)
-        {
-            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == query.Username);
-            if (user != null)
-            {
-                loans = loans.Where(x => x.ClientId == user.Id);
-            }
-        }
-
-        if (query.StartDate != null)
-        {
-            loans = loans.Where(x => x.CreatedAt >= query.StartDate);
-        }
-
-        if (query.EndDate != null)
-        {
-            loans = loans.Where(x => x.CreatedAt <= query.EndDate);
-        }
-
-        if (query.Status != null)
-        {
-            loans = loans.Where(x => x.Status == query.Status);
-        }
+        loans = await FilterByQuery(loans, query);
 
         loans = loans.OrderBy(x => x.CreatedAt);
 
@@ -118,5 +90,39 @@ public class LoansRepository(ApplicationDbContext context, IMapper mapper) : ILo
         await context.SaveChangesAsync();
 
         return loan;
+    }
+
+    public async Task<IQueryable<Loan>> FilterByQuery(IQueryable<Loan> loans, LoanQuery query)
+    {
+        if (query.ClientId != null)
+        {
+            loans = loans.Where(x => x.ClientId == query.ClientId);
+        }
+
+        if (query.Username != null)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(x => x.UserName == query.Username);
+            if (user != null)
+            {
+                loans = loans.Where(x => x.ClientId == user.Id);
+            }
+        }
+
+        if (query.StartDate != null)
+        {
+            loans = loans.Where(x => x.CreatedAt >= query.StartDate);
+        }
+
+        if (query.EndDate != null)
+        {
+            loans = loans.Where(x => x.CreatedAt <= query.EndDate);
+        }
+
+        if (query.Status != null)
+        {
+            loans = loans.Where(x => x.Status == query.Status);
+        }
+
+        return loans;
     }
 }

@@ -13,11 +13,16 @@ const useNewTransaction = () => {
     // Set individual
     queryClient.setQueryData(["transactions", transaction.id], transaction);
 
-    // Set plurarl
+    // Set plural
     queryClient.setQueryData<Transaction[]>(["transactions", ""], (prev) => [
       ...(prev || []),
       transaction,
     ]);
+    // Update on type list
+    queryClient.setQueryData<Transaction[]>(
+      ["transactions", transaction.type],
+      (prev) => [...(prev || []), transaction]
+    );
 
     return transaction;
   };

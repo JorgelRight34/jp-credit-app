@@ -15,6 +15,8 @@ const useDeleteTransaction = () => {
 
         // Set plural
         queryClient.setQueryData<Transaction[]>(["transactions", ""], (prev) => prev?.filter(el => el.id !== transaction.id))
+        // Set on type list
+        queryClient.setQueryData<Transaction[]>(["transactions", transaction.type], (prev) => prev?.filter(el => el.id !== transaction.id))
 
         return transaction;
     }

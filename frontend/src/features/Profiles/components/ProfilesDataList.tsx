@@ -29,6 +29,7 @@ const ProfilesDataList = ({
         <SelectInput
           defaultValue={options[0]?.value}
           firstOption={["", "---"]}
+          disabled={isDisabled}
           options={options.map((option) => [option.value, option.label])}
           {...props}
         />

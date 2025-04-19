@@ -13,7 +13,7 @@ public class LoanDto
 {
     public int Id { get; set; }
     public string? ClientId { get; set; }
-    public  string? GuarantorId { get; set; }
+    public string? GuarantorId { get; set; }
     public int LastPaymentId { get; set; }
 
     // Loan details

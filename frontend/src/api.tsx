@@ -2,6 +2,7 @@ import axios, { AxiosError, InternalAxiosRequestConfig } from "axios";
 import { jwtDecode } from "jwt-decode";
 import { toast } from "react-toastify";
 import { completeLoadingBar, startLoadingBar } from "./common/ui/LoadingBar";
+import { hideLoadingSpinner, showLoadingSpinner } from "./loadingManager";
 
 const api = axios.create({ baseURL: "http://localhost:5270/api/" });
 
@@ -21,6 +22,11 @@ api.interceptors.request.use(
         }
       }
     }
+
+    if (config.method === "post") {
+      showLoadingSpinner();
+    }
+
     startLoadingBar();
     return config;
   },
@@ -32,6 +38,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => {
     completeLoadingBar();
+    hideLoadingSpinner();
     return response;
   },
   (error) => {
@@ -60,6 +67,7 @@ api.interceptors.response.use(
       toast.error("Ha ocurrido un error.");
     }
 
+    hideLoadingSpinner();
     completeLoadingBar();
     return Promise.reject(error);
   }

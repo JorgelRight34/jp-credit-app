@@ -44,11 +44,13 @@ const FormFieldInput = <TData,>({
     defaultValue: formField.defaultValue,
   };
 
-  const watchedValue = formField.watch ? watch(formField.watch) : undefined;
-  const disabled = formField.disabledWhen?.(watchedValue) ?? false;
+  const watchedValue = formField.watchedValue
+    ? watch(formField.watchedValue)
+    : undefined;
+  const disabled = formField.disabledWhen?.(watch) ?? false;
   const isFileInput = formField.type === "file" && files && setFiles;
 
-  if (!formField.showOnEdit && edit) return <></>;
+  if ((!formField.showOnEdit && edit) || formField.show === false) return <></>;
 
   if (formField.profileDataList && edit) {
     return (
@@ -80,7 +82,6 @@ const FormFieldInput = <TData,>({
       {isFileInput ? (
         <MultipleFilesInput
           className="w-full"
-          files={files}
           setFiles={setFiles}
           setDefaultFileSources={setDefaultFileSources}
           defaultFileSources={defaultFileSources}

@@ -13,10 +13,13 @@ import LinkToLoan from "../../Loans/components/LinkToLoan";
 interface TransactionsDataTableProps {
   transactions: Transaction[];
   navigateCallback?: (page: number) => void;
+  extraColumns?: ColumnDef<Transaction>[];
+  startInsertingColumnsAt?: number;
 }
 
 const columns: ColumnDef<Transaction>[] = [
   { accessorKey: "id", header: "Id", enableSorting: true },
+  { accessorKey: "type", header: "Tipo", enableSorting: true },
   {
     accessorKey: "capitalValue",
     header: "Capital",
@@ -64,12 +67,18 @@ const columns: ColumnDef<Transaction>[] = [
 const TransactionsDataTable = ({
   transactions,
   navigateCallback,
+  extraColumns = [],
+  startInsertingColumnsAt,
 }: TransactionsDataTableProps) => {
   const navigate = useNavigate();
 
   return (
     <DataTable
-      columns={columns}
+      columns={
+        startInsertingColumnsAt
+          ? columns.splice(startInsertingColumnsAt, 0, ...extraColumns)
+          : columns
+      }
       data={transactions}
       onRowClick={(transaction: Transaction) => {
         navigate(`/transactions/${transaction.id}`);

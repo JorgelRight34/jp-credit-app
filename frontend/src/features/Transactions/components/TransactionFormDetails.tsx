@@ -54,6 +54,14 @@ const TransactionFormDetails = ({
 
   if (!loanId || !loan) return <></>;
 
+  if (amount > loan.disbursedAmount)
+    return (
+      <h6 className="text-danger">
+        El monto ({amount}) no puede ser mayor al costo del préstamo (
+        {loan.disbursedAmount})
+      </h6>
+    );
+
   return (
     <div className={`row mx-0 ${className}`}>
       <div className="col-lg-6">

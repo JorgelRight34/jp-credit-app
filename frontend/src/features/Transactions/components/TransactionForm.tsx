@@ -10,6 +10,7 @@ import { Transaction } from "../../../models/transaction";
 import EntityForm from "../../../common/EntityForm/EntityForm";
 import { FormField } from "../../../models/formField";
 import TransactionFormDetails from "./TransactionFormDetails";
+import { TransactionType } from "../../../models/transactionType";
 
 interface TransactionFormProps {
   fixedLoan?: Loan;
@@ -32,20 +33,33 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
       type: "date",
     },
     {
+      name: "loanId",
+      label: "Id Préstamo",
+      type: "number",
+      defaultValue: fixedLoan?.id === undefined ? null : String(fixedLoan?.id),
+    },
+    {
       name: "payerId",
       label: "Cliente",
       profileDataList: true,
       profileRole: "user",
       fixedWatchedValue: fixedLoan?.id,
-      watch: "loanId",
-      disabledWhen: (value) =>
-        value === "" || value === 0 || value == undefined || value === null,
-    },
-    {
-      name: "loanId",
-      label: "Id Préstamo",
-      type: "number",
-      defaultValue: String(fixedLoan?.id) || null,
+      watchedValue: "loanId",
+      disabledWhen: (watch) => {
+        const type = watch("type");
+
+        if (type === "DS") return true;
+        const loanId = watch("loanId");
+        if (
+          loanId === "" ||
+          loanId === 0 ||
+          loanId == undefined ||
+          loanId === null
+        )
+          return true;
+
+        return false;
+      },
     },
     {
       name: "type",
@@ -58,6 +72,8 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
       label: "Penalidad (1-100)%",
       type: "number",
       step: 0.01,
+      watchedValue: "type",
+      disabledWhen: (watch) => watch("type") === TransactionType.DS,
     },
   ];
 
@@ -69,7 +85,7 @@ const TransactionForm = ({ fixedLoan }: TransactionFormProps) => {
   return (
     <>
       <EntityForm<Transaction, TransactionFormValues>
-        columns={3}
+        columns={4}
         rows={2}
         formFields={transactionFormFields}
         schema={schema}

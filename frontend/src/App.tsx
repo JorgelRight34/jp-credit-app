@@ -11,6 +11,7 @@ import { lazy, Suspense } from "react";
 import ProtectedRoute from "./common/ProtectedRoute";
 import LoadingBar from "./common/ui/LoadingBar";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import LoadingScreen from "./common/LoadingScreen";
 
 // Pages
 const Login = lazy(() => import("./pages/Login/Login"));
@@ -49,6 +50,7 @@ function App() {
     <QueryClientProvider client={queryClient}>
       <Provider store={store}>
         <LoadingBar />
+        <LoadingScreen />
         <BrowserRouter>
           <Suspense fallback={<div>Loading...</div>}>
             <Routes>
@@ -68,15 +70,21 @@ function App() {
                 />
                 <Route path="notes" element={<NotesPage />} />
                 <Route path="notes/:id" element={<NotePage />} />
-                <Route path="profiles" element={<ProfilesPage />} />
+                <Route path="profiles/:tab?" element={<ProfilesPage />} />
                 <Route
                   path="profiles/:username/:tab?"
                   element={<ProfilePage />}
                 />
                 <Route path="loans" element={<LoansPage />} />
                 <Route path="loans/:id/:tab?" element={<LoanPage />} />
-                <Route path="transactions" element={<TransactionsPage />} />
-                <Route path="transactions/:id" element={<TransactionPage />} />
+                <Route
+                  path="transactions/:tab?"
+                  element={<TransactionsPage />}
+                />
+                <Route
+                  path="transactions/:id/:tab?"
+                  element={<TransactionPage />}
+                />
               </Route>
               <Route path="login" element={<Login />} />
               <Route path="*" element={<NotFound />} />

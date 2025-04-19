@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import { useEffect, useState } from "react";
 import Modal from "./Modal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUpload } from "@fortawesome/free-solid-svg-icons";
@@ -6,7 +6,7 @@ import AccentBtn from "./AccentBtn";
 import FileExplorer from "./FileExplorer";
 import { ApiFile } from "../../models/apiFile";
 import { ColumnDef } from "@tanstack/react-table";
-import { toast } from "react-toastify";
+import useMultipleFilesInput from "../../hooks/useMultipleFilesInput";
 
 interface MultipleFilesInputProps {
   setFiles: (files: File[] | ((prev: File[]) => File[])) => void;
@@ -14,7 +14,6 @@ interface MultipleFilesInputProps {
   setDefaultFileSources?: (
     files: ApiFile[] | ((prev: ApiFile[]) => ApiFile[])
   ) => void;
-  files: File[];
   maxLength: number;
   className?: string;
   onConfirm?: () => void;
@@ -22,7 +21,6 @@ interface MultipleFilesInputProps {
 
 const MultipleFilesInput = ({
   maxLength,
-  files,
   className = "",
   defaultFileSources = [],
   setDefaultFileSources,
@@ -30,20 +28,16 @@ const MultipleFilesInput = ({
   setFiles,
 }: MultipleFilesInputProps) => {
   const [showModal, setShowModal] = useState(false);
-  const tableFiles = useMemo(
-    () => [
-      ...defaultFileSources,
-      ...files.map((file) => ({
-        publicId: "---",
-        url: URL.createObjectURL(file),
-        id: 1,
-        name: file.name,
-        createdAt: "",
-        lastModified: "",
-        fileType: file.type,
-      })),
-    ],
-    [files, defaultFileSources]
+  const {
+    tableFiles,
+    handleOnFileChange,
+    removeFile,
+    removeDefaultFile,
+    files: hookFiles,
+  } = useMultipleFilesInput(
+    defaultFileSources,
+    setDefaultFileSources,
+    maxLength
   );
 
   const extraColumns: ColumnDef<ApiFile>[] = [
@@ -53,8 +47,8 @@ const MultipleFilesInput = ({
         <AccentBtn
           onClick={(event) => {
             event.stopPropagation();
-            if (row.original.createdAt !== "---") removeDefaultFile(row.index);
-            else removeFile(row.index);
+            if (!row.original.publicId) removeFile(row.index);
+            else removeDefaultFile(row.index);
           }}
         >
           Borrar
@@ -63,37 +57,10 @@ const MultipleFilesInput = ({
     },
   ];
 
-  const handleOnFileChange = (
-    event: React.ChangeEvent<HTMLInputElement>,
-    index?: number
-  ) => {
-    const uploadedFile = event.target?.files?.[0];
-    event.target.value = "";
-    if (!uploadedFile) return;
-
-    if (tableFiles.length >= maxLength) {
-      toast.error(`Solo ${maxLength} archivos son permitidos.`);
-      return;
-    }
-
-    if (index) {
-      setFiles((prev) => [...prev].splice(index, 0, uploadedFile));
-    } else {
-      setFiles((prev) => [...prev, uploadedFile]);
-    }
-  };
-
-  const removeFile = (index: number) => {
-    setFiles((prev) => [...prev].filter((_, key) => key !== index));
-  };
-
-  const removeDefaultFile = (index: number) => {
-    if (!setDefaultFileSources) return;
-
-    setDefaultFileSources((prev) =>
-      [...prev].filter((_, key) => key !== index)
-    );
-  };
+  useEffect(() => {
+    console.log("changing now", hookFiles);
+    setFiles(hookFiles);
+  }, [hookFiles]);
 
   return (
     <>

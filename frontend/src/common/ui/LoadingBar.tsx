@@ -1,5 +1,5 @@
 import { useRef } from "react";
-import TopLoadingBar from "react-top-loading-bar";
+import TopLoadingBar, { LoadingBarRef } from "react-top-loading-bar";
 
 export const loadingBarRef = { current: null as typeof TopLoadingBar | null };
 
@@ -34,7 +34,7 @@ const LoadingBar = () => {
   return (
     <TopLoadingBar
       color="#d09d0c"
-      ref={(ref) => (loadingBarRef.current = ref as any)}
+      ref={(ref) => (loadingBarRef.current = ref as LoadingBarRef | undefined)}
     />
   );
 };

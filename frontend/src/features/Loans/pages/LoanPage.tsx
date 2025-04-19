@@ -31,9 +31,9 @@ const LoanPage = () => {
   const { collaterals, fetchPage: fetchCollateralPage } = useCollaterals(
     `loanId=${id}`
   );
-  const { transactions, fetchPage: fetchTransactions } = useTransactions(
-    Number(id)
-  );
+  const { transactions, fetchPage: fetchTransactions } = useTransactions({
+    loanId: Number(id),
+  });
   const { notes, fetchPage: fetchNotes } = useNotes(`loanId=${id}`);
   const { armotization } = useLoanArmotization(Number(id));
   const [onDelete] = useDeleteLoan();

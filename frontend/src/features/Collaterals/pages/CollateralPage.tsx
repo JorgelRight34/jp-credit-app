@@ -46,12 +46,12 @@ const CollateralPage = () => {
             title={
               <TabTitle
                 title="Cliente"
-                path={`/profiles/${collateral.client.username}`}
+                path={`/profiles/${collateral.owner.username}`}
               />
             }
             className="p-3"
           >
-            <ProfileInfo profile={collateral.client} />
+            <ProfileInfo profile={collateral.owner} />
           </Tab>
           <Tab eventKey={"files"} title="Archivos" className="p-3">
             <CollateralFilesExplorer collateral={collateral} />

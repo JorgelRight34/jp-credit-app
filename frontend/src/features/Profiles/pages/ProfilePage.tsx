@@ -15,13 +15,14 @@ import ProfileForm from "../components/ProfileForm";
 import { Role } from "../../../models/role";
 import { getFullName } from "../../../utils/utils";
 import LoanSearchInput from "../../Loans/components/LoanSearch";
-import EntityTabs from "../../../common/ui/EntityTabs";
-import { Tab } from "react-bootstrap";
+import { Tab, Tabs } from "react-bootstrap";
 
 const ProfilePage = () => {
   const { username } = useParams();
   const { profile, isError, isLoading } = useProfile(username || "");
-  const { loans, fetchPage: fetchLoans } = useLoans(`username=${username}`);
+  const { loans, fetchPage: fetchLoans } = useLoans({
+    query: `username=${username}`,
+  });
   const { collaterals, fetchPage: fetchCollaterals } = useCollaterals(
     `username=${username}`
   );
@@ -30,7 +31,7 @@ const ProfilePage = () => {
 
   if (isError) return <NotFound />;
 
-  if (isLoading) return <></>;
+  if (isLoading || !profile) return <></>;
 
   return (
     <>
@@ -38,7 +39,7 @@ const ProfilePage = () => {
         title={getFullName(profile)}
         onEdit={() => setShowModal(true)}
       >
-        <EntityTabs defaultActiveKey="info">
+        <Tabs>
           <Tab className="p-3" eventKey={"info"} title="Información">
             {profile && <ProfileInfo profile={profile} />}
           </Tab>
@@ -63,7 +64,7 @@ const ProfilePage = () => {
               navigateCallback={(page: number) => fetchTransactions(page)}
             />
           </Tab>
-        </EntityTabs>
+        </Tabs>
       </EntityLayout>
       <Modal
         title="Editar Pérfil"

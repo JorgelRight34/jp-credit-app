@@ -17,10 +17,18 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
     public async Task<Transaction> CreateAsync(CreateTransactionDto createTransactionDto)
     {
         var transaction = mapper.Map<Transaction>(createTransactionDto);
+        var payerId = createTransactionDto.PayerId;
 
-        // Calculate capital value and interest value
-        var loan = await context.Loans.FindAsync(createTransactionDto.LoanId);
+        // Get profile
+        var profile = await context.Users.Where(x => x.Id == createTransactionDto.PayerId).FirstOrDefaultAsync();
+        if (profile == null) throw new Exception("Payer doesn't exist on database");
+
+        // Avoid paying other's client loan
+        var loan = await context.Loans
+            .Where(x => x.ClientId == payerId || x.LoanOfficerId == payerId || x.GuarantorId == payerId)
+            .FirstOrDefaultAsync(x => x.Id == createTransactionDto.LoanId);
         if (loan == null) throw new InvalidOperationException("Loan doesn't exist");
+
 
         // Get payment dates
         var payday = loan.NextPaymentDate;
@@ -62,7 +70,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         loan.PrincipalBalance -= capital;
         transaction.InterestValue = interests;
         transaction.CapitalValue = capital;
-        if (loan.PrincipalBalance == 0) loan.Status = LoanStatus.PaidOff;   // If loan is completed then set to paid off
+        if (loan.PrincipalBalance <= 0) loan.Status = LoanStatus.PaidOff;   // If loan is completed then set to paid off
 
         // Days between payments = 365 / PaymentFrequency
         int days = (int)(365.0 / (double)loan.PaymentFrequency);
@@ -70,7 +78,7 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
 
         // Calculate the new payment value (A)
         var numberOfPayments = loan.NumberOfPayments - 1;
-        if (numberOfPayments != 0) loan.NumberOfPayments = numberOfPayments;
+        if (!(numberOfPayments <= 0)) loan.NumberOfPayments = numberOfPayments;
         loan.CalculatePaymentValue(loan.PrincipalBalance);  // Ojo con el principal balance = 0
 
         await context.Transactions.AddAsync(transaction);
@@ -147,6 +155,11 @@ public class TransactionsRepository(ApplicationDbContext context, IMapper mapper
         {
             var clientId = await context.Users.Where(x => x.UserName == query.Username).Select(x => x.Id).FirstOrDefaultAsync();
             transactions = transactions.Where(x => x.PayerId == clientId);
+        }
+
+        if (query.Type != null)
+        {
+            transactions = transactions.Where(x => x.Type == query.Type);
         }
 
 

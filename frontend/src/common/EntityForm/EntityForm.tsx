@@ -51,6 +51,7 @@ const EntityForm = <TData, T extends FieldValues>({
     handleSubmit,
     watch,
     reset,
+    setValue,
     formState: { errors },
   } = useForm({
     resolver: zodResolver(schema),
@@ -94,7 +95,22 @@ const EntityForm = <TData, T extends FieldValues>({
 
   const handleOnSubmit = async (data: FieldValues) => {
     await onSubmit(data as T);
-    if (resetValues) reset();
+
+    if (resetValues && defaultValues) {
+      reset(defaultValues);
+      return;
+    }
+
+    if (resetValues) {
+      reset(undefined, { keepDirty: true });
+
+      // Force dirty state sync
+      setTimeout(() => {
+        Object.keys(control._formValues).forEach((name) => {
+          setValue(name, control._formValues[name], { shouldDirty: true });
+        });
+      }, 0);
+    }
   };
 
   const rowFormFields = useMemo(

@@ -2,10 +2,10 @@ import { FormField } from "../../models/formField";
 
 interface SelectInputProps<TData> {
   formField?: FormField<TData>;
-  disabled?: boolean;
+  disabled?: boolean | undefined;
   options?: (string | number)[][];
   firstOption?: (string | number)[];
-  defaultValue?: string | number;
+  defaultValue?: string | number | null;
 }
 
 const SelectInput = <TData,>({
@@ -22,7 +22,7 @@ const SelectInput = <TData,>({
       name={formField?.name}
       disabled={disabled}
       required={formField?.required}
-      defaultValue={defaultValue}
+      defaultValue={defaultValue || undefined}
       {...props}
     >
       {firstOption && <option value={firstOption[0]}>{firstOption[1]}</option>}

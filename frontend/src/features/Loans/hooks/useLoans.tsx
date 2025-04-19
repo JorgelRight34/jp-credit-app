@@ -3,7 +3,12 @@ import { baseUrl } from "../lib/constants";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Loan } from "../../../models/loan";
 
-const useLoans = (query: string = "", page: number = 1) => {
+interface UseLoansProps {
+  query?: string;
+  page?: number;
+}
+
+const useLoans = ({ query = "", page = 1 }: UseLoansProps) => {
   const queryClient = useQueryClient();
 
   const { data, isError, isLoading } = useQuery<Loan[]>({
